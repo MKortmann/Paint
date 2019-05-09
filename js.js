@@ -2,6 +2,9 @@
 /*Udemy jQuery Lektion 82*/
 jQuery(document).ready(function($) {
 
+/*Declarations*/
+let stiftActive = false;
+
 /*The Canvas API provides a means for drawing graphics
 via JavaScript and the HTML <canvas> element.*/
 /*Among other things, it can be used for animation,
@@ -55,13 +58,15 @@ function draw(posX, posY) {
 }
 
 $("#canvas").mousedown(function(event) {
-  $(".bStift").addClass("active");
-  let cursorPositions = getCursorPosition(canvas, event);
-  draw(cursorPositions[0], cursorPositions[1]);
+  if($(".bStift").hasClass("active")) {
+    stiftActive = true;
+    let cursorPositions = getCursorPosition(canvas, event);
+    draw(cursorPositions[0], cursorPositions[1]);
+  };
 })
 
 $("#canvas").mousemove(function(event) {
-  if ($(".bStift").hasClass("active")) {
+  if (stiftActive) {
     let cursorPositions = getCursorPosition(canvas, event);
     console.log(cursorPositions[0], cursorPositions[1]);
     draw(cursorPositions[0], cursorPositions[1]);
@@ -69,7 +74,7 @@ $("#canvas").mousemove(function(event) {
 });
 
 $("#canvas").mouseup(function(event) {
-  $(".bStift").removeClass("active");
+  stiftActive = false;
 })
 
 /**nav functions:*/
@@ -78,6 +83,15 @@ $("#canvas").mouseup(function(event) {
 //Stift
 $(".bStift").click(function() {
   $(".bStift").toggleClass("active");
+
+
+  // if (stiftActive) {
+  //   stiftActive = false;
+  // } else {
+  //     stiftActive = true;
+  // }
+
+
 });
 //Zoom
 $(".bZoom").click(function() {
