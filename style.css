@@ -14,8 +14,8 @@ nav {
 }
 
 #canvas {
-  width: 400px;
-  height: 400px;
+  width: 600px;
+  height: 600px;
   border: 2px solid black;
   background-color: white;
 }
@@ -23,8 +23,19 @@ nav {
 button {
   width: 100px;
   height: 35px;
+  padding: 10px 10px 10px 10px;
+  border: solid 5px red;
+  margin: 15px 15px 15px 15px;
+
 }
 
+button:hover {
+  background-color: orange;
+}
+
+/* button:active {
+  background-color: blue;
+} */
 .active {
   background-color: red;
 }

@@ -31,7 +31,7 @@ function resizeCanvas(width, height) {
 
 /*To draw something in the Canvas Element*/
 //fill the draw with a specified color
-ctx.fillStyle = "green";
+
 //draw rectangle
 //ctx.fillRect(x, y, width, height);
 // ctx.fillRect(0, 0, canvas[0].width, canvas[0].height);
@@ -48,17 +48,49 @@ ctx.fillStyle = "green";
 //     }
 // }
 
+/*Draw a house: see that the (x,y) are the end point coordinates in the canvas 2D!*/
+ctx.beginPath();
+ctx.moveTo(100,10);
+ctx.lineTo(200,50);
+ctx.lineTo(200,100);
+ctx.lineTo(10,100);
+ctx.lineTo(10,50);
+ctx.lineTo(100,10);
+// ctx.closePath(); TO CLOSE THE PATH
+ctx.stroke();
+
+
 let animation = function () {
   console.log("canvas[0].width");
 
+  ctx.fillStyle = "green";
   for (let index=1; index <= canvas[0].width; index++) {
+
     setTimeout( () => {
       console.log(index);
-      ctx.fillRect(0, 0, index, 200);
+      ctx.fillRect(0, 0, index, canvas[0].height);
 
     },10)
   }
 }
+
+/*Draw a house: see that the (x,y) are the end point coordinates in the canvas 2D!*/
+ctx.beginPath();
+ctx.moveTo(100,10);
+ctx.lineTo(200,50);
+ctx.lineTo(200,100);
+ctx.lineTo(10,100);
+ctx.lineTo(10,50);
+ctx.lineTo(100,10);
+// ctx.closePath(); TO CLOSE THE PATH
+ctx.stroke();
+
+function draw (posX, posY) {
+  /*Draw a house: see that the (x,y) are the end point coordinates in the canvas 2D!*/
+  ctx.lineTo(posX,posY);
+  // ctx.closePath(); TO CLOSE THE PATH
+  ctx.stroke();
+};
 
 
 // setTimeout(function() {
@@ -67,6 +99,45 @@ let animation = function () {
 
 // animation();
 
+//add canvas addEventListener
+
+
+function getCursorPosition(canvas, event) {
+  //you can get the bounding box of any element by calling getBoundingClientRecht
+  //javaScript native function
+  const rect = canvas[0].getBoundingClientRect();
+  const x = event.pageX - rect.left;
+  const y = event.pageY - rect.top;
+  return [x , y];
+}
+
+function draw(posX, posY) {
+  ctx.beginPath();
+  ctx.lineWidth = 10;
+  ctx.lineCap = "round";
+  ctx.lineTo(posX,posY);
+  ctx.stroke();
+}
+
+  $("#canvas").mousemove(function(event) {
+    if ($(".bStift").hasClass("active")) {
+      let cursorPositions = getCursorPosition(canvas, event);
+      console.log(cursorPositions[0], cursorPositions[1]);
+      draw(cursorPositions[0], cursorPositions[1]);
+    }
+  });
+
+
+$("#canvas").mouseup(function(event) {
+  $(".bStift").removeClass("active");
+})
+
+$("#canvas").mousedown(function(event) {
+  $(".bStift").addClass("active");
+
+})
+
+
 
 /**nav functions:*/
 
@@ -74,7 +145,6 @@ let animation = function () {
 //Stift
 $(".bStift").click(function() {
   $(".bStift").toggleClass("active");
-
 });
 //Zoom
 $(".bZoom").click(function() {
@@ -105,5 +175,6 @@ $(window).on("resize", function() {
   resizeCanvas(window.innerWidth, 600);
   }
 });
+
 
 });
