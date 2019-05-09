@@ -23,10 +23,6 @@ nav {
 button {
   width: 100px;
   height: 35px;
-  padding: 10px 10px 10px 10px;
-  border: solid 5px red;
-  margin: 15px 15px 15px 15px;
-
 }
 
 button:hover {
