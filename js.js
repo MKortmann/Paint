@@ -4,6 +4,7 @@ jQuery(document).ready(function($) {
 
 /*Declarations*/
 let stiftActive = false;
+let eraseActive = false;
 
 /*The Canvas API provides a means for drawing graphics
 via JavaScript and the HTML <canvas> element.*/
@@ -42,10 +43,10 @@ function getCursorPosition(canvas, event) {
   // const y = event.pageY - rect.top;
   const x = event.pageX - rect.left;
   const y = event.pageY - rect.top;
-  console.log("event.pageX: " + event.pageX);
-  console.log("event.pagey: " + event.pageY);
-  console.log(" rect.left: " +  rect.left);
-  console.log("rect.top: " + rect.top);
+  // console.log("event.pageX: " + event.pageX);
+  // console.log("event.pagey: " + event.pageY);
+  // console.log(" rect.left: " +  rect.left);
+  // console.log("rect.top: " + rect.top);
   return [x , y];
 }
 
@@ -57,24 +58,43 @@ function draw(posX, posY) {
   ctx.stroke();
 }
 
+function erase(posX, posY) {
+  ctx.beginPath();
+  ctx.lineWidth = 10;
+  ctx.lineCap = "round";
+  ctx.strokeStyle = "white";
+  ctx.lineTo(posX,posY);
+  ctx.stroke();
+}
+
 $("#canvas").mousedown(function(event) {
   if($(".bStift").hasClass("active")) {
     stiftActive = true;
     let cursorPositions = getCursorPosition(canvas, event);
     draw(cursorPositions[0], cursorPositions[1]);
   };
+  if($(".bErase").hasClass("active")) {
+    eraseActive = true;
+    let cursorPositions = getCursorPosition(canvas, event);
+    erase(cursorPositions[0], cursorPositions[1]);
+  };
 })
 
 $("#canvas").mousemove(function(event) {
     if (stiftActive) {
     let cursorPositions = getCursorPosition(canvas, event);
-    console.log(cursorPositions[0], cursorPositions[1]);
+    // console.log(cursorPositions[0], cursorPositions[1]);
     draw(cursorPositions[0], cursorPositions[1]);
-  }
+  };
+  if( eraseActive) {
+    let cursorPositions = getCursorPosition(canvas, event);
+    erase(cursorPositions[0], cursorPositions[1]);
+  };
 });
 
 $("#canvas").mouseup(function(event) {
   stiftActive = false;
+  eraseActive = false;
 })
 
 /**nav functions:*/
@@ -83,6 +103,20 @@ $("#canvas").mouseup(function(event) {
 //Stift
 $(".bStift").click(function() {
   $(".bStift").toggleClass("active");
+  /*reseting other buttons*/
+  if($(".bErase").hasClass("active")) {
+    $(".bErase").toggleClass("active");
+    eraseActive = false;
+  }
+});
+//bErase
+$(".bErase").click(function() {
+  $(".bErase").toggleClass("active");
+  /*reseting other buttons*/
+  if($(".bStift").hasClass("active")) {
+    $(".bStift").toggleClass("active");
+    stiftActive = false;
+  }
 });
 //Zoom
 $(".bZoom").click(function() {
