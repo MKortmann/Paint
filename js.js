@@ -66,7 +66,7 @@ $("#canvas").mousedown(function(event) {
 })
 
 $("#canvas").mousemove(function(event) {
-  if (stiftActive) {
+    if (stiftActive) {
     let cursorPositions = getCursorPosition(canvas, event);
     console.log(cursorPositions[0], cursorPositions[1]);
     draw(cursorPositions[0], cursorPositions[1]);
@@ -83,15 +83,6 @@ $("#canvas").mouseup(function(event) {
 //Stift
 $(".bStift").click(function() {
   $(".bStift").toggleClass("active");
-
-
-  // if (stiftActive) {
-  //   stiftActive = false;
-  // } else {
-  //     stiftActive = true;
-  // }
-
-
 });
 //Zoom
 $(".bZoom").click(function() {
@@ -141,5 +132,9 @@ $(window).on("resize", function() {
   //     },10)
   //   }
   // }
+
+console.log("This is a log");
+console.warn("this is a warn");
+
 
 });

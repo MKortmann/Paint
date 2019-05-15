@@ -21,12 +21,12 @@ nav {
 }
 
 button {
-  width: 100px;
+  width: 101px;
   height: 35px;
 }
 
 button:hover {
-  background-color: orange;
+  background-color: #c733b0;
 }
 
 /* button:active {
