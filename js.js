@@ -5,6 +5,10 @@ jQuery(document).ready(function($) {
 /*Declarations*/
 let stiftActive = false;
 let eraseActive = false;
+let straightLine = false;
+let straightLine2 = false;
+let posX = [];
+let posY = [];
 
 /*The Canvas API provides a means for drawing graphics
 via JavaScript and the HTML <canvas> element.*/
@@ -67,6 +71,15 @@ function erase(posX, posY) {
   ctx.stroke();
 }
 
+function drawStraightLine(posX, posY) {
+  ctx.beginPath();
+  ctx.lineWidth = 10;
+  ctx.lineCap = "round";
+  ctx.lineTo(posX[0],posY[0]);
+  ctx.lineTo(posX[1],posY[1]);
+  ctx.stroke();
+}
+
 $("#canvas").mousedown(function(event) {
   if($(".bStift").hasClass("active")) {
     stiftActive = true;
@@ -77,6 +90,17 @@ $("#canvas").mousedown(function(event) {
     eraseActive = true;
     let cursorPositions = getCursorPosition(canvas, event);
     erase(cursorPositions[0], cursorPositions[1]);
+  };
+  if($(".bStraightLine").hasClass("active")) {
+    if(straightLine) {
+      straightLine2 = true;
+    }
+    straightLine = true;
+    let cursorPositions = getCursorPosition(canvas, event);
+    posX.push(cursorPositions[0]);
+    posY.push(cursorPositions[1]);
+    console.log(`First X position: ${cursorPositions[0]}`);
+    console.log(`First Y position: ${cursorPositions[1]}`);
   };
 })
 
@@ -93,8 +117,22 @@ $("#canvas").mousemove(function(event) {
 });
 
 $("#canvas").mouseup(function(event) {
+  /*reseting*/
   stiftActive = false;
   eraseActive = false;
+  if(straightLine2) {
+    let cursorPositions = getCursorPosition(canvas, event);
+    posX.push(cursorPositions[0]);
+    posY.push(cursorPositions[1]);
+    console.log(`Last X position: ${cursorPositions[0]}`);
+    console.log(`Last Y position: ${cursorPositions[1]}`);
+    drawStraightLine(posX, posY);
+    straightLine = false;
+    straightLine2 = false;
+    posX = [];
+    posY = [];
+  }
+
 })
 
 /**nav functions:*/
@@ -122,6 +160,10 @@ $(".bErase").click(function() {
 $(".bFill").click( () => {
    ctx.fillStyle = "green";
    ctx.fillRect(0, 0, canvas[0].width, canvas[0].height);
+});
+//bFill
+$(".bStraightLine").click( () => {
+   $(".bStraightLine").toggleClass("active");
 });
 //Zoom
 $(".bZoom").click(function() {
