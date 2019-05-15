@@ -118,19 +118,24 @@ $(".bErase").click(function() {
     stiftActive = false;
   }
 });
+//bFill
+$(".bFill").click( () => {
+   ctx.fillStyle = "green";
+   ctx.fillRect(0, 0, canvas[0].width, canvas[0].height);
+});
 //Zoom
 $(".bZoom").click(function() {
-  $(".bZoom").toggleClass("active");
+  // $(".bZoom").toggleClass("active");
   resizeCanvas(window.innerWidth, 600);
 });
 //Reload
 $(".bReload").click(function() {
     resizeCanvas(600, 600);
-})
+});
 //Animation
 $(".bAnimation").click(function() {
   animation();
-})
+});
 
 /*if you resize the window, then you have
 to click the .bZoom again or addAnEventListener*/
