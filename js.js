@@ -9,6 +9,7 @@ let straightLine = false;
 let straightLine2 = false;
 let posArrayX = [];
 let posArrayY = [];
+let activeButtons = [];
 //let index = 0;
 
 /*The Canvas API provides a means for drawing graphics
@@ -72,8 +73,9 @@ function erase(posX, posY) {
   ctx.stroke();
 }
 
+//FOR STRAIGHTLINE////////////////////////////
 function drawStraightLine(posArrayX, posArrayY) {
-  ctx.clearRect(0,0, innerWidth, innerHeight);
+  // ctx.clearRect(0,0, innerWidth, innerHeight);
   ctx.beginPath();
   ctx.lineWidth = 10;
   ctx.lineCap = "round";
@@ -92,16 +94,23 @@ function drawStraightLineGhost(posX, posY) {
   ctx.lineTo(posX,posY);
   ctx.stroke();
 
+  setTimeout(function() {
+    //ctx.clearRect(0,0, innerWidth, innerHeight);
+  deleteStraightLineGhost(posX, posY);
+   },100);
+
 }
 function deleteStraightLineGhost(posX, posY) {
   ctx.beginPath();
-  ctx.lineWidth = 5;
+  ctx.lineWidth = 6;
   ctx.lineCap = "round";
   ctx.strokeStyle = "white";
   ctx.lineTo(posArrayX[0], posArrayY[0]);
   ctx.lineTo(posX,posY);
   ctx.stroke();
 }
+
+
 
 $("#canvas").mousedown(function(event) {
   if($(".bStift").hasClass("active")) {
@@ -126,6 +135,11 @@ $("#canvas").mousedown(function(event) {
     console.log(`First Y position: ${cursorPositions[1]}`);
     }
   };
+  if($(".bRect").hasClass("active")) {
+    stiftActive = true;
+    let cursorPositions = getCursorPosition(canvas, event);
+    drawRect(cursorPositions[0], cursorPositions[1]);
+  };
 })
 
 $("#canvas").mousemove(function(event) {
@@ -141,11 +155,6 @@ $("#canvas").mousemove(function(event) {
   if(straightLine && !straightLine2) {
     let cursorPositions = getCursorPosition(canvas, event);
     drawStraightLineGhost(cursorPositions[0], cursorPositions[1]);
-    setTimeout(function() {
-      //ctx.clearRect(0,0, innerWidth, innerHeight);
-      deleteStraightLineGhost(cursorPositions[0], cursorPositions[1]);
-    },100);
-
   }
 });
 
@@ -169,46 +178,88 @@ $("#canvas").mouseup(function(event) {
 
 /**nav functions:*/
 
+/*reset nav buttons function*/
+function resetButtons() {
+  /*reseting other buttons*/
+  if(activeButtons.length > 1)
+  {
+    $(activeButtons[0]).toggleClass("active");
+    activeButtons.shift();
+  }
+  console.log(activeButtons);
+};
+
 /*adding buttons*/
 //Stift
 $(".bStift").click(function() {
   $(".bStift").toggleClass("active");
-  /*reseting other buttons*/
-  if($(".bErase").hasClass("active")) {
-    $(".bErase").toggleClass("active");
-    eraseActive = false;
-  }
+  activeButtons.push(".bStift");
+  resetButtons();
 });
 //bErase
 $(".bErase").click(function() {
   $(".bErase").toggleClass("active");
   /*reseting other buttons*/
-  if($(".bStift").hasClass("active")) {
-    $(".bStift").toggleClass("active");
-    stiftActive = false;
-  }
+    activeButtons.push(".bErase");
+    resetButtons();
 });
 //bFill
 $(".bFill").click( () => {
    ctx.fillStyle = "green";
    ctx.fillRect(0, 0, canvas[0].width, canvas[0].height);
+    $(".bFill").toggleClass("active");
+   activeButtons.push(".bFill");
+   resetButtons();
 });
+//bFillElement
 //bFill
+$(".bFillElement").click( () => {
+  $(".bFillElement").toggleClass("active");
+  activeButtons.push(".bFillElement");
+  resetButtons();
+});
+//bStraightLine
 $(".bStraightLine").click( () => {
    $(".bStraightLine").toggleClass("active");
+   activeButtons.push(".bStraightLine");
+   resetButtons();
 });
+
+//bRectangle
+$(".bRect").click( () => {
+   $(".bRect").toggleClass("active");
+   activeButtons.push(".bRect");
+   resetButtons();
+});
+
+//bCircle
+$(".bCircle").click( () => {
+   $(".bCircle").toggleClass("active");
+   activeButtons.push(".bCircle");
+   resetButtons();
+});
+
 //Zoom
 $(".bZoom").click(function() {
-  // $(".bZoom").toggleClass("active");
+  $(".bZoom").toggleClass("active");
   resizeCanvas(window.innerWidth, 600);
+  activeButtons.push(".bZoom");
+  resetButtons();
 });
 //Reload
 $(".bReload").click(function() {
     resizeCanvas(600, 600);
+    $(".bReload").toggleClass("active");
+    activeButtons.push(".bReload");
+    resetButtons();
 });
 //Animation
 $(".bAnimation").click(function() {
   animation();
+  $(".bAnimation").toggleClass("active");
+  activeButtons.push(".bAnimation");
+  resetButtons();
+
 });
 
 /*if you resize the window, then you have
@@ -236,15 +287,15 @@ $(window).on("resize", function() {
   // ctx.stroke();
   //
   // /*The animation function was done only to test!*/
-  // let animation = function () {
-  //   ctx.fillStyle = "green";
-  //   for (let index=1; index <= canvas[0].width; index++) {
-  //     setTimeout( () => {
-  //       console.log(index);
-  //       ctx.fillRect(0, 0, index, canvas[0].height);
-  //     },10)
-  //   }
-  // }
+  let animation = function () {
+    ctx.fillStyle = "green";
+    for (let index=1; index <= canvas[0].width; index++) {
+      setTimeout( () => {
+        console.log(index);
+        ctx.fillRect(0, 0, index, canvas[0].height);
+      },10)
+    }
+  }
 
 console.log("This is a log");
 console.warn("this is a warn");
