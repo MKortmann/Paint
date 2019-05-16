@@ -122,7 +122,7 @@ jQuery(document).ready(function($) {
     ctx.beginPath();
     ctx.lineWidth = 10;
     ctx.lineCap = "round";
-    ctx.strokeStyle = "black";
+    ctx.fillStyle  = "black";
     console.log(firstPosClickX, firstPosClickY);
     // ctx.fillRect(x, y, width, height);
 
@@ -138,7 +138,7 @@ jQuery(document).ready(function($) {
     ctx.beginPath();
     ctx.lineWidth = 10;
     ctx.lineCap = "round";
-    ctx.strokeStyle = "rgba(255, 160, 122, 0.3)";
+    ctx.fillStyle  = "rgba(255, 160, 122, 0.3)";
     console.log(firstPosClickX, firstPosClickY);
     // ctx.fillRect(x, y, width, height);
 
@@ -151,7 +151,7 @@ jQuery(document).ready(function($) {
     setTimeout(function() {
       //ctx.clearRect(0,0, innerWidth, innerHeight);
     deleteRectGhost(posX, posY);
-     },100);
+  },50);
 
   }
 
@@ -159,7 +159,7 @@ jQuery(document).ready(function($) {
     ctx.beginPath();
     ctx.lineWidth = 6;
     ctx.lineCap = "round";
-    ctx.strokeStyle = "white";
+    ctx.fillStyle  = "white";
 
     let width = posX - firstPosClickX;
     let height = posY - firstPosClickY;
@@ -272,7 +272,13 @@ jQuery(document).ready(function($) {
     /*reseting*/
     stiftActive = false;
     eraseActive = false;
-    rectActive = false;
+
+
+    if(rectActive) {
+      let cursorPositions = getCursorPosition(canvas, event);
+      drawRect(cursorPositions[0], cursorPositions[1]);
+      rectActive = false;
+    }
 
     if (straightLine) {
       let cursorPositions = getCursorPosition(canvas, event);
