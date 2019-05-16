@@ -119,9 +119,48 @@ function drawRect(posArrayX, posArrayY) {
   ctx.strokeStyle = "black";
   console.log(posArrayX, posArrayY);
   ctx.fillRect(posArrayX,posArrayY,100,100);
+}
+
+function drawRectGhost(posX, posY) {
+  ctx.beginPath();
+  ctx.lineWidth = 5;
+  ctx.lineCap = "round";
+  ctx.strokeStyle = "rgba(255, 160, 122, 0.3)";
+  ctx.lineTo(posArrayX[0], posArrayY[0]);
+  ctx.lineTo(posX,posY);
+  ctx.stroke();
+
+  setTimeout(function() {
+    //ctx.clearRect(0,0, innerWidth, innerHeight);
+  deleteStraightLineGhost(posX, posY);
+   },100);
+
+}
+
+// function deleteStraightLineGhost(posX, posY) {
+//   ctx.beginPath();
+//   ctx.lineWidth = 6;
+//   ctx.lineCap = "round";
+//   ctx.strokeStyle = "white";
+//   ctx.lineTo(posArrayX[0], posArrayY[0]);
+//   ctx.lineTo(posX,posY);
+//   ctx.stroke();
+// }
+
+////////////////////////////////
+
+/////FOR Circle//////////////////////////////
+function drawCircle(posArrayX, posArrayY) {
+  // ctx.clearRect(0,0, innerWidth, innerHeight);
+  ctx.beginPath();
+  ctx.lineWidth = 10;
+  ctx.lineCap = "round";
+  ctx.strokeStyle = "black";
+  console.log(posArrayX, posArrayY);
+  ctx.arc(posArrayX,posArrayY, 30, Math.PI * 2, false);
   // ctx.lineTo(posArrayX[0],posArrayY[0]);
   // ctx.lineTo(posArrayX[1],posArrayY[1]);
-  // ctx.stroke();
+  ctx.stroke();
 }
 
 // function drawStraightLineGhost(posX, posY) {
@@ -175,9 +214,15 @@ $("#canvas").mousedown(function(event) {
     }
   };
   if($(".bRect").hasClass("active")) {
-    stiftActive = true;
     let cursorPositions = getCursorPosition(canvas, event);
+    posArrayX.push(cursorPositions[0]);
+    posArrayY.push(cursorPositions[1]);
     drawRect(cursorPositions[0], cursorPositions[1]);
+  };
+
+  if($(".bCircle").hasClass("active")) {
+    let cursorPositions = getCursorPosition(canvas, event);
+    drawCircle(cursorPositions[0], cursorPositions[1]);
   };
 })
 
