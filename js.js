@@ -7,8 +7,8 @@ let stiftActive = false;
 let eraseActive = false;
 let straightLine = false;
 let straightLine2 = false;
-let posX = [];
-let posY = [];
+let posArrayX = [];
+let posArrayY = [];
 
 /*The Canvas API provides a means for drawing graphics
 via JavaScript and the HTML <canvas> element.*/
@@ -71,13 +71,30 @@ function erase(posX, posY) {
   ctx.stroke();
 }
 
-function drawStraightLine(posX, posY) {
+function drawStraightLine(posArrayX, posArrayY) {
+  ctx.clearRect(0,0, innerWidth, innerHeight);
+  debugger
   ctx.beginPath();
   ctx.lineWidth = 10;
   ctx.lineCap = "round";
-  ctx.lineTo(posX[0],posY[0]);
-  ctx.lineTo(posX[1],posY[1]);
+  ctx.strokeStyle = "black";
+  ctx.lineTo(posArrayX[0],posArrayY[0]);
+  ctx.lineTo(posArrayX[1],posArrayY[1]);
   ctx.stroke();
+}
+
+function drawStraightLineGhost(posX, posY) {
+  ctx.beginPath();
+  ctx.lineWidth = 5;
+  ctx.lineCap = "round";
+  ctx.strokeStyle = "rgba(255, 160, 122, 0.3)";
+  ctx.lineTo(posArrayX[0], posArrayY[0]);
+  ctx.lineTo(posX,posY);
+  ctx.stroke();
+  //setTimeout(function() {
+  //   ctx.clearRect(0,0, innerWidth, innerHeight);
+  //},1000)
+
 }
 
 $("#canvas").mousedown(function(event) {
@@ -94,13 +111,14 @@ $("#canvas").mousedown(function(event) {
   if($(".bStraightLine").hasClass("active")) {
     if(straightLine) {
       straightLine2 = true;
-    }
+    } else {
     straightLine = true;
     let cursorPositions = getCursorPosition(canvas, event);
-    posX.push(cursorPositions[0]);
-    posY.push(cursorPositions[1]);
+    posArrayX.push(cursorPositions[0]);
+    posArrayY.push(cursorPositions[1]);
     console.log(`First X position: ${cursorPositions[0]}`);
     console.log(`First Y position: ${cursorPositions[1]}`);
+    }
   };
 })
 
@@ -114,6 +132,10 @@ $("#canvas").mousemove(function(event) {
     let cursorPositions = getCursorPosition(canvas, event);
     erase(cursorPositions[0], cursorPositions[1]);
   };
+  if(straightLine && !straightLine2) {
+    let cursorPositions = getCursorPosition(canvas, event);
+    drawStraightLineGhost(cursorPositions[0], cursorPositions[1]);
+  }
 });
 
 $("#canvas").mouseup(function(event) {
@@ -122,17 +144,16 @@ $("#canvas").mouseup(function(event) {
   eraseActive = false;
   if(straightLine2) {
     let cursorPositions = getCursorPosition(canvas, event);
-    posX.push(cursorPositions[0]);
-    posY.push(cursorPositions[1]);
+    posArrayX.push(cursorPositions[0]);
+    posArrayY.push(cursorPositions[1]);
     console.log(`Last X position: ${cursorPositions[0]}`);
     console.log(`Last Y position: ${cursorPositions[1]}`);
-    drawStraightLine(posX, posY);
+    drawStraightLine(posArrayX, posArrayY);
     straightLine = false;
     straightLine2 = false;
-    posX = [];
-    posY = [];
+    posArrayX = [];
+    posArrayY = [];
   }
-
 })
 
 /**nav functions:*/
