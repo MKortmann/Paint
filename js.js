@@ -9,6 +9,7 @@ let straightLine = false;
 let straightLine2 = false;
 let posArrayX = [];
 let posArrayY = [];
+//let index = 0;
 
 /*The Canvas API provides a means for drawing graphics
 via JavaScript and the HTML <canvas> element.*/
@@ -73,7 +74,6 @@ function erase(posX, posY) {
 
 function drawStraightLine(posArrayX, posArrayY) {
   ctx.clearRect(0,0, innerWidth, innerHeight);
-  debugger
   ctx.beginPath();
   ctx.lineWidth = 10;
   ctx.lineCap = "round";
@@ -91,10 +91,16 @@ function drawStraightLineGhost(posX, posY) {
   ctx.lineTo(posArrayX[0], posArrayY[0]);
   ctx.lineTo(posX,posY);
   ctx.stroke();
-  //setTimeout(function() {
-  //   ctx.clearRect(0,0, innerWidth, innerHeight);
-  //},1000)
 
+}
+function deleteStraightLineGhost(posX, posY) {
+  ctx.beginPath();
+  ctx.lineWidth = 5;
+  ctx.lineCap = "round";
+  ctx.strokeStyle = "white";
+  ctx.lineTo(posArrayX[0], posArrayY[0]);
+  ctx.lineTo(posX,posY);
+  ctx.stroke();
 }
 
 $("#canvas").mousedown(function(event) {
@@ -135,6 +141,11 @@ $("#canvas").mousemove(function(event) {
   if(straightLine && !straightLine2) {
     let cursorPositions = getCursorPosition(canvas, event);
     drawStraightLineGhost(cursorPositions[0], cursorPositions[1]);
+    setTimeout(function() {
+      //ctx.clearRect(0,0, innerWidth, innerHeight);
+      deleteStraightLineGhost(cursorPositions[0], cursorPositions[1]);
+    },100);
+
   }
 });
 
