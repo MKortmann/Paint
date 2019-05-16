@@ -110,7 +110,46 @@ function deleteStraightLineGhost(posX, posY) {
   ctx.stroke();
 }
 
+/////FOR Rectangle//////////////////////////////
+function drawRect(posArrayX, posArrayY) {
+  // ctx.clearRect(0,0, innerWidth, innerHeight);
+  ctx.beginPath();
+  ctx.lineWidth = 10;
+  ctx.lineCap = "round";
+  ctx.strokeStyle = "black";
+  console.log(posArrayX, posArrayY);
+  ctx.fillRect(posArrayX,posArrayY,100,100);
+  // ctx.lineTo(posArrayX[0],posArrayY[0]);
+  // ctx.lineTo(posArrayX[1],posArrayY[1]);
+  // ctx.stroke();
+}
 
+// function drawStraightLineGhost(posX, posY) {
+//   ctx.beginPath();
+//   ctx.lineWidth = 5;
+//   ctx.lineCap = "round";
+//   ctx.strokeStyle = "rgba(255, 160, 122, 0.3)";
+//   ctx.lineTo(posArrayX[0], posArrayY[0]);
+//   ctx.lineTo(posX,posY);
+//   ctx.stroke();
+//
+//   setTimeout(function() {
+//     //ctx.clearRect(0,0, innerWidth, innerHeight);
+//   deleteStraightLineGhost(posX, posY);
+//    },100);
+//
+// }
+// function deleteStraightLineGhost(posX, posY) {
+//   ctx.beginPath();
+//   ctx.lineWidth = 6;
+//   ctx.lineCap = "round";
+//   ctx.strokeStyle = "white";
+//   ctx.lineTo(posArrayX[0], posArrayY[0]);
+//   ctx.lineTo(posX,posY);
+//   ctx.stroke();
+// }
+
+////////////////////////////////
 
 $("#canvas").mousedown(function(event) {
   if($(".bStift").hasClass("active")) {
