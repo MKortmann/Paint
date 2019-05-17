@@ -6,6 +6,7 @@ jQuery(document).ready(function($) {
   let stiftActive = false;
   let eraseActive = false;
   let rectActive = false;
+  let circleActive = false;
   let straightLine = false;
   let straightLine2 = false;
   let posArrayX = [];
@@ -175,8 +176,7 @@ jQuery(document).ready(function($) {
   function drawCircle(posArrayX, posArrayY) {
     // ctx.clearRect(0,0, innerWidth, innerHeight);
     ctx.beginPath();
-    ctx.lineWidth = 10;
-    ctx.lineCap = "round";
+    ctx.lineWidth = 5;
     ctx.strokeStyle = "black";
     console.log(posArrayX, posArrayY);
     ctx.arc(posArrayX, posArrayY, 30, Math.PI * 2, false);
@@ -185,30 +185,34 @@ jQuery(document).ready(function($) {
     ctx.stroke();
   }
 
-  // function drawStraightLineGhost(posX, posY) {
-  //   ctx.beginPath();
-  //   ctx.lineWidth = 5;
-  //   ctx.lineCap = "round";
-  //   ctx.strokeStyle = "rgba(255, 160, 122, 0.3)";
-  //   ctx.lineTo(posArrayX[0], posArrayY[0]);
-  //   ctx.lineTo(posX,posY);
-  //   ctx.stroke();
-  //
-  //   setTimeout(function() {
-  //     //ctx.clearRect(0,0, innerWidth, innerHeight);
-  //   deleteStraightLineGhost(posX, posY);
-  //    },100);
-  //
-  // }
-  // function deleteStraightLineGhost(posX, posY) {
-  //   ctx.beginPath();
-  //   ctx.lineWidth = 6;
-  //   ctx.lineCap = "round";
-  //   ctx.strokeStyle = "white";
-  //   ctx.lineTo(posArrayX[0], posArrayY[0]);
-  //   ctx.lineTo(posX,posY);
-  //   ctx.stroke();
-  // }
+  function drawCircleGhost(posX, posY) {
+    // ctx.clearRect(0,0, innerWidth, innerHeight);
+    ctx.beginPath();
+    ctx.lineWidth = 4;
+    ctx.strokeStyle = "rgba(255, 160, 122, 0.3)";
+    console.log(posX, posY);
+    ctx.arc(posX, posY, 30, Math.PI * 2, false);
+    // ctx.lineTo(posArrayX[0],posArrayY[0]);
+    // ctx.lineTo(posArrayX[1],posArrayY[1]);
+    ctx.stroke();
+
+    setTimeout(function() {
+      //ctx.clearRect(0,0, innerWidth, innerHeight);
+    deleteDrawCircleGhost(posX, posY);
+     },100);
+
+  }
+  function deleteDrawCircleGhost(posX, posY) {
+    // ctx.clearRect(0,0, innerWidth, innerHeight);
+    ctx.beginPath();
+    ctx.lineWidth = 7;
+    ctx.strokeStyle = "white";
+    console.log(posX, posY);
+    ctx.arc(posX, posY, 30, Math.PI * 2, false);
+    // ctx.lineTo(posArrayX[0],posArrayY[0]);
+    // ctx.lineTo(posArrayX[1],posArrayY[1]);
+    ctx.stroke();
+  }
 
   ////////////////////////////////
 
@@ -239,8 +243,10 @@ jQuery(document).ready(function($) {
     };
 
     if ($(".bCircle").hasClass("active")) {
+      circleActive = true;
       let cursorPositions = getCursorPosition(canvas, event);
-      drawCircle(cursorPositions[0], cursorPositions[1]);
+      firstPosClickX = cursorPositions[0];
+      firstPosClickY = cursorPositions[1];
     };
   })
 
@@ -264,6 +270,11 @@ jQuery(document).ready(function($) {
       drawRectGhost(cursorPositions[0], cursorPositions[1]);
     }
 
+    if (circleActive) {
+      let cursorPositions = getCursorPosition(canvas, event);
+      drawCircleGhost(cursorPositions[0], cursorPositions[1]);
+    }
+
   });
 
 
@@ -278,6 +289,12 @@ jQuery(document).ready(function($) {
       let cursorPositions = getCursorPosition(canvas, event);
       drawRect(cursorPositions[0], cursorPositions[1]);
       rectActive = false;
+    }
+
+    if(circleActive) {
+      let cursorPositions = getCursorPosition(canvas, event);
+      drawCircle(cursorPositions[0], cursorPositions[1]);
+      circleActive = false;
     }
 
     if (straightLine) {
