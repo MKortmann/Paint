@@ -173,13 +173,13 @@ jQuery(document).ready(function($) {
   ////////////////////////////////
 
   /////FOR Circle//////////////////////////////
-  function drawCircle(posArrayX, posArrayY) {
+  function drawCircle(posX, posY) {
     // ctx.clearRect(0,0, innerWidth, innerHeight);
     ctx.beginPath();
     ctx.lineWidth = 5;
     ctx.strokeStyle = "black";
     console.log(posArrayX, posArrayY);
-    ctx.arc(posArrayX, posArrayY, 30, Math.PI * 2, false);
+    ctx.arc(posX, posY, Math.abs(((firstPosClickX-posX)+(firstPosClickY-posY))/2), Math.PI * 2, false);
     // ctx.lineTo(posArrayX[0],posArrayY[0]);
     // ctx.lineTo(posArrayX[1],posArrayY[1]);
     ctx.stroke();
@@ -191,7 +191,7 @@ jQuery(document).ready(function($) {
     ctx.lineWidth = 4;
     ctx.strokeStyle = "rgba(255, 160, 122, 0.3)";
     console.log(posX, posY);
-    ctx.arc(posX, posY, 30, Math.PI * 2, false);
+    ctx.arc(posX, posY, Math.abs(((firstPosClickX-posX)+(firstPosClickY-posY))/2), Math.PI * 2, false);
     // ctx.lineTo(posArrayX[0],posArrayY[0]);
     // ctx.lineTo(posArrayX[1],posArrayY[1]);
     ctx.stroke();
@@ -208,7 +208,7 @@ jQuery(document).ready(function($) {
     ctx.lineWidth = 7;
     ctx.strokeStyle = "white";
     console.log(posX, posY);
-    ctx.arc(posX, posY, 30, Math.PI * 2, false);
+    ctx.arc(posX, posY, Math.abs(((firstPosClickX-posX)+(firstPosClickY-posY))/2), Math.PI * 2, false);
     // ctx.lineTo(posArrayX[0],posArrayY[0]);
     // ctx.lineTo(posArrayX[1],posArrayY[1]);
     ctx.stroke();
