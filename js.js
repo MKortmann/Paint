@@ -15,7 +15,7 @@ jQuery(document).ready(function($) {
   let firstPosClickY = 0;
   let activeButtons = [];
   let activeColor = "black";
-  let thickness = [4,5,8,10,12,14,18,22, 30];
+  let thickness = [4,8,12,16,20,24,28,36,42];
   let indexThickness = 0;
 
   //let index = 0;
@@ -55,13 +55,16 @@ jQuery(document).ready(function($) {
     const rect = canvas[0].getBoundingClientRect();
     // const x = event.pageX - rect.left;
     // const y = event.pageY - rect.top;
-    const x = event.pageX - rect.left;
-    const y = event.pageY - rect.top;
-    // console.log("event.pageX: " + event.pageX);
-    // console.log("event.pagey: " + event.pageY);
-    // console.log(" rect.left: " +  rect.left);
-    // console.log("rect.top: " + rect.top);
-    return [x, y];
+    // let scaleX = canvas[0].width / rect.width;
+    // let scaleY = canvas[0].height / rect.height;
+
+    const x = (event.pageX - rect.left);
+    const y = (event.pageY - rect.top);
+    console.log("event.pageX: " + event.pageX);
+      console.log(" rect.left: " +  rect.left);
+    console.log("event.pagey: " + event.pageY);
+    console.log("rect.top: " + rect.top);
+    return [x, y-52];
   }
 
 
@@ -89,7 +92,7 @@ $(".gridThickness").click( (e) => {
 
   function erase(posX, posY) {
     ctx.beginPath();
-    ctx.lineWidth = thickness[indexThickness]+2;
+    ctx.lineWidth = thickness[indexThickness];
     ctx.lineCap = "round";
     ctx.strokeStyle = "white";
     ctx.lineTo(posX, posY);
@@ -218,7 +221,7 @@ $(".gridThickness").click( (e) => {
     setTimeout(function() {
       //ctx.clearRect(0,0, innerWidth, innerHeight);
     deleteDrawCircleGhost(posX, posY);
-     },100);
+  },50);
 
   }
   function deleteDrawCircleGhost(posX, posY) {
