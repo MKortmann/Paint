@@ -29,6 +29,23 @@ nav {
 	margin-top: 30px;
 }
 
+.gridThickness {
+  display: grid;
+  grid-template-columns: auto auto auto;
+  background: white;
+  grid-gap: 1px;
+  /**top, right, bottom, left*/
+  padding: 2px 2px 2px 2px;
+  border-radius: 8px;
+  max-width: 300px;
+  justify-content: space-evenly;
+  margin: auto;
+  /** big grid stay at the center*/
+  border: 1.5px solid;
+  margin-top: 30px;
+
+}
+
 .box {
   border-style: solid;
   border-width: 1px;
@@ -68,6 +85,37 @@ nav {
 }
 .box.b19 {
   background-color: purple;
+}
+
+.box.b20 {
+  background-color: white;
+}
+.box.b21 {
+  background-color: silver;
+}
+.box.b22 {
+  background-color: rosybrown;
+}
+.box.b23 {
+  background-color: olive;
+}
+.box.b24 {
+  background-color: lime;
+}
+.box.b25 {
+  background-color: aqua;
+}
+.box.b26 {
+  background-color: teal;
+}
+.box.b27 {
+  background-color: skyblue;
+}
+.box.b28 {
+  background-color: fuchsia;
+}
+.box.b29 {
+  background-color: darksalmon;
 }
 
 section.colorChart {}

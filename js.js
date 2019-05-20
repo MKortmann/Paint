@@ -15,6 +15,9 @@ jQuery(document).ready(function($) {
   let firstPosClickY = 0;
   let activeButtons = [];
   let activeColor = "black";
+  let thickness = [4,5,8,10,12,14,18,22, 30];
+  let indexThickness = 0;
+
   //let index = 0;
 
   /*The Canvas API provides a means for drawing graphics
@@ -64,24 +67,29 @@ jQuery(document).ready(function($) {
 
   /*get active color*/
 $(".colorChart").click( (e) => {
-  console.log(`clicked at: ${e.target.id}`);
+  // console.log(`clicked at: ${e.target.id}`);
   activeColor = e.target.id;
-  console.log(`the active color is: ${e.target.id}`);
 });
+
+$(".gridThickness").click( (e) => {
+  console.log(`the thickness is: ${e.target.id}`);
+  indexThickness = e.target.id;
+})
 
 // $(".colorChart").css("color", "red");
 
   function draw(posX, posY) {
     ctx.beginPath();
-    ctx.lineWidth = 10;
+    ctx.lineWidth = thickness[indexThickness];
     ctx.lineCap = "round";
+    ctx.strokeStyle = activeColor;
     ctx.lineTo(posX, posY);
     ctx.stroke();
   }
 
   function erase(posX, posY) {
     ctx.beginPath();
-    ctx.lineWidth = 10;
+    ctx.lineWidth = thickness[indexThickness]+2;
     ctx.lineCap = "round";
     ctx.strokeStyle = "white";
     ctx.lineTo(posX, posY);
@@ -94,9 +102,9 @@ $(".colorChart").click( (e) => {
   function drawStraightLine(posArrayX, posArrayY) {
     // ctx.clearRect(0,0, innerWidth, innerHeight);
     ctx.beginPath();
-    ctx.lineWidth = 10;
+    ctx.lineWidth = thickness[indexThickness];
     ctx.lineCap = "round";
-    ctx.strokeStyle = "black";
+    ctx.strokeStyle = activeColor;
     ctx.lineTo(posArrayX[0], posArrayY[0]);
     ctx.lineTo(posArrayX[1], posArrayY[1]);
     ctx.stroke();
@@ -132,9 +140,9 @@ $(".colorChart").click( (e) => {
   function drawRect(posX, posY) {
     // ctx.clearRect(0,0, innerWidth, innerHeight);
     ctx.beginPath();
-    ctx.lineWidth = 10;
+    ctx.lineWidth = thickness[indexThickness];
     ctx.lineCap = "round";
-    ctx.fillStyle  = "black";
+    ctx.fillStyle = activeColor;
     console.log(firstPosClickX, firstPosClickY);
     // ctx.fillRect(x, y, width, height);
 
@@ -148,7 +156,7 @@ $(".colorChart").click( (e) => {
   function drawRectGhost(posX, posY) {
     // ctx.clearRect(0,0, innerWidth, innerHeight);
     ctx.beginPath();
-    ctx.lineWidth = 10;
+    ctx.lineWidth = 5;
     ctx.lineCap = "round";
     ctx.fillStyle  = "rgba(255, 160, 122, 0.3)";
     console.log(firstPosClickX, firstPosClickY);
@@ -187,8 +195,8 @@ $(".colorChart").click( (e) => {
   function drawCircle(posX, posY) {
     // ctx.clearRect(0,0, innerWidth, innerHeight);
     ctx.beginPath();
-    ctx.lineWidth = 5;
-    ctx.strokeStyle = "black";
+    ctx.lineWidth = thickness[indexThickness];
+    ctx.strokeStyle = activeColor;
     console.log(posArrayX, posArrayY);
     ctx.arc(posX, posY, Math.abs(((firstPosClickX-posX)+(firstPosClickY-posY))/2), Math.PI * 2, false);
     // ctx.lineTo(posArrayX[0],posArrayY[0]);
