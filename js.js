@@ -14,6 +14,7 @@ jQuery(document).ready(function($) {
   let firstPosClickX = 0;
   let firstPosClickY = 0;
   let activeButtons = [];
+  let activeColor = "black";
   //let index = 0;
 
   /*The Canvas API provides a means for drawing graphics
@@ -59,6 +60,16 @@ jQuery(document).ready(function($) {
     // console.log("rect.top: " + rect.top);
     return [x, y];
   }
+
+
+  /*get active color*/
+$(".colorChart").click( (e) => {
+  console.log(`clicked at: ${e.target.id}`);
+  activeColor = e.target.id;
+  console.log(`the active color is: ${e.target.id}`);
+});
+
+// $(".colorChart").css("color", "red");
 
   function draw(posX, posY) {
     ctx.beginPath();

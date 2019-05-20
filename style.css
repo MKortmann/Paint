@@ -13,6 +13,65 @@ nav {
   text-align: center;
 }
 
+.colorChart {
+	display: grid;
+	grid-template-columns: auto auto auto auto auto auto auto auto auto auto;
+	background: white;
+	grid-gap: 1px;
+	/**top, right, bottom, left*/
+	padding: 2px 2px 2px 2px;
+	border-radius: 8px;
+	max-width: 300px;
+	justify-content: space-evenly;
+	margin: auto;
+	/** big grid stay at the center*/
+	border: 1.5px solid;
+	margin-top: 30px;
+}
+
+.box {
+  border-style: solid;
+  border-width: 1px;
+  border-radius: 4px;
+  cursor: pointer;
+
+}
+
+.box.b10 {
+  background-color: black;
+}
+.box.b11 {
+  background-color: darkgray;
+}
+
+.box.b12 {
+  background-color: gray;
+}
+.box.b13 {
+  background-color: darkred;
+}
+
+.box.b14 {
+  background-color: red;
+}
+.box.b15 {
+  background-color: orange;
+}
+.box.b16 {
+  background-color: yellow;
+}
+.box.b17 {
+  background-color: blue;
+}
+.box.b18 {
+  background-color: darkblue;
+}
+.box.b19 {
+  background-color: purple;
+}
+
+section.colorChart {}
+
 #canvas {
   width: 600px;
   height: 600px;
