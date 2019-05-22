@@ -97,10 +97,14 @@ width and height attributes explicitly in the <canvas> attributes, and not using
     ctx.arc(302, 350, 40, 0, Math.PI * 2, true);  // Right eye
     ctx.fill();
 
-    //clear call
-    setTimeout(()=> {
-      ctx.clearRect(0,0, innerWidth, innerHeight);
-    },3000);
+    //Nice way to clear
+    for(let index=0; index <= 310; index = index + 0.3) {
+      setTimeout( function() {
+        ctx.strokeStyle = "white";
+        ctx.arc(300, 300, index, 0, Math.PI * 2, true); // Outer circle
+        ctx.stroke();
+      }.bind(index), 3000);
+    }
   }
 
   function getCursorPosition(canvas, event) {
