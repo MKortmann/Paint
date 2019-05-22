@@ -40,6 +40,13 @@ jQuery(document).ready(function($) {
 
   /*resizing: to avoid cursor position problem, sometimes fine in some browsers and
   sometimes not. So, let's resize as soon as the document is loaded.*/
+/*The element can be sized arbitrarily by CSS, but during rendering the image is
+scaled to fit its layout size: if the CSS sizing doesn't respect the ratio of the
+initial canvas, it will appear distorted.*/
+
+/*Another important note:  If your renderings seem distorted, try specifying your
+width and height attributes explicitly in the <canvas> attributes, and not using CSS.*/
+
   function resizeCanvas(width, height) {
     canvas[0].width = width;
     canvas[0].height = height;
@@ -64,7 +71,7 @@ jQuery(document).ready(function($) {
       console.log(" rect.left: " +  rect.left);
     console.log("event.pagey: " + event.pageY);
     console.log("rect.top: " + rect.top);
-    return [x, y-52];
+    return [x, y];
   }
 
 
@@ -145,7 +152,8 @@ $(".gridThickness").click( (e) => {
     ctx.beginPath();
     ctx.lineWidth = thickness[indexThickness];
     ctx.lineCap = "round";
-    ctx.fillStyle = activeColor;
+    // ctx.fillStyle = activeColor;
+    ctx.strokeStyle = activeColor;
     console.log(firstPosClickX, firstPosClickY);
     // ctx.fillRect(x, y, width, height);
 
@@ -153,7 +161,11 @@ $(".gridThickness").click( (e) => {
     let height = posY - firstPosClickY;
     console.log(width);
     console.log(height);
-    ctx.fillRect(firstPosClickX, firstPosClickY, width, height);
+    //ctx.fillRect-> draw and fill the inside of a rectangle
+    // ctx.fillRect(firstPosClickX, firstPosClickY, width, height);
+    //Draw the countour of a rectangle
+    ctx.rect(firstPosClickX, firstPosClickY, width, height);
+    ctx.stroke();
   }
 
   function drawRectGhost(posX, posY) {
@@ -392,6 +404,12 @@ $(".gridThickness").click( (e) => {
   $(".bCircle").click(() => {
     $(".bCircle").toggleClass("active");
     activeButtons.push(".bCircle");
+    resetButtons();
+  });
+
+  $(".bSelect").click(() => {
+    $(".bSelect").toggleClass("active");
+    activeButtons.push(".bSelect");
     resetButtons();
   });
 
