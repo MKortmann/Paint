@@ -26,14 +26,20 @@ jQuery(document).ready(function($) {
   game graphics, data visualization, photo manipulation,
   and real-time video processing.*/
 
-  /*We need to get the canvas!*/
+  /*We need to get the canvas!
+  The first line in the script retrieves the node in the DOM representing the
+  <canvas> element by calling the document.getElementById() method. */
   const canvas = $("#canvas"); //document.getElementById
   /*jQuery exposes the actual DOM element in numeric
   indexes, where you can perform normal JavaScript/DOM functions.*/
   //javaScript ohne [0];
   /*We need to specific write the kind of environment we are
   working: is it 2D or 3D!*/
-  const ctx = canvas[0].getContext("2d");
+  // if(canvas[0].getContext) {
+    const ctx = canvas[0].getContext("2d");
+  // } else {
+  //   alert("Sorry, the canvas is unsupported in your browser");
+  // }
   /*I have also seen that it's often preferred to use .get(0) to
   reference a jquery target as HTML element:
   var myCanvasElem = $("#canvas").get(0);*/
@@ -55,6 +61,47 @@ width and height attributes explicitly in the <canvas> attributes, and not using
   }
   /*You make sure that the attributes of canvas and css are the same!*/
   resizeCanvas(600, 600);
+
+ smileFace();
+
+  function smileFace() {
+    ctx.beginPath();
+    ctx.strokeStyle = "black";
+    //Big Circle//////////////////
+    ctx.arc(300, 300, 300, 0, Math.PI * 2, true); // Outer circle
+    //Mouth
+    ctx.moveTo(500, 300);
+    // Mouth (clockwise) - outside part
+    ctx.arc(300, 300, 200, 0, Math.PI, false);
+    // Mouth (clockwise) - inside part
+    ctx.moveTo(500, 300);
+    ctx.arc(300, 300, 220, 0, Math.PI, false);  // Mouth (clockwise)
+    ctx.moveTo(80, 300);
+    ctx.lineTo(100,300)
+    // ctx.closePath();
+    ctx.stroke();
+    ctx.beginPath();
+    //eyes
+    ctx.moveTo(260, 200);
+    //eye left
+    ctx.arc(200, 200, 60, 0, Math.PI * 2, true);  // Left eye
+    ctx.moveTo(460, 200);
+    //eye right
+    ctx.arc(400, 200, 60, 0, Math.PI * 2, true);  // Right eye
+    ctx.strokeStyle = "blue";
+    ctx.stroke();
+    //nose
+    ctx.beginPath();
+    ctx.moveTo(342, 350);
+    ctx.fillStyle = "red";
+    ctx.arc(302, 350, 40, 0, Math.PI * 2, true);  // Right eye
+    ctx.fill();
+
+    //clear call
+    setTimeout(()=> {
+      ctx.clearRect(0,0, innerWidth, innerHeight);
+    },3000);
+  }
 
   function getCursorPosition(canvas, event) {
     //you can get the bounding box of any element by calling getBoundingClientRecht
@@ -89,12 +136,23 @@ $(".gridThickness").click( (e) => {
 // $(".colorChart").css("color", "red");
 
   function draw(posX, posY) {
+    //create a new path
     ctx.beginPath();
+    //path width
     ctx.lineWidth = thickness[indexThickness];
     ctx.lineCap = "round";
     ctx.strokeStyle = activeColor;
+    //draws a straightLine from the current drawing position to the position
+    //specified by posX, posY
     ctx.lineTo(posX, posY);
+    //draws the shape by stroking its outline
     ctx.stroke();
+    //close is an option step that tries to close the path
+    //by drawing a straight line from the current point to the start.
+    //closePath();
+    //Fill: when you call fill(), any open shapes are closed automatically.
+    //when you call fill any open shape are closed automatically. so you do not
+    //need to call stroke();
   }
 
   function erase(posX, posY) {
@@ -181,7 +239,9 @@ $(".gridThickness").click( (e) => {
     let height = posY - firstPosClickY;
     console.log(width);
     console.log(height);
-    ctx.fillRect(firstPosClickX, firstPosClickY, width, height);
+    // ctx.fillRect(firstPosClickX, firstPosClickY, width, height);
+    ctx.rect(firstPosClickX, firstPosClickY, width, height);
+    ctx.stroke();
 
     setTimeout(function() {
       //ctx.clearRect(0,0, innerWidth, innerHeight);
@@ -200,7 +260,9 @@ $(".gridThickness").click( (e) => {
     let height = posY - firstPosClickY;
     console.log(width);
     console.log(height);
+    /*clear and fill Rect have the same results*/
     ctx.fillRect(firstPosClickX, firstPosClickY, width, height);
+    // ctx.clearRect(firstPosClickX, firstPosClickY, width, height);
 
   }
 
