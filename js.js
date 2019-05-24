@@ -1,4 +1,8 @@
 "use strict";
+/*
+Using quadratic and cubic Bézier curves can be quite challenging, because unlike
+ vector drawing software like Adobe Illustrator, we don't have direct visual
+ feedback as to what we're doing. */
 /*Udemy jQuery Lektion 82*/
 jQuery(document).ready(function($) {
 
@@ -7,6 +11,7 @@ jQuery(document).ready(function($) {
   let eraseActive = false;
   let rectActive = false;
   let circleActive = false;
+  let bezierActive = false;
   let straightLine = false;
   let straightLine2 = false;
   let posArrayX = [];
@@ -62,14 +67,23 @@ width and height attributes explicitly in the <canvas> attributes, and not using
   /*You make sure that the attributes of canvas and css are the same!*/
   resizeCanvas(600, 600);
 
- smileFace();
+ // smileFace();
 
   function smileFace() {
     ctx.beginPath();
     ctx.strokeStyle = "black";
     //Big Circle//////////////////
+    //arc(x,y,radius,startAngle, endAngle, anticlockwise);
+    //Draw an arc which is centerd at (x,y),
+    //Angles in the arc function are measured in radians, not degress.
     ctx.arc(300, 300, 300, 0, Math.PI * 2, true); // Outer circle
+    /*Another way to draw an arc is to type:
+    arcTo(x1, y1, x2, y2, radius)
+    It draws an arc with the given control poionts and radius, connected to the
+    previous point by a straight line.*/
+
     //Mouth
+    //MoveTo: moves the pen to the coordinates specified by x,y
     ctx.moveTo(500, 300);
     // Mouth (clockwise) - outside part
     ctx.arc(300, 300, 200, 0, Math.PI, false);
@@ -77,6 +91,7 @@ width and height attributes explicitly in the <canvas> attributes, and not using
     ctx.moveTo(500, 300);
     ctx.arc(300, 300, 220, 0, Math.PI, false);  // Mouth (clockwise)
     ctx.moveTo(80, 300);
+    //draws a line from the current drawing position to the position specified x,y
     ctx.lineTo(100,300)
     // ctx.closePath();
     ctx.stroke();
@@ -314,6 +329,43 @@ $(".gridThickness").click( (e) => {
     ctx.stroke();
   }
 
+  /////FOR Bezier//////////////////////////////
+  function drawBezierGhost(posX, posY) {
+    // ctx.clearRect(0,0, innerWidth, innerHeight);
+    ctx.beginPath();
+    ctx.lineWidth = thickness[indexThickness];
+    ctx.strokeStyle = activeColor;
+    console.log(posArrayX, posArrayY);
+    //quadraticCurveTo(cp1x, cp1y, x, y)
+    //x,y = coordinates of the end poionts of the curve
+    //cp1x, cp1y = coordinates of the first control point
+    //In this case I think we have to use the moveTo
+    ctx.moveTo(firstPosClickX, firstPosClickY);
+    ctx.quadraticCurveTo(100, 100, posX, posY);
+    ctx.stroke();
+
+    setTimeout(function() {
+      //ctx.clearRect(0,0, innerWidth, innerHeight);
+      deleteDrawBezierGhost(posX, posY);
+    },30);
+  }
+
+  function deleteDrawBezierGhost(posX, posY) {
+    // ctx.clearRect(0,0, innerWidth, innerHeight);
+    ctx.beginPath();
+    ctx.lineWidth = thickness[indexThickness]+2;
+    ctx.strokeStyle = "white";
+    console.log(posArrayX, posArrayY);
+    //quadraticCurveTo(cp1x, cp1y, x, y)
+    //x,y = coordinates of the end poionts of the curve
+    //cp1x, cp1y = coordinates of the first control point
+    //In this case I think we have to use the moveTo
+    ctx.moveTo(firstPosClickX, firstPosClickY);
+    ctx.quadraticCurveTo(100, 100, posX, posY);
+    ctx.stroke();
+  }
+
+
   ////////////////////////////////
 
   $("#canvas").mousedown(function(event) {
@@ -348,6 +400,13 @@ $(".gridThickness").click( (e) => {
       firstPosClickX = cursorPositions[0];
       firstPosClickY = cursorPositions[1];
     };
+
+    if ($(".bBezier").hasClass("active")) {
+      bezierActive = true;
+      let cursorPositions = getCursorPosition(canvas, event);
+      firstPosClickX = cursorPositions[0];
+      firstPosClickY = cursorPositions[1];
+    };
   })
 
   $("#canvas").mousemove(function(event) {
@@ -373,6 +432,11 @@ $(".gridThickness").click( (e) => {
     if (circleActive) {
       let cursorPositions = getCursorPosition(canvas, event);
       drawCircleGhost(cursorPositions[0], cursorPositions[1]);
+    }
+
+    if (bezierActive) {
+      let cursorPositions = getCursorPosition(canvas, event);
+      drawBezierGhost(cursorPositions[0], cursorPositions[1]);
     }
 
   });
@@ -407,6 +471,10 @@ $(".gridThickness").click( (e) => {
       straightLine = false;
       posArrayX = [];
       posArrayY = [];
+    }
+
+    if (bezierActive) {
+      bezierActive = false;
     }
 
   })
@@ -470,6 +538,13 @@ $(".gridThickness").click( (e) => {
   $(".bCircle").click(() => {
     $(".bCircle").toggleClass("active");
     activeButtons.push(".bCircle");
+    resetButtons();
+  });
+
+  //bBezier
+  $(".bBezier").click(() => {
+    $(".bBezier").toggleClass("active");
+    activeButtons.push(".bBezier");
     resetButtons();
   });
 
