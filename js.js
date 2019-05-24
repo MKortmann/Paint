@@ -1,4 +1,7 @@
 "use strict";
+
+/*TODO THOUGHTS: we need an array to push the values of x, y of the mouse position.
+The ghost function should delete and use these values.*/
 /*
 Using quadratic and cubic Bézier curves can be quite challenging, because unlike
  vector drawing software like Adobe Illustrator, we don't have direct visual
@@ -330,6 +333,21 @@ $(".gridThickness").click( (e) => {
   }
 
   /////FOR Bezier//////////////////////////////
+  function drawBezier(posX, posY) {
+    // ctx.clearRect(0,0, innerWidth, innerHeight);
+    ctx.beginPath();
+    ctx.lineWidth = thickness[indexThickness];
+    ctx.strokeStyle = activeColor;
+    console.log(posArrayX, posArrayY);
+    //quadraticCurveTo(cp1x, cp1y, x, y)
+    //x,y = coordinates of the end poionts of the curve
+    //cp1x, cp1y = coordinates of the first control point
+    //In this case I think we have to use the moveTo
+    ctx.moveTo(firstPosClickX, firstPosClickY);
+    ctx.quadraticCurveTo(100, 100, posX, posY);
+    ctx.stroke();
+  }
+
   function drawBezierGhost(posX, posY) {
     // ctx.clearRect(0,0, innerWidth, innerHeight);
     ctx.beginPath();
@@ -344,16 +362,15 @@ $(".gridThickness").click( (e) => {
     ctx.quadraticCurveTo(100, 100, posX, posY);
     ctx.stroke();
 
-    setTimeout(function() {
-      //ctx.clearRect(0,0, innerWidth, innerHeight);
-      deleteDrawBezierGhost(posX, posY);
-    },30);
+    setTimeout(()=> {
+      deleteDrawBezierGhost(posX, posY) ;
+    },50)
   }
 
   function deleteDrawBezierGhost(posX, posY) {
     // ctx.clearRect(0,0, innerWidth, innerHeight);
     ctx.beginPath();
-    ctx.lineWidth = thickness[indexThickness]+2;
+    ctx.lineWidth = thickness[indexThickness]+4;
     ctx.strokeStyle = "white";
     console.log(posArrayX, posArrayY);
     //quadraticCurveTo(cp1x, cp1y, x, y)
@@ -361,7 +378,7 @@ $(".gridThickness").click( (e) => {
     //cp1x, cp1y = coordinates of the first control point
     //In this case I think we have to use the moveTo
     ctx.moveTo(firstPosClickX, firstPosClickY);
-    ctx.quadraticCurveTo(100, 100, posX, posY);
+    ctx.quadraticCurveTo(100, 100, posX+4, posY+4 );
     ctx.stroke();
   }
 
@@ -448,7 +465,6 @@ $(".gridThickness").click( (e) => {
     stiftActive = false;
     eraseActive = false;
 
-
     if(rectActive) {
       let cursorPositions = getCursorPosition(canvas, event);
       drawRect(cursorPositions[0], cursorPositions[1]);
@@ -475,6 +491,8 @@ $(".gridThickness").click( (e) => {
 
     if (bezierActive) {
       bezierActive = false;
+      let cursorPositions = getCursorPosition(canvas, event);
+      drawBezier(cursorPositions[0], cursorPositions[1]);
     }
 
   })
