@@ -4,6 +4,10 @@
 1) Bezier Curve the coordinates are not correct in the tutorial.
 At least, it is not matching the code! TOBECHECKED!
 
+2) Generate a palettes of color through js
+https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Applying_styles_and_colors
+
+
 2) we need an array to push the values of x, y of the mouse position.
 The ghost function should delete and use these values.
 
@@ -32,8 +36,10 @@ jQuery(document).ready(function($) {
   let firstPosClickY = 0;
   let activeButtons = [];
   let activeColor = "black";
-  let thickness = [4,8,12,16,20,24,28,36,42];
-  let indexThickness = 0;
+  let transparency = 1;
+  let thickness = 5;
+  // let thickness = [4,8,12,16,20,24,28,36,42];
+  // let indexThickness = 0;
 
   //let index = 0;
 
@@ -115,11 +121,13 @@ width and height attributes explicitly in the <canvas> attributes, and not using
     ctx.moveTo(460, 200);
     //eye right
     ctx.arc(400, 200, 60, 0, Math.PI * 2, true);  // Right eye
+    //Sets the style for shapes outlines
     ctx.strokeStyle = "blue";
     ctx.stroke();
     //nose
     ctx.beginPath();
     ctx.moveTo(342, 350);
+    //Sets the style used when filling shapes
     ctx.fillStyle = "red";
     ctx.arc(302, 350, 40, 0, Math.PI * 2, true);  // Right eye
     ctx.fill();
@@ -159,10 +167,10 @@ $(".colorChart").click( (e) => {
   activeColor = e.target.id;
 });
 
-$(".gridThickness").click( (e) => {
-  console.log(`the thickness is: ${e.target.id}`);
-  indexThickness = e.target.id;
-})
+// $(".gridThickness").click( (e) => {
+//   console.log(`the thickness is: ${e.target.id}`);
+//   indexThickness = e.target.id;
+// })
 
 // $(".colorChart").css("color", "red");
 
@@ -170,9 +178,10 @@ $(".gridThickness").click( (e) => {
     //create a new path
     ctx.beginPath();
     //path width
-    ctx.lineWidth = thickness[indexThickness];
+    ctx.lineWidth = thickness;
     ctx.lineCap = "round";
     ctx.strokeStyle = activeColor;
+    ctx.globalAlpha = transparency;
     //draws a straightLine from the current drawing position to the position
     //specified by posX, posY
     ctx.lineTo(posX, posY);
@@ -188,7 +197,7 @@ $(".gridThickness").click( (e) => {
 
   function erase(posX, posY) {
     ctx.beginPath();
-    ctx.lineWidth = thickness[indexThickness];
+    ctx.lineWidth = thickness;
     ctx.lineCap = "round";
     ctx.strokeStyle = "white";
     ctx.lineTo(posX, posY);
@@ -201,9 +210,10 @@ $(".gridThickness").click( (e) => {
   function drawStraightLine(posArrayX, posArrayY) {
     // ctx.clearRect(0,0, innerWidth, innerHeight);
     ctx.beginPath();
-    ctx.lineWidth = thickness[indexThickness];
+    ctx.lineWidth = thickness;
     ctx.lineCap = "round";
     ctx.strokeStyle = activeColor;
+    ctx.globalAlpha = transparency;
     ctx.lineTo(posArrayX[0], posArrayY[0]);
     ctx.lineTo(posArrayX[1], posArrayY[1]);
     ctx.stroke();
@@ -239,10 +249,11 @@ $(".gridThickness").click( (e) => {
   function drawRect(posX, posY) {
     // ctx.clearRect(0,0, innerWidth, innerHeight);
     ctx.beginPath();
-    ctx.lineWidth = thickness[indexThickness];
+    ctx.lineWidth = thickness;
     ctx.lineCap = "round";
     // ctx.fillStyle = activeColor;
     ctx.strokeStyle = activeColor;
+    ctx.globalAlpha = transparency;
     console.log(firstPosClickX, firstPosClickY);
     // ctx.fillRect(x, y, width, height);
 
@@ -303,8 +314,9 @@ $(".gridThickness").click( (e) => {
   function drawCircle(posX, posY) {
     // ctx.clearRect(0,0, innerWidth, innerHeight);
     ctx.beginPath();
-    ctx.lineWidth = thickness[indexThickness];
+    ctx.lineWidth = thickness;
     ctx.strokeStyle = activeColor;
+    ctx.globalAlpha = transparency;
     console.log(posArrayX, posArrayY);
     ctx.arc(posX, posY, Math.abs(((firstPosClickX-posX)+(firstPosClickY-posY))/2), Math.PI * 2, false);
     // ctx.lineTo(posArrayX[0],posArrayY[0]);
@@ -345,8 +357,9 @@ $(".gridThickness").click( (e) => {
   function drawBezier(posX, posY) {
     // ctx.clearRect(0,0, innerWidth, innerHeight);
     ctx.beginPath();
-    ctx.lineWidth = thickness[indexThickness];
+    ctx.lineWidth = thickness;
     ctx.strokeStyle = activeColor;
+    ctx.globalAlpha = transparency;
     // console.log(posArrayX, posArrayY);
     //quadraticCurveTo(cp1x, cp1y, x, y)
     //x,y = coordinates of the end poionts of the curve
@@ -362,8 +375,9 @@ $(".gridThickness").click( (e) => {
     // ctx.clearRect(0,0, innerWidth, innerHeight);
 
     ctx.beginPath();
-    ctx.lineWidth = thickness[indexThickness];
+    ctx.lineWidth = thickness;
     ctx.strokeStyle = activeColor;
+    ctx.globalAlpha = transparency;
     // console.log(posArrayX, posArrayY);
     //quadraticCurveTo(cp1x, cp1y, x, y)
     //x,y = coordinates of the end poionts of the curve
@@ -381,7 +395,7 @@ $(".gridThickness").click( (e) => {
   function deleteDrawBezierGhost(posX, posY) {
     // ctx.clearRect(0,0, innerWidth, innerHeight);
     ctx.beginPath();
-    ctx.lineWidth = thickness[indexThickness]+20;
+    ctx.lineWidth = thickness+20;
     ctx.strokeStyle = "white";
     // console.log(posArrayX, posArrayY);
     //quadraticCurveTo(cp1x, cp1y, x, y)
@@ -397,8 +411,9 @@ $(".gridThickness").click( (e) => {
   function drawBezierCurve(posX, posY) {
     // ctx.clearRect(0,0, innerWidth, innerHeight);
     ctx.beginPath();
-    ctx.lineWidth = thickness[indexThickness];
+    ctx.lineWidth = thickness;
     ctx.strokeStyle = activeColor;
+    ctx.globalAlpha = transparency;
     console.log(posArrayX, posArrayY);
     //quadraticCurveTo(cp1x, cp1y, x, y)
     //x,y = coordinates of the end poionts of the curve
@@ -415,8 +430,9 @@ $(".gridThickness").click( (e) => {
   function drawBezierCurveGhost(posX, posY) {
     // ctx.clearRect(0,0, innerWidth, innerHeight);
     ctx.beginPath();
-    ctx.lineWidth = thickness[indexThickness];
+    ctx.lineWidth = thickness;
     ctx.strokeStyle = activeColor;
+    ctx.globalAlpha = transparency;
     console.log(posArrayX, posArrayY);
     //quadraticCurveTo(cp1x, cp1y, x, y)
     //x,y = coordinates of the end poionts of the curve
@@ -436,7 +452,7 @@ $(".gridThickness").click( (e) => {
   function deleteDrawBezierCurveGhost(posX, posY) {
     // ctx.clearRect(0,0, innerWidth, innerHeight);
     ctx.beginPath();
-    ctx.lineWidth = thickness[indexThickness]+20;
+    ctx.lineWidth = thickness+20;
     ctx.strokeStyle = "white";
     console.log(posArrayX, posArrayY);
     //quadraticCurveTo(cp1x, cp1y, x, y)
@@ -466,25 +482,25 @@ our code!
 
 */
 
-function draw() {
-
-  let rectangle = new Path2D();
-  rectangle.rect(10,10,50,50);
-
-  let circle = new Path2D();
-  circle.moveTo(125,35);
-  circle.arc(100,35,25,0,2*Math.PI);
-console.log("Canvas Width': " + canvas.width);
-  for(var indexX=100; indexX < 600; indexX = indexX + 52) {
-    circle.arc(indexX,35,25,0,2*Math.PI);
-    // ctx.stroke(circle);
-    console.log(`Circles: ${circle}`);
-  }
-  console.log("outside");
-  ctx.fill(rectangle);
-  ctx.stroke(circle);
-  debugger
-}
+// function draw() {
+//
+//   let rectangle = new Path2D();
+//   rectangle.rect(10,10,50,50);
+//
+//   let circle = new Path2D();
+//   circle.moveTo(125,35);
+//   circle.arc(100,35,25,0,2*Math.PI);
+// console.log("Canvas Width': " + canvas.width);
+//   for(var indexX=100; indexX < 600; indexX = indexX + 52) {
+//     circle.arc(indexX,35,25,0,2*Math.PI);
+//     // ctx.stroke(circle);
+//     console.log(`Circles: ${circle}`);
+//   }
+//   console.log("outside");
+//   ctx.fill(rectangle);
+//   ctx.stroke(circle);
+//
+// }
 
 /*Using SVG paths*/
 /*Another powerful feature of the new canvas Path2D API is using SVG path data
@@ -495,12 +511,12 @@ The path will move to point (M10 10) and then move horizontally 80 points to
 the right (h 80), then 80 points down (v 80), then 80 points to the left (h -80),
 and then back to the start (z).
 */
-function SVG() {
-  let p = new Path2D('M10 10 h 80 v 180 h -80 Z');
-  ctx.stroke(p);
-}
+// function SVG() {
+//   let p = new Path2D('M10 10 h 80 v 180 h -80 Z');
+//   ctx.stroke(p);
+// }
 
-SVG();
+// SVG();
 // draw();
 
 
@@ -833,6 +849,18 @@ SVG();
     resetButtons();
 
   });
+
+$("#transparency").change( () => {
+  transparency = $("#transparency")[0].value;
+  console.log($("#transparency")[0].value);
+});
+
+$("#thickness").change( () => {
+  thickness = $("#thickness")[0].value;
+  console.log($("#thickness")[0].value);
+})
+
+
 
   /*if you resize the window, then you have
   to click the .bZoom again or addAnEventListener*/
