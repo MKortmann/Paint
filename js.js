@@ -1,7 +1,15 @@
 "use strict";
 
-/*TODO THOUGHTS: we need an array to push the values of x, y of the mouse position.
-The ghost function should delete and use these values.*/
+/*TODO:
+1) Bezier Curve the coordinates are not correct in the tutorial.
+At least, it is not matching the code! TOBECHECKED!
+
+2) we need an array to push the values of x, y of the mouse position.
+The ghost function should delete and use these values.
+
+
+
+*/
 /*
 Using quadratic and cubic Bézier curves can be quite challenging, because unlike
  vector drawing software like Adobe Illustrator, we don't have direct visual
@@ -442,7 +450,62 @@ $(".gridThickness").click( (e) => {
     ctx.stroke();
   }
 
-  ////////////////////////////////
+/*
+Path2D Objects
+// The Path2D() constructor returns a newly instantiated Path2D object, optionally with
+another path as an argument (creates a copy), or optionally with a string consisting of SVG path data.
+new Path2D();     // empty path object
+new Path2D(path); // copy from another Path2D object
+new Path2D(d);    // path from SVG path data
+All path methods like moveTo, rect, arc or quadraticCurveTo, etc., which we got
+to know above, are available on Path2D objects.
+
+It is easier to use it to copy and past, so I will do
+above an simple example. We will use it to improve
+our code!
+
+*/
+
+function draw() {
+
+  let rectangle = new Path2D();
+  rectangle.rect(10,10,50,50);
+
+  let circle = new Path2D();
+  circle.moveTo(125,35);
+  circle.arc(100,35,25,0,2*Math.PI);
+console.log("Canvas Width': " + canvas.width);
+  for(var indexX=100; indexX < 600; indexX = indexX + 52) {
+    circle.arc(indexX,35,25,0,2*Math.PI);
+    // ctx.stroke(circle);
+    console.log(`Circles: ${circle}`);
+  }
+  console.log("outside");
+  ctx.fill(rectangle);
+  ctx.stroke(circle);
+  debugger
+}
+
+/*Using SVG paths*/
+/*Another powerful feature of the new canvas Path2D API is using SVG path data
+ to initialize paths on your canvas. */
+
+/*
+The path will move to point (M10 10) and then move horizontally 80 points to
+the right (h 80), then 80 points down (v 80), then 80 points to the left (h -80),
+and then back to the start (z).
+*/
+function SVG() {
+  let p = new Path2D('M10 10 h 80 v 180 h -80 Z');
+  ctx.stroke(p);
+}
+
+SVG();
+// draw();
+
+
+  ////////////////////////////////////////////////////
+  //MOUSEEEEEEEEEEEEEEEEEEEEEEEE
 
   $("#canvas").mousedown(function(event) {
     if ($(".bStift").hasClass("active")) {
