@@ -14,7 +14,8 @@ jQuery(document).ready(function($) {
   let eraseActive = false;
   let rectActive = false;
   let circleActive = false;
-  let bezierActive = false;
+  let bezierQActive = false;
+  let bezierCActive = false;
   let straightLine = false;
   let straightLine2 = false;
   let posArrayX = [];
@@ -136,10 +137,10 @@ width and height attributes explicitly in the <canvas> attributes, and not using
 
     const x = (event.pageX - rect.left);
     const y = (event.pageY - rect.top);
-    console.log("event.pageX: " + event.pageX);
-      console.log(" rect.left: " +  rect.left);
-    console.log("event.pagey: " + event.pageY);
-    console.log("rect.top: " + rect.top);
+    // console.log("event.pageX: " + event.pageX);
+    //   console.log(" rect.left: " +  rect.left);
+    // console.log("event.pagey: " + event.pageY);
+    // console.log("rect.top: " + rect.top);
     return [x, y];
   }
 
@@ -332,34 +333,36 @@ $(".gridThickness").click( (e) => {
     ctx.stroke();
   }
 
-  /////FOR Bezier//////////////////////////////
+  /////FOR Bezier Quadratic//////////////////////////////
   function drawBezier(posX, posY) {
     // ctx.clearRect(0,0, innerWidth, innerHeight);
     ctx.beginPath();
     ctx.lineWidth = thickness[indexThickness];
     ctx.strokeStyle = activeColor;
-    console.log(posArrayX, posArrayY);
+    // console.log(posArrayX, posArrayY);
     //quadraticCurveTo(cp1x, cp1y, x, y)
     //x,y = coordinates of the end poionts of the curve
     //cp1x, cp1y = coordinates of the first control point
     //In this case I think we have to use the moveTo
-    ctx.moveTo(firstPosClickX, firstPosClickY);
-    ctx.quadraticCurveTo(100, 100, posX, posY);
+    ctx.moveTo(posArrayX[0], posArrayY[0])
+    // ctx.quadraticCurveTo(canvas.width/2, canvas.height/2, posX, posY);
+    ctx.quadraticCurveTo(posX, posY, posArrayX[1], posArrayY[1]);
     ctx.stroke();
   }
 
   function drawBezierGhost(posX, posY) {
     // ctx.clearRect(0,0, innerWidth, innerHeight);
+
     ctx.beginPath();
     ctx.lineWidth = thickness[indexThickness];
     ctx.strokeStyle = activeColor;
-    console.log(posArrayX, posArrayY);
+    // console.log(posArrayX, posArrayY);
     //quadraticCurveTo(cp1x, cp1y, x, y)
     //x,y = coordinates of the end poionts of the curve
     //cp1x, cp1y = coordinates of the first control point
     //In this case I think we have to use the moveTo
-    ctx.moveTo(firstPosClickX, firstPosClickY);
-    ctx.quadraticCurveTo(100, 100, posX, posY);
+    ctx.moveTo(posArrayX[0], posArrayY[0]);
+    ctx.quadraticCurveTo(posX, posY, posArrayX[1], posArrayY[1]);
     ctx.stroke();
 
     setTimeout(()=> {
@@ -370,18 +373,74 @@ $(".gridThickness").click( (e) => {
   function deleteDrawBezierGhost(posX, posY) {
     // ctx.clearRect(0,0, innerWidth, innerHeight);
     ctx.beginPath();
-    ctx.lineWidth = thickness[indexThickness]+4;
+    ctx.lineWidth = thickness[indexThickness]+20;
+    ctx.strokeStyle = "white";
+    // console.log(posArrayX, posArrayY);
+    //quadraticCurveTo(cp1x, cp1y, x, y)
+    //x,y = coordinates of the end poionts of the curve
+    //cp1x, cp1y = coordinates of the first control point
+    //In this case I think we have to use the moveTo
+    ctx.moveTo(posArrayX[0], posArrayY[0]);
+    ctx.quadraticCurveTo(posX, posY, posArrayX[1], posArrayY[1]);
+    ctx.stroke();
+  }
+
+  /////FOR Bezier Curve//////////////////////////////
+  function drawBezierCurve(posX, posY) {
+    // ctx.clearRect(0,0, innerWidth, innerHeight);
+    ctx.beginPath();
+    ctx.lineWidth = thickness[indexThickness];
+    ctx.strokeStyle = activeColor;
+    console.log(posArrayX, posArrayY);
+    //quadraticCurveTo(cp1x, cp1y, x, y)
+    //x,y = coordinates of the end poionts of the curve
+    //cp1x, cp1y = coordinates of the first control point
+    //In this case I think we have to use the moveTo
+    ctx.moveTo(posArrayX[0], posArrayY[0]);
+    // bezierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y)
+
+    //ctx.quadraticCurveTo(posArrayX[1], posArrayY[1], posArrayX[2], posArrayY[2], posX, posY);
+    ctx.quadraticCurveTo(posArrayX[1], posArrayY[1], posX, posY, posArrayX[2], posArrayY[2]);
+    ctx.stroke();
+  }
+
+  function drawBezierCurveGhost(posX, posY) {
+    // ctx.clearRect(0,0, innerWidth, innerHeight);
+    ctx.beginPath();
+    ctx.lineWidth = thickness[indexThickness];
+    ctx.strokeStyle = activeColor;
+    console.log(posArrayX, posArrayY);
+    //quadraticCurveTo(cp1x, cp1y, x, y)
+    //x,y = coordinates of the end poionts of the curve
+    //cp1x, cp1y = coordinates of the first control point
+    //In this case I think we have to use the moveTo
+    ctx.moveTo(posArrayX[0], posArrayY[0]);
+    // ctx.quadraticCurveTo(canvas.width/2, canvas.height/2, posX, posY);
+    //ctx.quadraticCurveTo(posArrayX[1], posArrayY[1], posArrayX[2], posArrayY[2], posX, posY);
+    ctx.quadraticCurveTo(posArrayX[1], posArrayY[1], posX, posY, posArrayX[2], posArrayY[2]);
+    ctx.stroke();
+
+    setTimeout(()=> {
+      deleteDrawBezierCurveGhost(posX, posY) ;
+    },50)
+  }
+
+  function deleteDrawBezierCurveGhost(posX, posY) {
+    // ctx.clearRect(0,0, innerWidth, innerHeight);
+    ctx.beginPath();
+    ctx.lineWidth = thickness[indexThickness]+20;
     ctx.strokeStyle = "white";
     console.log(posArrayX, posArrayY);
     //quadraticCurveTo(cp1x, cp1y, x, y)
     //x,y = coordinates of the end poionts of the curve
     //cp1x, cp1y = coordinates of the first control point
     //In this case I think we have to use the moveTo
-    ctx.moveTo(firstPosClickX, firstPosClickY);
-    ctx.quadraticCurveTo(100, 100, posX+4, posY+4 );
+    ctx.moveTo(posArrayX[0], posArrayY[0]);
+    // ctx.quadraticCurveTo(canvas.width/2, canvas.height/2, posX, posY);
+    //ctx.quadraticCurveTo(posArrayX[1], posArrayY[1], posArrayX[2], posArrayY[2], posX, posY);
+    ctx.quadraticCurveTo(posArrayX[1], posArrayY[1], posX, posY, posArrayX[2], posArrayY[2]);
     ctx.stroke();
   }
-
 
   ////////////////////////////////
 
@@ -418,11 +477,80 @@ $(".gridThickness").click( (e) => {
       firstPosClickY = cursorPositions[1];
     };
 
-    if ($(".bBezier").hasClass("active")) {
-      bezierActive = true;
+    if ($(".bBezierQ").hasClass("active")) {
+        bezierQActive = true;
+        let cursorPositions = getCursorPosition(canvas, event);
+        posArrayX.push(cursorPositions[0]);
+        posArrayY.push(cursorPositions[1]);
+
+        console.log(`posArrayX: ${cursorPositions[0]}`);
+        console.log(`posArrayY: ${cursorPositions[1]}`);
+        switch(posArrayX.length) {
+          case 1:
+            ctx.font = "30px Arial";
+            //fillText(text,x,y); - draws "filled" text on the canvas
+            ctx.fillStyle = "blue";
+            ctx.fillText("1", cursorPositions[0], cursorPositions[1]);
+            break;
+          case 2:
+            //ctx.font = "30px Arial";
+            //fillText(text,x,y); - draws "filled" text on the canvas
+            ctx.fillStyle = "blue";
+            ctx.fillText("2", cursorPositions[0], cursorPositions[1]);
+            break;
+          case 3:
+            //ctx.font = "30px Arial";
+            //fillText(text,x,y); - draws "filled" text on the canvas
+            ctx.fillStyle = "red";
+            ctx.fillText("3", cursorPositions[0], cursorPositions[1]);
+            break;
+
+          default:
+            console.log("not matched");
+
+        }
+
+    };
+
+    if ($(".bBezierC").hasClass("active")) {
+      bezierCActive = true;
       let cursorPositions = getCursorPosition(canvas, event);
-      firstPosClickX = cursorPositions[0];
-      firstPosClickY = cursorPositions[1];
+      posArrayX.push(cursorPositions[0]);
+      posArrayY.push(cursorPositions[1]);
+      console.log(`posArrayX: ${cursorPositions[0]}`);
+      console.log(`posArrayY: ${cursorPositions[1]}`);
+
+      switch(posArrayX.length) {
+        case 1:
+          ctx.font = "30px Arial";
+          //fillText(text,x,y); - draws "filled" text on the canvas
+          ctx.fillStyle = "blue";
+          ctx.fillText("1", cursorPositions[0], cursorPositions[1]);
+          break;
+        case 2:
+          //ctx.font = "30px Arial";
+          //fillText(text,x,y); - draws "filled" text on the canvas
+          ctx.fillStyle = "red";
+          ctx.fillText("2", cursorPositions[0], cursorPositions[1]);
+          break;
+        case 3:
+          //ctx.font = "30px Arial";
+          //fillText(text,x,y); - draws "filled" text on the canvas
+          ctx.fillStyle = "red";
+          ctx.fillText("3", cursorPositions[0], cursorPositions[1]);
+          break;
+
+        case 4:
+          //ctx.font = "30px Arial";
+          //fillText(text,x,y); - draws "filled" text on the canvas
+          ctx.fillStyle = "blue";
+          ctx.fillText("4", cursorPositions[0], cursorPositions[1]);
+          break;
+
+        default:
+          console.log("not matched");
+
+      }
     };
   })
 
@@ -451,9 +579,15 @@ $(".gridThickness").click( (e) => {
       drawCircleGhost(cursorPositions[0], cursorPositions[1]);
     }
 
-    if (bezierActive) {
+    if (bezierQActive) {
       let cursorPositions = getCursorPosition(canvas, event);
       drawBezierGhost(cursorPositions[0], cursorPositions[1]);
+    }
+
+    if (bezierCActive) {
+
+      let cursorPositions = getCursorPosition(canvas, event);
+      drawBezierCurveGhost(cursorPositions[0], cursorPositions[1]);
     }
 
   });
@@ -489,10 +623,46 @@ $(".gridThickness").click( (e) => {
       posArrayY = [];
     }
 
-    if (bezierActive) {
-      bezierActive = false;
+    if(posArrayY.length >= 3 && bezierQActive) {
+      bezierQActive = false;
       let cursorPositions = getCursorPosition(canvas, event);
+      //Erasing the numbers:
+      ctx.fillStyle = "white";
+      ctx.strokeStyle = "white";
+      ctx.font = "30px Arial";
+      ctx.fillText("1", posArrayX[0], posArrayY[0]);
+      ctx.fillText("2", posArrayX[1], posArrayY[1]);
+      ctx.fillText("3", posArrayX[2], posArrayY[2]);
+      ctx.strokeText("1", posArrayX[0], posArrayY[0]);
+      ctx.strokeText("2", posArrayX[1], posArrayY[1]);
+      ctx.strokeText("3", posArrayX[2], posArrayY[2]);
+
       drawBezier(cursorPositions[0], cursorPositions[1]);
+
+      posArrayX = [];
+      posArrayY = [];
+
+    }
+
+
+    if (posArrayY.length >= 4 && bezierCActive) {
+      //Erasing the numbers:
+      ctx.fillStyle = "white";
+      ctx.strokeStyle = "white";
+      ctx.font = "30px Arial";
+      ctx.fillText("1", posArrayX[0], posArrayY[0]);
+      ctx.fillText("2", posArrayX[1], posArrayY[1]);
+      ctx.fillText("3", posArrayX[2], posArrayY[2]);
+      ctx.fillText("4", posArrayX[3], posArrayY[3]);
+      ctx.strokeText("1", posArrayX[0], posArrayY[0]);
+      ctx.strokeText("2", posArrayX[1], posArrayY[1]);
+      ctx.strokeText("3", posArrayX[2], posArrayY[2]);
+      ctx.strokeText("4", posArrayX[3], posArrayY[3]);
+      let cursorPositions = getCursorPosition(canvas, event);
+      drawBezierCurve(cursorPositions[0], cursorPositions[1]);
+      posArrayX = [];
+      posArrayY = [];
+      bezierCActive = false;
     }
 
   })
@@ -559,10 +729,16 @@ $(".gridThickness").click( (e) => {
     resetButtons();
   });
 
-  //bBezier
-  $(".bBezier").click(() => {
-    $(".bBezier").toggleClass("active");
-    activeButtons.push(".bBezier");
+  //bBezierQ
+  $(".bBezierQ").click(() => {
+    $(".bBezierQ").toggleClass("active");
+    activeButtons.push(".bBezierQ");
+    resetButtons();
+  });
+  //bBezierC
+  $(".bBezierC").click(() => {
+    $(".bBezierC").toggleClass("active");
+    activeButtons.push(".bBezierC");
     resetButtons();
   });
 
