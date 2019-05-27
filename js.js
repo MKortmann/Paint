@@ -14,6 +14,21 @@ The ghost function should delete and use these values.
 
 
 */
+/*Tutorial: lines MDN:
+
+lineWidth = value // sets the width of lines drawn in the future.
+lineCap  = type //(defaultvalue = butt) sets the appearance of the ends of lines.
+lineJoin = type // sets the appearance of the "corners" where lines meet
+miterLimit = value // Establishes a limit on the miter when two lines join
+//at a sharp angle, to let you control how the thick the junction becomes.
+
+getLineDash() //returns the current line dash pattern array.
+setLineDash(segments) //sets the current line dash pattern.
+lineDashOffset = value //specifies where to start a dash array on a line.
+
+
+
+*/
 /*
 Using quadratic and cubic Bézier curves can be quite challenging, because unlike
  vector drawing software like Adobe Illustrator, we don't have direct visual
@@ -38,6 +53,8 @@ jQuery(document).ready(function($) {
   let activeColor = "black";
   let transparency = 1;
   let thickness = 5;
+  let lineCap = ["square","round"]; //"butt" lineCap DO NOT WORK, why?
+  let lineCapString = "round";
   // let thickness = [4,8,12,16,20,24,28,36,42];
   // let indexThickness = 0;
 
@@ -179,7 +196,9 @@ $(".colorChart").click( (e) => {
     ctx.beginPath();
     //path width
     ctx.lineWidth = thickness;
-    ctx.lineCap = "round";
+    ctx.lineCap = lineCapString;
+
+    // ctx.lineCap = "round";
     ctx.strokeStyle = activeColor;
     ctx.globalAlpha = transparency;
     //draws a straightLine from the current drawing position to the position
@@ -198,7 +217,7 @@ $(".colorChart").click( (e) => {
   function erase(posX, posY) {
     ctx.beginPath();
     ctx.lineWidth = thickness;
-    ctx.lineCap = "round";
+    ctx.lineCap = lineCapString;
     ctx.strokeStyle = "white";
     ctx.lineTo(posX, posY);
     ctx.stroke();
@@ -211,7 +230,7 @@ $(".colorChart").click( (e) => {
     // ctx.clearRect(0,0, innerWidth, innerHeight);
     ctx.beginPath();
     ctx.lineWidth = thickness;
-    ctx.lineCap = "round";
+    ctx.lineCap = lineCapString;
     ctx.strokeStyle = activeColor;
     ctx.globalAlpha = transparency;
     ctx.lineTo(posArrayX[0], posArrayY[0]);
@@ -250,7 +269,7 @@ $(".colorChart").click( (e) => {
     // ctx.clearRect(0,0, innerWidth, innerHeight);
     ctx.beginPath();
     ctx.lineWidth = thickness;
-    ctx.lineCap = "round";
+    ctx.lineCap = lineCapString;
     // ctx.fillStyle = activeColor;
     ctx.strokeStyle = activeColor;
     ctx.globalAlpha = transparency;
@@ -315,6 +334,7 @@ $(".colorChart").click( (e) => {
     // ctx.clearRect(0,0, innerWidth, innerHeight);
     ctx.beginPath();
     ctx.lineWidth = thickness;
+    ctx.lineCap = lineCapString;
     ctx.strokeStyle = activeColor;
     ctx.globalAlpha = transparency;
     console.log(posArrayX, posArrayY);
@@ -358,6 +378,7 @@ $(".colorChart").click( (e) => {
     // ctx.clearRect(0,0, innerWidth, innerHeight);
     ctx.beginPath();
     ctx.lineWidth = thickness;
+    ctx.lineCap = lineCapString;
     ctx.strokeStyle = activeColor;
     ctx.globalAlpha = transparency;
     // console.log(posArrayX, posArrayY);
@@ -376,6 +397,7 @@ $(".colorChart").click( (e) => {
 
     ctx.beginPath();
     ctx.lineWidth = thickness;
+    ctx.lineCap = lineCapString;
     ctx.strokeStyle = activeColor;
     ctx.globalAlpha = transparency;
     // console.log(posArrayX, posArrayY);
@@ -396,6 +418,7 @@ $(".colorChart").click( (e) => {
     // ctx.clearRect(0,0, innerWidth, innerHeight);
     ctx.beginPath();
     ctx.lineWidth = thickness+20;
+    ctx.lineCap = lineCapString;
     ctx.strokeStyle = "white";
     // console.log(posArrayX, posArrayY);
     //quadraticCurveTo(cp1x, cp1y, x, y)
@@ -412,6 +435,7 @@ $(".colorChart").click( (e) => {
     // ctx.clearRect(0,0, innerWidth, innerHeight);
     ctx.beginPath();
     ctx.lineWidth = thickness;
+    ctx.lineCap = lineCapString;
     ctx.strokeStyle = activeColor;
     ctx.globalAlpha = transparency;
     console.log(posArrayX, posArrayY);
@@ -431,6 +455,7 @@ $(".colorChart").click( (e) => {
     // ctx.clearRect(0,0, innerWidth, innerHeight);
     ctx.beginPath();
     ctx.lineWidth = thickness;
+    ctx.lineCap = lineCapString;
     ctx.strokeStyle = activeColor;
     ctx.globalAlpha = transparency;
     console.log(posArrayX, posArrayY);
@@ -453,6 +478,7 @@ $(".colorChart").click( (e) => {
     // ctx.clearRect(0,0, innerWidth, innerHeight);
     ctx.beginPath();
     ctx.lineWidth = thickness+20;
+    ctx.lineCap = lineCapString;
     ctx.strokeStyle = "white";
     console.log(posArrayX, posArrayY);
     //quadraticCurveTo(cp1x, cp1y, x, y)
@@ -858,6 +884,12 @@ $("#transparency").change( () => {
 $("#thickness").change( () => {
   thickness = $("#thickness")[0].value;
   console.log($("#thickness")[0].value);
+})
+
+$("#lineCap").change( () => {
+  lineCapString = lineCap[($("#lineCap")[0].value)];
+
+  console.log(($("#lineCap")[0].value))
 })
 
 
