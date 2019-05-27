@@ -9,10 +9,12 @@ nav {
 
 }
 
-#lineCap {
+#lineCap,
+#lineDash,
+#gradient {
  max-width: 50px;
  max-height: 26px;
- 
+
 }
 
 .container {
@@ -33,6 +35,7 @@ nav {
 	/** big grid stay at the center*/
 	border: 1.5px solid;
 	margin-top: 30px;
+  cursor: pointer;
 }
 
 .gridThickness {
@@ -134,6 +137,7 @@ nav {
 button {
   width: 120px;
   height: 46px;
+  cursor: pointer;
 }
 
 button:hover {

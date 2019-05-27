@@ -52,8 +52,12 @@ jQuery(document).ready(function($) {
   let activeButtons = [];
   let activeColor = "black";
   let transparency = 1;
-  let thickness = 5;
+  let thickness = 10;
   let lineCap = ["square","round","butt"]; //"butt" lineCap DO NOT WORK, With
+  let dashIndex = 0;
+  let gradient = false;
+  //starting with the value of 0
+  // $("#lineDash")[0].value = 0
   //free style stift.
   let lineCapString = "round";
   // let thickness = [4,8,12,16,20,24,28,36,42];
@@ -198,7 +202,6 @@ $(".colorChart").click( (e) => {
     //path width
     ctx.lineWidth = thickness;
     ctx.lineCap = lineCapString;
-
     // ctx.lineCap = "round";
     ctx.strokeStyle = activeColor;
     ctx.globalAlpha = transparency;
@@ -227,12 +230,35 @@ $(".colorChart").click( (e) => {
   //FOR STRAIGHTLINE////////////////////////////
   //think about if it would not be a better way, to draw a line,
   //hold it change its size and angle??
+
+  function testGradient() {
+    var grd = ctx.createLinearGradient(0, 0, 150, 0);
+    grd.addColorStop(0, "black");
+    grd.addColorStop(1, "white");
+
+    ctx.fillStyle = grd;
+    ctx.fillRect(20, 20, 150, 100);
+  }
+
+  testGradient();
+
   function drawStraightLine(posArrayX, posArrayY) {
     // ctx.clearRect(0,0, innerWidth, innerHeight);
     ctx.beginPath();
     ctx.lineWidth = thickness;
     ctx.lineCap = lineCapString;
-    ctx.strokeStyle = activeColor;
+
+    ctx.setLineDash([thickness, dashIndex*thickness]);/*dashes are x and spaces are y*/
+    if(gradient === "true") {
+    let linearGradient = ctx.createLinearGradient(posArrayX[0], posArrayY[0], posArrayX[1], posArrayY[1]);
+    linearGradient.addColorStop(1, 'white');
+    linearGradient.addColorStop(0, activeColor);
+    // ctx.fillStyle = linearGradient;
+    // ctx.strokeStyle = activeColor;
+    ctx.strokeStyle = linearGradient;
+    } else {
+      ctx.strokeStyle = activeColor;
+    }
     ctx.globalAlpha = transparency;
     ctx.lineTo(posArrayX[0], posArrayY[0]);
     ctx.lineTo(posArrayX[1], posArrayY[1]);
@@ -271,21 +297,33 @@ $(".colorChart").click( (e) => {
     ctx.beginPath();
     ctx.lineWidth = thickness;
     ctx.lineCap = lineCapString;
-    // ctx.fillStyle = activeColor;
     ctx.strokeStyle = activeColor;
+    ctx.setLineDash([thickness, dashIndex*thickness]);/*dashes are x and spaces are y*/
     ctx.globalAlpha = transparency;
     console.log(firstPosClickX, firstPosClickY);
-    // ctx.fillRect(x, y, width, height);
 
     let width = posX - firstPosClickX;
     let height = posY - firstPosClickY;
-    console.log(width);
-    console.log(height);
+
     //ctx.fillRect-> draw and fill the inside of a rectangle
     // ctx.fillRect(firstPosClickX, firstPosClickY, width, height);
     //Draw the countour of a rectangle
-    ctx.rect(firstPosClickX, firstPosClickY, width, height);
-    ctx.stroke();
+    debugger
+    if ( gradient === "true") {
+      let linearGradient = ctx.createLinearGradient(firstPosClickX, firstPosClickY, posX, posY);
+      linearGradient.addColorStop(1, 'white');
+      linearGradient.addColorStop(0, activeColor);
+      // ctx.fillStyle = linearGradient;
+      ctx.strokeStyle = activeColor;
+      console.log("inside");
+      ctx.fillStyle = linearGradient;
+      ctx.fillRect(firstPosClickX, firstPosClickY, width, height);
+      ctx.stroke();
+    } else {
+      ctx.fillStyle = "white";
+      ctx.rect(firstPosClickX, firstPosClickY, width, height);
+      ctx.stroke();
+    }
   }
 
   function drawRectGhost(posX, posY) {
@@ -299,8 +337,7 @@ $(".colorChart").click( (e) => {
 
     let width = posX - firstPosClickX;
     let height = posY - firstPosClickY;
-    console.log(width);
-    console.log(height);
+
     // ctx.fillRect(firstPosClickX, firstPosClickY, width, height);
     ctx.rect(firstPosClickX, firstPosClickY, width, height);
     ctx.stroke();
@@ -320,8 +357,7 @@ $(".colorChart").click( (e) => {
 
     let width = posX - firstPosClickX;
     let height = posY - firstPosClickY;
-    console.log(width);
-    console.log(height);
+
     /*clear and fill Rect have the same results*/
     ctx.fillRect(firstPosClickX, firstPosClickY, width, height);
     // ctx.clearRect(firstPosClickX, firstPosClickY, width, height);
@@ -336,6 +372,7 @@ $(".colorChart").click( (e) => {
     ctx.beginPath();
     ctx.lineWidth = thickness;
     ctx.lineCap = lineCapString;
+    ctx.setLineDash([thickness, dashIndex*thickness]);/*dashes are x and spaces are y*/
     ctx.strokeStyle = activeColor;
     ctx.globalAlpha = transparency;
     console.log(posArrayX, posArrayY);
@@ -380,6 +417,7 @@ $(".colorChart").click( (e) => {
     ctx.beginPath();
     ctx.lineWidth = thickness;
     ctx.lineCap = lineCapString;
+    ctx.setLineDash([thickness, dashIndex*thickness]);/*dashes are x and spaces are y*/
     ctx.strokeStyle = activeColor;
     ctx.globalAlpha = transparency;
     // console.log(posArrayX, posArrayY);
@@ -437,6 +475,7 @@ $(".colorChart").click( (e) => {
     ctx.beginPath();
     ctx.lineWidth = thickness;
     ctx.lineCap = lineCapString;
+    ctx.setLineDash([thickness, dashIndex*thickness]);/*dashes are x and spaces are y*/
     ctx.strokeStyle = activeColor;
     ctx.globalAlpha = transparency;
     console.log(posArrayX, posArrayY);
@@ -457,6 +496,7 @@ $(".colorChart").click( (e) => {
     ctx.beginPath();
     ctx.lineWidth = thickness;
     ctx.lineCap = lineCapString;
+    ctx.setLineDash([thickness, dashIndex*thickness]);/*dashes are x and spaces are y*/
     ctx.strokeStyle = activeColor;
     ctx.globalAlpha = transparency;
     console.log(posArrayX, posArrayY);
@@ -558,8 +598,10 @@ and then back to the start (z).
 
     //lineCap "butt do not work with Stift"
     $("#lineCap")[0].max = 1;
+
   } else {
     $("#lineCap")[0].max = 2;
+
   };
     if ($(".bErase").hasClass("active")) {
       eraseActive = true;
@@ -896,6 +938,16 @@ $("#lineCap").change( () => {
   lineCapString = lineCap[($("#lineCap")[0].value)];
 
   console.log(($("#lineCap")[0].value))
+})
+
+$("#lineDash").change( () => {
+  dashIndex = $("#lineDash")[0].value;
+  console.log(dashIndex);
+})
+
+$("#gradient").change( () => {
+  gradient = $("#gradient")[0].value == 1 ? "true" : "false";
+  console.log(gradient);
 })
 
 
