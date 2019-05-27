@@ -308,7 +308,7 @@ $(".colorChart").click( (e) => {
     //ctx.fillRect-> draw and fill the inside of a rectangle
     // ctx.fillRect(firstPosClickX, firstPosClickY, width, height);
     //Draw the countour of a rectangle
-    debugger
+    
     if ( gradient === "true") {
       let linearGradient = ctx.createLinearGradient(firstPosClickX, firstPosClickY, posX, posY);
       linearGradient.addColorStop(1, 'white');
@@ -376,10 +376,22 @@ $(".colorChart").click( (e) => {
     ctx.strokeStyle = activeColor;
     ctx.globalAlpha = transparency;
     console.log(posArrayX, posArrayY);
-    ctx.arc(posX, posY, Math.abs(((firstPosClickX-posX)+(firstPosClickY-posY))/2), Math.PI * 2, false);
-    // ctx.lineTo(posArrayX[0],posArrayY[0]);
-    // ctx.lineTo(posArrayX[1],posArrayY[1]);
-    ctx.stroke();
+
+    if ( gradient === "true") {
+      let linearGradient = ctx.createLinearGradient(posX, posY, Math.abs(((firstPosClickX-posX)+(firstPosClickY-posY))/2), Math.PI * 2);
+      linearGradient.addColorStop(0.8, 'white');
+      linearGradient.addColorStop(0, activeColor);
+      // ctx.fillStyle = linearGradient;
+      // ctx.strokeStyle = activeColor;
+      console.log("inside");
+      ctx.fillStyle = linearGradient;
+      ctx.arc(posX, posY, Math.abs(((firstPosClickX-posX)+(firstPosClickY-posY))/2), Math.PI * 2, false);
+      ctx.fill();
+    } else {
+      ctx.arc(posX, posY, Math.abs(((firstPosClickX-posX)+(firstPosClickY-posY))/2), Math.PI * 2, false);
+      ctx.stroke();
+    }
+
   }
 
   function drawCircleGhost(posX, posY) {
@@ -420,6 +432,14 @@ $(".colorChart").click( (e) => {
     ctx.setLineDash([thickness, dashIndex*thickness]);/*dashes are x and spaces are y*/
     ctx.strokeStyle = activeColor;
     ctx.globalAlpha = transparency;
+
+    if(gradient === "true") {
+    let linearGradient = ctx.createLinearGradient(posX, posY, posArrayX[1], posArrayY[1]);
+    linearGradient.addColorStop(1, 'white');
+    linearGradient.addColorStop(0, activeColor);
+    // ctx.fillStyle = linearGradient;
+    // ctx.strokeStyle = activeColor;
+    ctx.strokeStyle = linearGradient;
     // console.log(posArrayX, posArrayY);
     //quadraticCurveTo(cp1x, cp1y, x, y)
     //x,y = coordinates of the end poionts of the curve
@@ -429,6 +449,19 @@ $(".colorChart").click( (e) => {
     // ctx.quadraticCurveTo(canvas.width/2, canvas.height/2, posX, posY);
     ctx.quadraticCurveTo(posX, posY, posArrayX[1], posArrayY[1]);
     ctx.stroke();
+    } else {
+      ctx.strokeStyle = activeColor;
+      // console.log(posArrayX, posArrayY);
+      //quadraticCurveTo(cp1x, cp1y, x, y)
+      //x,y = coordinates of the end poionts of the curve
+      //cp1x, cp1y = coordinates of the first control point
+      //In this case I think we have to use the moveTo
+      ctx.moveTo(posArrayX[0], posArrayY[0])
+      // ctx.quadraticCurveTo(canvas.width/2, canvas.height/2, posX, posY);
+      ctx.quadraticCurveTo(posX, posY, posArrayX[1], posArrayY[1]);
+      ctx.stroke();
+    }
+
   }
 
   function drawBezierGhost(posX, posY) {
@@ -479,16 +512,39 @@ $(".colorChart").click( (e) => {
     ctx.strokeStyle = activeColor;
     ctx.globalAlpha = transparency;
     console.log(posArrayX, posArrayY);
+
+    if(gradient === "true") {
+    let linearGradient = ctx.createLinearGradient(posArrayX[1], posArrayY[1],posX, posY);
+    linearGradient.addColorStop(1, 'white');
+    linearGradient.addColorStop(0, activeColor);
+    // ctx.fillStyle = linearGradient;
+    // ctx.strokeStyle = activeColor;
+    ctx.strokeStyle = linearGradient;
+
     //quadraticCurveTo(cp1x, cp1y, x, y)
     //x,y = coordinates of the end poionts of the curve
     //cp1x, cp1y = coordinates of the first control point
     //In this case I think we have to use the moveTo
     ctx.moveTo(posArrayX[0], posArrayY[0]);
     // bezierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y)
-
     //ctx.quadraticCurveTo(posArrayX[1], posArrayY[1], posArrayX[2], posArrayY[2], posX, posY);
     ctx.quadraticCurveTo(posArrayX[1], posArrayY[1], posX, posY, posArrayX[2], posArrayY[2]);
     ctx.stroke();
+    } else {
+      ctx.strokeStyle = activeColor;
+      //quadraticCurveTo(cp1x, cp1y, x, y)
+      //x,y = coordinates of the end poionts of the curve
+      //cp1x, cp1y = coordinates of the first control point
+      //In this case I think we have to use the moveTo
+      ctx.moveTo(posArrayX[0], posArrayY[0]);
+      // bezierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y)
+      //ctx.quadraticCurveTo(posArrayX[1], posArrayY[1], posArrayX[2], posArrayY[2], posX, posY);
+      ctx.quadraticCurveTo(posArrayX[1], posArrayY[1], posX, posY, posArrayX[2], posArrayY[2]);
+      ctx.stroke();
+    }
+
+
+
   }
 
   function drawBezierCurveGhost(posX, posY) {
