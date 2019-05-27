@@ -53,7 +53,8 @@ jQuery(document).ready(function($) {
   let activeColor = "black";
   let transparency = 1;
   let thickness = 5;
-  let lineCap = ["square","round"]; //"butt" lineCap DO NOT WORK, why?
+  let lineCap = ["square","round","butt"]; //"butt" lineCap DO NOT WORK, With
+  //free style stift.
   let lineCapString = "round";
   // let thickness = [4,8,12,16,20,24,28,36,42];
   // let indexThickness = 0;
@@ -554,7 +555,12 @@ and then back to the start (z).
       stiftActive = true;
       let cursorPositions = getCursorPosition(canvas, event);
       draw(cursorPositions[0], cursorPositions[1]);
-    };
+
+    //lineCap "butt do not work with Stift"
+    $("#lineCap")[0].max = 1;
+  } else {
+    $("#lineCap")[0].max = 2;
+  };
     if ($(".bErase").hasClass("active")) {
       eraseActive = true;
       let cursorPositions = getCursorPosition(canvas, event);
