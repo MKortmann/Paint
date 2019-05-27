@@ -60,6 +60,8 @@ jQuery(document).ready(function($) {
   // $("#lineDash")[0].value = 0
   //free style stift.
   let lineCapString = "round";
+  let width =  1000;
+  let height = 500;
   // let thickness = [4,8,12,16,20,24,28,36,42];
   // let indexThickness = 0;
 
@@ -105,7 +107,7 @@ width and height attributes explicitly in the <canvas> attributes, and not using
     canvas.css("height", height);
   }
   /*You make sure that the attributes of canvas and css are the same!*/
-  resizeCanvas(600, 600);
+  resizeCanvas(width, height);
 
  // smileFace();
 
@@ -308,7 +310,7 @@ $(".colorChart").click( (e) => {
     //ctx.fillRect-> draw and fill the inside of a rectangle
     // ctx.fillRect(firstPosClickX, firstPosClickY, width, height);
     //Draw the countour of a rectangle
-    
+
     if ( gradient === "true") {
       let linearGradient = ctx.createLinearGradient(firstPosClickX, firstPosClickY, posX, posY);
       linearGradient.addColorStop(1, 'white');
@@ -542,8 +544,6 @@ $(".colorChart").click( (e) => {
       ctx.quadraticCurveTo(posArrayX[1], posArrayY[1], posX, posY, posArrayX[2], posArrayY[2]);
       ctx.stroke();
     }
-
-
 
   }
 
@@ -966,7 +966,7 @@ and then back to the start (z).
   });
   //Reload
   $(".bReload").click(function() {
-    resizeCanvas(600, 600);
+    resizeCanvas(width, height);
     $(".bReload").toggleClass("active");
     activeButtons.push(".bReload");
     resetButtons();
