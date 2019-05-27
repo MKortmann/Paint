@@ -233,16 +233,16 @@ $(".colorChart").click( (e) => {
   //think about if it would not be a better way, to draw a line,
   //hold it change its size and angle??
 
-  function testGradient() {
-    var grd = ctx.createLinearGradient(0, 0, 150, 0);
-    grd.addColorStop(0, "black");
-    grd.addColorStop(1, "white");
-
-    ctx.fillStyle = grd;
-    ctx.fillRect(20, 20, 150, 100);
-  }
-
-  testGradient();
+  // function testGradient() {
+  //   var grd = ctx.createLinearGradient(0, 0, 150, 0);
+  //   grd.addColorStop(0, "black");
+  //   grd.addColorStop(1, "white");
+  //
+  //   ctx.fillStyle = grd;
+  //   ctx.fillRect(20, 20, 150, 100);
+  // }
+  //
+  // testGradient();
 
   function drawStraightLine(posArrayX, posArrayY) {
     // ctx.clearRect(0,0, innerWidth, innerHeight);
