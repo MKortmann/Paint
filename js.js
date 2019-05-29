@@ -1,6 +1,8 @@
 "use strict";
 
 /*TODO:
+*) Important: look about redo function!
+
 1) Bezier Curve the coordinates are not correct in the tutorial.
 At least, it is not matching the code! TOBECHECKED!
 
@@ -604,6 +606,23 @@ $(".colorChart").click( (e) => {
   }
 
 
+  // function draw() {
+  //   var ctx = document.getElementById('canvas').getContext('2d');
+  //   var img = new Image();
+  //   img.onload = function() {
+  //     ctx.drawImage(img, 0, 0);
+  //     ctx.beginPath();
+  //     ctx.moveTo(30, 96);
+  //     ctx.lineTo(70, 66);
+  //     ctx.lineTo(103, 76);
+  //     ctx.lineTo(170, 15);
+  //     ctx.stroke();
+  //   };
+  //   img.src = 'https://mdn.mozillademos.org/files/5395/backdrop.png';
+  // }
+  //
+  // draw();
+
 /*Drawing text*/
 
 // function drawText() {
@@ -670,6 +689,7 @@ and then back to the start (z).
   //MOUSEEEEEEEEEEEEEEEEEEEEEEEE
 
   $("#canvas").mousedown(function(event) {
+    globalPush();
     if ($(".bStift").hasClass("active")) {
       stiftActive = true;
       let cursorPositions = getCursorPosition(canvas, event);
@@ -904,6 +924,9 @@ and then back to the start (z).
       posArrayX = [];
       posArrayY = [];
 
+      //Saving the last status of the canvas!
+
+
     }
 
 
@@ -927,6 +950,7 @@ and then back to the start (z).
       bezierCActive = false;
     }
 
+
   })
 
   /**nav functions:*/
@@ -941,7 +965,43 @@ and then back to the start (z).
     console.log(activeButtons);
   };
 
+
+/*Undo Function*/
+let globalArray = new Array();
+let canvasImg = new Image();
+// let globalSavedNumbers = 0;
+
+function globalPush() {
+  // globalSavedNumbers++;
+  console.log("we are at the global push");
+
+  globalArray.push(canvas[0].toDataURL());
+
+}
+
+function undo() {
+  console.log("we are at the undo");
+
+  if(globalArray.length > 0) {
+
+    canvasImg.src = globalArray.pop();
+    canvasImg.onload = function() {
+      //drawImage(image, x, y); (x,y) are the canvas coordinates
+      ctx.clearRect(0, 0, canvas[0].width, canvas[0].height);
+      ctx.drawImage(canvasImg, 0, 0);
+    }
+  }
+}
+
+
   /*adding buttons*/
+  //undo
+  $(".bUndo").click( ()=> {
+    $(".bUndo").toggleClass("active");
+    activeButtons.push(".bUndo");
+    resetButtons();
+    undo();
+  });
   //Stift
   $(".bStift").click(function() {
     $(".bStift").toggleClass("active");
