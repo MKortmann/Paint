@@ -1000,6 +1000,9 @@ function redo() {
 
   if(globalRedo.length > 0) {
     canvasImg.src = globalRedo.pop();
+    /*These two lines below are important to undo&redo the process infinite!*/
+    globalArray.push(canvasImg.src);
+    globalArray.push(canvasImg.src);
     canvasImg.onload = function() {
       //drawImage(image, x, y); (x,y) are the canvas coordinates
       ctx.clearRect(0, 0, canvas[0].width, canvas[0].height);
