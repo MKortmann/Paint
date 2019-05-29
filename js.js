@@ -380,13 +380,23 @@ $(".colorChart").click( (e) => {
     console.log(posArrayX, posArrayY);
 
     if ( gradient === "true") {
-      let linearGradient = ctx.createLinearGradient(posX, posY, Math.abs(((firstPosClickX-posX)+(firstPosClickY-posY))/2), Math.PI * 2);
-      linearGradient.addColorStop(0.8, 'white');
-      linearGradient.addColorStop(0, activeColor);
+      /*Let's use radial gradient: creates a radial gradient using the size and
+      coordinates of two circles.
+      ////:
+      createRadialGradient(x1, y1, r1, x2, y2, r2)
+      We have to circles with each having the center at x1,y1 and x2,y2 and with
+      the respective radius: r1 and r2. Interesting that it seems to be given in
+      grad and not radians. TO BE CHECKED!!!
+            */
+
+      let radialGradient = ctx.createRadialGradient(firstPosClickX, firstPosClickY, 360, posX, posY, 8);
+      radialGradient.addColorStop(0.5, activeColor);
+      radialGradient.addColorStop(0.7, "#ECF0F1");
+      radialGradient.addColorStop(1, activeColor);
       // ctx.fillStyle = linearGradient;
       // ctx.strokeStyle = activeColor;
       console.log("inside");
-      ctx.fillStyle = linearGradient;
+      ctx.fillStyle = radialGradient;
       ctx.arc(posX, posY, Math.abs(((firstPosClickX-posX)+(firstPosClickY-posY))/2), Math.PI * 2, false);
       ctx.fill();
     } else {
