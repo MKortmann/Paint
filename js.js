@@ -984,7 +984,7 @@ function undo() {
   console.log("we are at the undo");
   if(globalArray.length > 0) {
     globalRedo.push(globalArray.pop());
-    canvasImg.src = globalRedo[globalRedo.length-1];
+    canvasImg.src = globalArray.pop();
     canvasImg.onload = function() {
       //drawImage(image, x, y); (x,y) are the canvas coordinates
       ctx.clearRect(0, 0, canvas[0].width, canvas[0].height);
