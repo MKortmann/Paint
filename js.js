@@ -18,6 +18,9 @@ The ghost function should delete and use these values.
   the respective radius: r1 and r2. Interesting that it seems to be given in
   grad and not radians. TO BE CHECKED!!!
 
+  5) //TODO: Undo and Redo functions simplify!
+  I want to simplify here. I want to remove flag and 1 array. 
+
 */
 /*Tutorial: lines MDN:
 
@@ -969,9 +972,12 @@ and then back to the start (z).
 
 
 /*Undo Function*/
+//TODO: I want to simplify here. I want to remove flag and 1 array.
+
 let globalArray = new Array();
 let globalRedo = new Array();
 let canvasImg = new Image();
+let flag = false;
 // let globalSavedNumbers = 0;
 
 function globalPush() {
@@ -983,15 +989,27 @@ function globalPush() {
 function undo() {
   console.log("we are at the undo");
   if(globalArray.length > 0) {
+
     globalRedo.push(globalArray.pop());
-    canvasImg.src = globalArray.pop();
+    //to avoid to click two times at undo when you have clicked alredy in redo.
+    if (flag === true) {
+      globalArray.pop();
+      flag = false;
+    }
+    //to avoid bug!!!
+    if(globalArray.length === 0) {
+      canvasImg.src = globalRedo[globalRedo.length-1];
+    } else {
+      canvasImg.src = globalArray.pop();
+    }
+
     canvasImg.onload = function() {
       //drawImage(image, x, y); (x,y) are the canvas coordinates
       ctx.clearRect(0, 0, canvas[0].width, canvas[0].height);
       ctx.drawImage(canvasImg, 0, 0);
     }
   } else {
-    console.log(`The Global Array is empty: ${globalArray}`)
+    console.log(`The Global Array has size: ${globalArray.length}`)
   }
 }
 
@@ -999,6 +1017,7 @@ function redo() {
   console.log("we are at the redo");
 
   if(globalRedo.length > 0) {
+    flag = true;
     canvasImg.src = globalRedo.pop();
     /*These two lines below are important to undo&redo the process infinite!*/
     globalArray.push(canvasImg.src);
