@@ -798,7 +798,9 @@ and then back to the start (z).
 
       // ctx.font = "64px serif";
       ctx.font = ($("#fontSize")[0].value)+"px"+ " serif";
-      
+      ctx.fillStyle = activeColor;
+      ctx.strokeStyle = activeColor;
+
       if ( $("#textFill")[0].value === "0" ) {
         ctx.fillText($("#textInput")[0].value, firstPosClickX, firstPosClickY);
       } else {
