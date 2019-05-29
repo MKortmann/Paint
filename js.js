@@ -689,7 +689,9 @@ and then back to the start (z).
   //MOUSEEEEEEEEEEEEEEEEEEEEEEEE
 
   $("#canvas").mousedown(function(event) {
+    //Saving the last status of the canvas!
     globalPush();
+
     if ($(".bStift").hasClass("active")) {
       stiftActive = true;
       let cursorPositions = getCursorPosition(canvas, event);
@@ -924,8 +926,6 @@ and then back to the start (z).
       posArrayX = [];
       posArrayY = [];
 
-      //Saving the last status of the canvas!
-
 
     }
 
@@ -950,6 +950,8 @@ and then back to the start (z).
       bezierCActive = false;
     }
 
+    //Saving the last status of the canvas!
+    globalPush();
 
   })
 
@@ -968,28 +970,43 @@ and then back to the start (z).
 
 /*Undo Function*/
 let globalArray = new Array();
+let globalRedo = new Array();
 let canvasImg = new Image();
 // let globalSavedNumbers = 0;
 
 function globalPush() {
   // globalSavedNumbers++;
   console.log("we are at the global push");
-
   globalArray.push(canvas[0].toDataURL());
-
 }
 
 function undo() {
   console.log("we are at the undo");
-
   if(globalArray.length > 0) {
-
-    canvasImg.src = globalArray.pop();
+    globalRedo.push(globalArray.pop());
+    canvasImg.src = globalRedo[globalRedo.length-1];
     canvasImg.onload = function() {
       //drawImage(image, x, y); (x,y) are the canvas coordinates
       ctx.clearRect(0, 0, canvas[0].width, canvas[0].height);
       ctx.drawImage(canvasImg, 0, 0);
     }
+  } else {
+    console.log(`The Global Array is empty: ${globalArray}`)
+  }
+}
+
+function redo() {
+  console.log("we are at the redo");
+
+  if(globalRedo.length > 0) {
+    canvasImg.src = globalRedo.pop();
+    canvasImg.onload = function() {
+      //drawImage(image, x, y); (x,y) are the canvas coordinates
+      ctx.clearRect(0, 0, canvas[0].width, canvas[0].height);
+      ctx.drawImage(canvasImg, 0, 0);
+    }
+  } else {
+    console.log(`The Redo Array is empty: ${globalRedo}`)
   }
 }
 
@@ -1001,6 +1018,13 @@ function undo() {
     activeButtons.push(".bUndo");
     resetButtons();
     undo();
+  });
+  //redo
+  $(".bRedo").click( ()=> {
+    $(".bRedo").toggleClass("active");
+    activeButtons.push(".bRedo");
+    resetButtons();
+    redo();
   });
   //Stift
   $(".bStift").click(function() {
