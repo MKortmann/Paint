@@ -24,10 +24,15 @@ margin-bottom: 0;
 
 #lineCap,
 #lineDash,
-#gradient {
+#gradient,
+#textFill {
  max-width: 50px;
  max-height: 26px;
 
+}
+
+#textInput {
+  width: 400px;
 }
 
 .container {

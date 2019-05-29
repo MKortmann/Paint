@@ -8,10 +8,13 @@ At least, it is not matching the code! TOBECHECKED!
 https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Applying_styles_and_colors
 
 
-2) we need an array to push the values of x, y of the mouse position.
+3) we need an array to push the values of x, y of the mouse position.
 The ghost function should delete and use these values.
 
-
+4)   createRadialGradient(x1, y1, r1, x2, y2, r2)
+  We have to circles with each having the center at x1,y1 and x2,y2 and with
+  the respective radius: r1 and r2. Interesting that it seems to be given in
+  grad and not radians. TO BE CHECKED!!!
 
 */
 /*Tutorial: lines MDN:
@@ -56,6 +59,7 @@ jQuery(document).ready(function($) {
   let lineCap = ["square","round","butt"]; //"butt" lineCap DO NOT WORK, With
   let dashIndex = 0;
   let gradient = false;
+  let textDraw = false;
   //starting with the value of 0
   // $("#lineDash")[0].value = 0
   //free style stift.
@@ -599,6 +603,15 @@ $(".colorChart").click( (e) => {
     ctx.stroke();
   }
 
+
+/*Drawing text*/
+
+// function drawText() {
+//   ctx.font = "64px serif";
+//   ctx.fillText("Hello World", 10, 50);
+// }
+
+
 /*
 Path2D Objects
 // The Path2D() constructor returns a newly instantiated Path2D object, optionally with
@@ -771,7 +784,33 @@ and then back to the start (z).
 
       }
     };
+
+    if ($(".bText").hasClass("active")) {
+      textDraw = true;
+      console.log("textDraw is true");
+      let cursorPositions = getCursorPosition(canvas, event);
+      firstPosClickX = cursorPositions[0];
+      firstPosClickY = cursorPositions[1];
+
+      if($("#textInput")[0].value === "") {
+        alert("Write something in the inputBox first!");
+      }
+
+      ctx.font = "64px serif";
+      if ( $("#textFill")[0].value === "0" ) {
+        ctx.fillText($("#textInput")[0].value, firstPosClickX, firstPosClickY);
+      } else {
+        ctx.strokeText($("#textInput")[0].value, firstPosClickX, firstPosClickY);
+      }
+    };
   })
+
+  // $(document).keydown( ()=> {
+  //   if(textDraw == true) {
+  //     ctx.font = "64px serif";
+  //     ctx.fillText($("#textInput")[0].value, firstPosClickX, firstPosClickY);
+  //   }
+  // });
 
   $("#canvas").mousemove(function(event) {
     if (stiftActive) {
@@ -960,6 +999,12 @@ and then back to the start (z).
     activeButtons.push(".bBezierC");
     resetButtons();
   });
+
+  $(".bText").click( ()=> {
+    $(".bText").toggleClass("active");
+    activeButtons.push(".bText");
+    resetButtons();
+  })
 
   $(".bSelect").click(() => {
     $(".bSelect").toggleClass("active");
