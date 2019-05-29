@@ -796,7 +796,9 @@ and then back to the start (z).
         alert("Write something in the inputBox first!");
       }
 
-      ctx.font = "64px serif";
+      // ctx.font = "64px serif";
+      ctx.font = ($("#fontSize")[0].value)+"px"+ " serif";
+      
       if ( $("#textFill")[0].value === "0" ) {
         ctx.fillText($("#textInput")[0].value, firstPosClickX, firstPosClickY);
       } else {
