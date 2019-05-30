@@ -19,7 +19,7 @@ The ghost function should delete and use these values.
   grad and not radians. TO BE CHECKED!!!
 
   5) //TODO: Undo and Redo functions simplify!
-  I want to simplify here. I want to remove flag and 1 array. 
+  I want to simplify here. I want to remove flag and 1 array.
 
 */
 /*Tutorial: lines MDN:
@@ -977,6 +977,11 @@ and then back to the start (z).
 let globalArray = new Array();
 let globalRedo = new Array();
 let canvasImg = new Image();
+//the flag is true as soon as we click to redo. It is necessary because
+//we need to remove one array from the globalArray. If not, after clicking in redo
+//and we click again in undo it will be necessary to click two times because it
+//stores two times the same array. So we make the flag to check it and if it
+//is true we pop it out.
 let flag = false;
 // let globalSavedNumbers = 0;
 
@@ -986,6 +991,8 @@ function globalPush() {
   globalArray.push(canvas[0].toDataURL());
 }
 
+/*See, that we pop two times from the globalArray because we store the image when
+we click the mouse and when we release the mouse.*/
 function undo() {
   console.log("we are at the undo");
   if(globalArray.length > 0) {
@@ -996,9 +1003,10 @@ function undo() {
       globalArray.pop();
       flag = false;
     }
-    //to avoid bug!!!
+    //to reset from start!
     if(globalArray.length === 0) {
-      canvasImg.src = globalRedo[globalRedo.length-1];
+      ctx.clearRect(0, 0, canvas[0].width, canvas[0].height);
+      canvasImg.src = "";
     } else {
       canvasImg.src = globalArray.pop();
     }
@@ -1009,6 +1017,7 @@ function undo() {
       ctx.drawImage(canvasImg, 0, 0);
     }
   } else {
+
     console.log(`The Global Array has size: ${globalArray.length}`)
   }
 }
