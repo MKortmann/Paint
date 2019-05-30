@@ -25,7 +25,8 @@ margin-bottom: 0;
 #lineCap,
 #lineDash,
 #gradient,
-#textFill {
+#textFill,
+#canvasScaling {
  max-width: 50px;
  max-height: 26px;
 

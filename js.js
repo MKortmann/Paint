@@ -1166,7 +1166,20 @@ $("#gradient").change( () => {
   console.log(gradient);
 })
 
+$("#canvasScaling").change( ()=> {
+  canvasScaling();
+  console.log("canvasScaling");
+})
 
+function canvasScaling() {
+  canvasImg.src = globalArray.length === 0 ? "" : globalArray[globalArray.length-1]
+  canvasImg.onload = function() {
+    //drawImage(image, x, y); (x,y) are the canvas coordinates
+    ctx.clearRect(0, 0, canvas[0].width, canvas[0].height);
+    ctx.drawImage(canvasImg, 0,0,
+      canvas[0].width/$("#canvasScaling")[0].value,canvas[0].height/$("#canvasScaling")[0].value);
+  }
+};
 
   /*if you resize the window, then you have
   to click the .bZoom again or addAnEventListener*/
