@@ -3,101 +3,100 @@
 
 <head>
 
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="stylesheet" href="style.css">
-<!-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous"> -->
-<title>Paint Design With jQuery!!!</title>
-
-<!--Google icons used in the Main Card Grid and for some buttons styles-->
-<!-- <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons"> -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+  <!-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous"> -->
+  <title>Paint Design With jQuery!!!</title>
+  <!--Google icons used in the Main Card Grid and for some buttons styles-->
+  <!-- <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons"> -->
 
 </head>
 
 <body>
 
 
-<h1 class="outText">Paint</h1>
+  <h1 class="outText">Paint</h1>
 
-<nav>
+  <nav>
 
-<section class=controls>
-  <button class="bUndo">
-    undo
-  </button>
+    <section class=controls>
+      <button class="bUndo">
+        undo
+      </button>
 
-  <button class="bRedo">
-    redo
-  </button>
-  <button class="bPrint">
-    print
-  </button>
-</section>
+      <button class="bRedo">
+        redo
+      </button>
+      <button class="bPrint">
+        print
+      </button>
+    </section>
 
-<section class=tools>
-  <button class="bStift fas fa-paint-brush">
-    pincel
-  </button>
+    <section class=tools>
+      <button class="bStift fas fa-paint-brush">
+        pincel
+      </button>
 
-  <button class="bErase fas fa-eraser">
-    erase
-  </button>
+      <button class="bErase fas fa-eraser">
+        erase
+      </button>
 
-  <button class="bFill fas fa-fill">
-    fill
-  </button>
+      <!-- <button class="bFill fas fa-fill">
+      fill
+      </button>
 
-  <button class="bFillElement fas fa-fill-drip">
-    fill elem.
-  </button>
+      <button class="bFillElement fas fa-fill-drip">
+      fill elem.
+      </button> -->
 
-  <button class="bStraightLine fas fa-minus">
-    straightLine
-  </button>
+      <button class="bStraightLine fas fa-minus">
+        straightLine
+      </button>
 
-  <button class="bRect fas fa-square">
-    Rectangle
-  </button>
+      <button class="bRect fas fa-square">
+        Rectangle
+      </button>
 
-  <button class="bCircle fas fa-circle">
-    Circle
-  </button>
+      <button class="bCircle fas fa-circle">
+        Circle
+      </button>
 
-  <button class="bBezierQ fas fa-spinner">
-    Bezier quad.
-  </button>
+      <button class="bBezierQ fas fa-spinner">
+        Bezier quad.
+      </button>
 
-  <button class="bBezierC fas fa-bezier-curve">
-    Bezier Curve
-  </button>
+      <button class="bBezierC fas fa-bezier-curve">
+        Bezier Curve
+      </button>
 
-  <button class="bSelect fab fa-stripe-s">
-    Select
-  </button>
+      <button class="bSelect fab fa-stripe-s">
+        Select
+      </button>
 
 
-</section>
+    </section>
 
-<button class="bZoom fas fa-search-plus">
-  zoom
-</button>
+    <button class="bZoom fas fa-search-plus">
+      zoom
+    </button>
 
-<button class="bReload fas fa-sync-alt">
-  refresh
-</button>
+    <button class="bReload fas fa-sync-alt">
+      refresh
+    </button>
 
-<button class="bAnimation fas fa-angle-double-right">
-  animation
-</button>
+    <!-- <button class="bAnimation fas fa-angle-double-right">
+    animation
+    </button> -->
 
-Transparency:
-<input type="number" id="transparency"  placeholder="1" step="0.1" min="0.1" max="1.0">
-<!-- onfocus="this.value=''" -->
+    Transparency:
+    <input type="number" id="transparency" placeholder="1" step="0.1" min="0.1" max="1.0">
+    <!-- onfocus="this.value=''" -->
 
-Thickness:
-<input type="number" id="thickness" placeholder="10" step="1" min="1" max="80">
+    Thickness:
+    <input type="number" id="thickness" placeholder="10" step="1" min="1" max="80">
 
-<!-- <datalist id="tickmarksThickness">
+    <!-- <datalist id="tickmarksThickness">
   <option value="1" label="1">
     <option value="10">
     <option value="20">
@@ -109,83 +108,70 @@ Thickness:
     <option value="80" label="80">
 </datalist> -->
 
-LineCap:
-<input type="range" id="lineCap"  placeholder="1" step="1" min="0" max="2">
+    LineCap:
+    <input type="range" id="lineCap" placeholder="1" step="1" min="0" max="2">
 
-LineDash:
-<input type="range" id="lineDash"  placeholder="0" value="0" step="1" min="0" max="6">
+    LineDash:
+    <input type="range" id="lineDash" placeholder="0" value="0" step="1" min="0" max="6">
 
-Gradient:
-<input type="range" id="gradient"  placeholder="0" value="0" step="1" min="0" max="1">
+    Gradient:
+    <input type="range" id="gradient" placeholder="0" value="0" step="1" min="0" max="1">
 
-Text:
-<input type="text" id="textInput"  placeholder="Type a text here, then click text and in the canvas to insert it" value="">
+    Text:
+    <input type="text" id="textInput" placeholder="Type a text here, then click text and in the canvas to insert it" value="">
 
-<button class="bText fas fa-pencil-alt">
-  Text
-</button>
+    <button class="bText fas fa-pencil-alt">
+      Text
+    </button>
 
-Font Size:
-<input type="number" id="fontSize" placeholder="30" value="30" step="1" min="1" max="80">
+    Font Size:
+    <input type="number" id="fontSize" placeholder="30" value="30" step="1" min="1" max="80">
 
-Fill/Countour
-<input type="range" id="textFill"  placeholder="0" value="0" step="1" min="0" max="1">
+    Fill/Countour
+    <input type="range" id="textFill" placeholder="0" value="0" step="1" min="0" max="1">
 
-Canvas Scaling:
-<input type="range" id="canvasScaling" value="1" step="1" min="1" max="2">
+    Canvas Scaling:
+    <input type="range" id="canvasScaling" value="1" step="1" min="1" max="2">
 
 
-<!-- Canvas TranslatingX:
-<input type="range" id="canvasTranslatingX" value="1" step="1" min="1" max="200"> -->
+    <!-- Canvas TranslatingX:
+    <input type="range" id="canvasTranslatingX" value="1" step="1" min="1" max="200"> -->
 
-<section class="colorChart">
-  <!--Line 01-->
-    <div class="box b10" id="black">c10</div>
-    <div class="box b11" id="darkgray">c11</div>
-    <div class="box b12" id="gray">c12</div>
-    <div class="box b13" id="darkred">c13</div>
-    <div class="box b14" id="red">c14</div>
-    <div class="box b15" id="orange">c15</div>
-    <div class="box b16" id="yellow">c16</div>
-    <div class="box b17" id="blue">c17</div>
-    <div class="box b18" id="darkblue">c18</div>
-    <div class="box b19" id="purple">c19</div>
-  <!--Line 02-->
-    <div class="box b20" id="white">c20</div>
-    <div class="box b21" id="silver">c21</div>
-    <div class="box b22" id="rosybrown">c22</div>
-    <div class="box b23" id="olive">c23</div>
-    <div class="box b24" id="lime">c24</div>
-    <div class="box b25" id="aqua">c25</div>
-    <div class="box b26" id="teal">c26</div>
-    <div class="box b27" id="skyblue">c27</div>
-    <div class="box b28" id="fuchsia">c28</div>
-    <div class="box b29" id="darksalmon">c29</div>
-</section>
+    <section class="colorChart">
+      <!--Line 01-->
+      <div class="box b10" id="black">c10</div>
+      <div class="box b11" id="darkgray">c11</div>
+      <div class="box b12" id="gray">c12</div>
+      <div class="box b13" id="darkred">c13</div>
+      <div class="box b14" id="red">c14</div>
+      <div class="box b15" id="orange">c15</div>
+      <div class="box b16" id="yellow">c16</div>
+      <div class="box b17" id="blue">c17</div>
+      <div class="box b18" id="darkblue">c18</div>
+      <div class="box b19" id="purple">c19</div>
+      <!--Line 02-->
+      <div class="box b20" id="white">c20</div>
+      <div class="box b21" id="silver">c21</div>
+      <div class="box b22" id="rosybrown">c22</div>
+      <div class="box b23" id="olive">c23</div>
+      <div class="box b24" id="lime">c24</div>
+      <div class="box b25" id="aqua">c25</div>
+      <div class="box b26" id="teal">c26</div>
+      <div class="box b27" id="skyblue">c27</div>
+      <div class="box b28" id="fuchsia">c28</div>
+      <div class="box b29" id="darksalmon">c29</div>
+    </section>
 
-</nav>
+  </nav>
   <div class="container">
-  <canvas id="canvas">
-    <!--It works as alt for imgs-->
-    This is canvas! Sorry, your browser do not support it!
-  </canvas>
-</div>
-<!-- <div class="gallery">
-  <a href="./img/1.jpg" class="gallery-item">
-    <img src="./img/1.jpg" alt="1.jpg" />
-  </a>
-  <a href="./img/2.jpg" class="gallery-item">
-    <img src="./img/2.jpg" alt="2.jpg">
-  </a>
-  <a href="./img/3.jpg" class="gallery-item">
-    <img src="./img/3.jpg" alt="3.jpg">
-  </a>
-  <a href="./img/4.jpg" class="gallery-item">
-    <img src="./img/4.jpg" alt="4.jpg">
-  </a>
-</div> -->
+    <canvas id="canvas">
+      <!--It works as alt for imgs-->
+      This is canvas! Sorry, your browser do not support it!
+    </canvas>
+  </div>
 
-<script src="./lib/jQuery/jquery-3.3.1.js"></script>
-<script src="js.js"></script>
+  <script src="./lib/jQuery/jquery-3.3.1.js"></script>
+  <script src="js.js"></script>
 </body>
+
 </html>
