@@ -1175,9 +1175,16 @@ function canvasScaling() {
   canvasImg.src = globalArray.length === 0 ? "" : globalArray[globalArray.length-1]
   canvasImg.onload = function() {
     //drawImage(image, x, y); (x,y) are the canvas coordinates
-    ctx.clearRect(0, 0, canvas[0].width, canvas[0].height);
+  ctx.clearRect(0, 0, canvas[0].width, canvas[0].height);
+  if ($("#canvasScaling")[0].value === "2") {
+    ctx.drawImage(canvasImg, canvas[0].width/4,canvas[0].height/4,
+    canvas[0].width/$("#canvasScaling")[0].value,canvas[0].height/$("#canvasScaling")[0].value);
+  } else {
     ctx.drawImage(canvasImg, 0,0,
-      canvas[0].width/$("#canvasScaling")[0].value,canvas[0].height/$("#canvasScaling")[0].value);
+    canvas[0].width,canvas[0].height);
+  }
+
+
   }
 };
 
