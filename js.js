@@ -18,8 +18,11 @@ The ghost function should delete and use these values.
   the respective radius: r1 and r2. Interesting that it seems to be given in
   grad and not radians. TO BE CHECKED!!!
 
-  5) //TODO: Undo and Redo functions simplify!
-  I want to simplify here. I want to remove flag and 1 array.
+5) Save and restore work only when you are drawing something inside a function
+with specifics attribvute as strokestyle, fillstyle and so on...
+I think it does not replace what we have programmed as undo&redo.
+
+6) Can we use a clip path to do a selection tool?
 
 */
 /*Tutorial: lines MDN:
@@ -92,7 +95,7 @@ jQuery(document).ready(function($) {
   /*We need to specific write the kind of environment we are
   working: is it 2D or 3D!*/
   // if(canvas[0].getContext) {
-    const ctx = canvas[0].getContext("2d");
+  const ctx = canvas[0].getContext("2d");
   // } else {
   //   alert("Sorry, the canvas is unsupported in your browser");
   // }
@@ -953,7 +956,6 @@ and then back to the start (z).
 
     // //Saving the last status of the canvas!
     globalPush();
-
   })
 
   /**nav functions:*/
@@ -1175,18 +1177,23 @@ function canvasScaling() {
   canvasImg.src = globalArray.length === 0 ? "" : globalArray[globalArray.length-1]
   canvasImg.onload = function() {
     //drawImage(image, x, y); (x,y) are the canvas coordinates
-  ctx.clearRect(0, 0, canvas[0].width, canvas[0].height);
-  if ($("#canvasScaling")[0].value === "2") {
-    ctx.drawImage(canvasImg, canvas[0].width/4,canvas[0].height/4,
-    canvas[0].width/$("#canvasScaling")[0].value,canvas[0].height/$("#canvasScaling")[0].value);
-  } else {
-    ctx.drawImage(canvasImg, 0,0,
-    canvas[0].width,canvas[0].height);
-  }
-
-
+    ctx.clearRect(0, 0, canvas[0].width, canvas[0].height);
+    if ($("#canvasScaling")[0].value === "2") {
+      ctx.drawImage(canvasImg, canvas[0].width/4,canvas[0].height/4,
+      canvas[0].width/$("#canvasScaling")[0].value,canvas[0].height/$("#canvasScaling")[0].value);
+    } else {
+      ctx.drawImage(canvasImg, 0,0,
+      canvas[0].width,canvas[0].height);
+    }
   }
 };
+// AT THE MOMENT WE WILL NOT USE THIS
+// $("#canvasTranslatingX").change( ()=> {
+//   ctx.save();
+//   ctx.translate($("#canvasTranslatingX")[0].value, 0);
+//   ctx.restore();
+//   console.log("canvasScaling: " + $("#canvasTranslatingX")[0].value);
+// })
 
   /*if you resize the window, then you have
   to click the .bZoom again or addAnEventListener*/
