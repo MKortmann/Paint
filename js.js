@@ -692,8 +692,6 @@ and then back to the start (z).
   //MOUSEEEEEEEEEEEEEEEEEEEEEEEE
 
   $("#canvas").mousedown(function(event) {
-    //Saving the last status of the canvas!
-    globalPush();
 
     if ($(".bStift").hasClass("active")) {
       stiftActive = true;
@@ -953,7 +951,7 @@ and then back to the start (z).
       bezierCActive = false;
     }
 
-    //Saving the last status of the canvas!
+    // //Saving the last status of the canvas!
     globalPush();
 
   })
@@ -982,34 +980,25 @@ let canvasImg = new Image();
 //and we click again in undo it will be necessary to click two times because it
 //stores two times the same array. So we make the flag to check it and if it
 //is true we pop it out.
-let flag = false;
 // let globalSavedNumbers = 0;
+
+// //Saving the last status of the canvas!
+globalPush();
 
 function globalPush() {
   // globalSavedNumbers++;
-  console.log("we are at the global push");
   globalArray.push(canvas[0].toDataURL());
+  console.log(`we are at the global push, globalArray length: ${globalArray.length}`);
 }
 
 /*See, that we pop two times from the globalArray because we store the image when
 we click the mouse and when we release the mouse.*/
 function undo() {
-  console.log("we are at the undo");
+  console.log(`we are at the undo, globalArray length: ${globalArray.length}`);
   if(globalArray.length > 0) {
 
     globalRedo.push(globalArray.pop());
-    //to avoid to click two times at undo when you have clicked alredy in redo.
-    if (flag === true) {
-      globalArray.pop();
-      flag = false;
-    }
-    //to reset from start!
-    if(globalArray.length === 0) {
-      ctx.clearRect(0, 0, canvas[0].width, canvas[0].height);
-      canvasImg.src = "";
-    } else {
-      canvasImg.src = globalArray.pop();
-    }
+    canvasImg.src = globalArray.length === 0 ?"" : globalArray[globalArray.length-1]
 
     canvasImg.onload = function() {
       //drawImage(image, x, y); (x,y) are the canvas coordinates
@@ -1017,20 +1006,18 @@ function undo() {
       ctx.drawImage(canvasImg, 0, 0);
     }
   } else {
-
     console.log(`The Global Array has size: ${globalArray.length}`)
   }
 }
 
 function redo() {
-  console.log("we are at the redo");
-
+  console.log(`we are at the redo, globalRedo length: ${globalArray.length}`);
   if(globalRedo.length > 0) {
-    flag = true;
+
     canvasImg.src = globalRedo.pop();
     /*These two lines below are important to undo&redo the process infinite!*/
     globalArray.push(canvasImg.src);
-    globalArray.push(canvasImg.src);
+    // globalArray.push(canvasImg.src);
     canvasImg.onload = function() {
       //drawImage(image, x, y); (x,y) are the canvas coordinates
       ctx.clearRect(0, 0, canvas[0].width, canvas[0].height);
@@ -1040,7 +1027,6 @@ function redo() {
     console.log(`The Redo Array is empty: ${globalRedo}`)
   }
 }
-
 
   /*adding buttons*/
   //undo
