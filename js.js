@@ -989,6 +989,9 @@ globalPush();
 
 function globalPush() {
   // globalSavedNumbers++;
+  //Saving Images. The HTMLCanvasElement provcides a toDataURL() method, which
+  //is useful when saving images.
+  //Create a PNG image with the default settings.
   globalArray.push(canvas[0].toDataURL());
   console.log(`we are at the global push, globalArray length: ${globalArray.length}`);
 }
@@ -1173,6 +1176,7 @@ $("#canvasScaling").change( ()=> {
   console.log("canvasScaling");
 })
 
+
 function canvasScaling() {
   canvasImg.src = globalArray.length === 0 ? "" : globalArray[globalArray.length-1]
   canvasImg.onload = function() {
@@ -1206,6 +1210,37 @@ function canvasScaling() {
       resizeCanvas(window.innerWidth, 600);
     }
   });
+
+  //print
+
+  $(".bPrint").click( ()=> {
+    printCanvas();
+    console.log("Printing");
+  })
+
+
+  function printCanvas()
+  {
+    const dataUrl = canvas[0].toDataURL();
+    let windowContent = '<!DOCTYPE html>';
+    windowContent += '<html>'
+    windowContent += `<head><title>${$("h1").text()}</title></head>`;
+    windowContent += '<body>'
+    windowContent += '<img src="' + dataUrl + '">';
+    windowContent += '</body>';
+    windowContent += '</html>';
+    let printWin = window.open('','',`width=${canvas[0].width},height=${canvas[0].height}`);
+    printWin.document.open();
+    printWin.document.write(windowContent);
+
+    //I am using ES6 here instead of jQuery. Do not work with on!
+    printWin.document.addEventListener('load', function() {
+        printWin.focus();
+        printWin.print();
+        printWin.document.close();
+        printWin.close();
+    }, true);
+  }
 
   /*FUNCTIONS USED ONLY TO LEARN HOW IT WORKS*/
   /*Draw a house: see that the (x,y) are the end point coordinates in the canvas 2D!*/

@@ -80,7 +80,9 @@ margin-bottom: 0;
   cursor: pointer;
 
 }
-
+/* FOR PERFORMANCE:
+Use plain CSS for large background images
+*/
 .box.b10 {
   background-color: black;
 }
