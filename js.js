@@ -56,6 +56,13 @@ jQuery(document).ready(function($) {
     let bezierCActive = false;
     let straightLine = false;
     let straightLine2 = false;
+    //for select
+    let copy = false;
+    let paste = false;
+    let imageData = 0;
+    let pixel = 0;
+    let color = 0;
+    //End of select
     let posArrayX = [];
     let posArrayY = [];
     let firstPosClickX = 0;
@@ -76,6 +83,20 @@ jQuery(document).ready(function($) {
     let height = 500;
     // let thickness = [4,8,12,16,20,24,28,36,42];
     // let indexThickness = 0;
+    let oImage = {
+      arrayImages: [],
+
+      imageMethod () {
+        console.log("method here" + this.arrayImages.length);
+      },
+      imageMethod2 () {
+
+      }
+    };
+
+
+    oImage.imageMethod();
+
 
     //let index = 0;
 
@@ -205,6 +226,7 @@ jQuery(document).ready(function($) {
 
 
     function draw(posX, posY) {
+
         //create a new path
         ctx.beginPath();
         //path width
@@ -317,6 +339,11 @@ jQuery(document).ready(function($) {
             ctx.fillStyle = "white";
             ctx.rect(firstPosClickX, firstPosClickY, width, height);
             ctx.stroke();
+            //I was trying the lines below to see if I can store each element.
+            //however, I need more information about Path2D
+            // let path = new Path2D();
+            // path.rect(firstPosClickX, firstPosClickY, width, height);
+            // oImage.arrayImages.push(path);
         }
     }
 
@@ -669,9 +696,47 @@ jQuery(document).ready(function($) {
     // SVG();
     // draw();
 
+     function selection() {
+
+       if(copy === true && paste === true) {
+         console.log("We are at selection!!!!!");
+         let cursorPositions = getCursorPosition(canvas, event);
+         ctx.putImageData(imageData, cursorPositions[0], cursorPositions[1]);
+         copy = false;
+         paste = false;
+       }
+
+     }
+
     ////////////////////////////////////////////////////
     //MOUSEEEEEEEEEEEEEEEEEEEEEEEE UP
     $("#canvas").mousedown(function(event) {
+
+      if($(".bCopyPaste").hasClass("active")) {
+
+        if(paste === false) {
+        let cursorPositions = getCursorPosition(canvas, event);
+        console.log(cursorPositions[0], cursorPositions[1]);
+        //retrieve the pixel under cursor
+        //ctx.getImageData(sx, sy, sw, sh);
+        //sx: The x-axis coordinate of the top-left corner of the rectangle from
+        //which the ImageData will be extracted.
+        //sy: same as above but y-axis
+        //sw:The width of the rectangle from which the ImageData will be extracted.
+        //Positive values are to the right, and negative to the left.
+        //sy: same but is vertical
+        pixel = ctx.getImageData(cursorPositions[0], cursorPositions[1], 1, 1).data;
+        imageData = ctx.getImageData(cursorPositions[0], cursorPositions[1], 200, 100);
+
+        //create a rgb color profile for that clicked pixel region
+        color = `rgb(${pixel[0]}, ${pixel[1]}, ${pixel[2]})`;
+
+        console.log(`The color is: ${color}`);
+        copy = true;
+      }
+
+
+      }
 
         if ($(".bStift").hasClass("active")) {
             stiftActive = true;
@@ -856,6 +921,11 @@ jQuery(document).ready(function($) {
         /*reseting*/
         stiftActive = false;
         eraseActive = false;
+
+        selection();
+        if(copy === true) {
+          paste = true;
+        }
 
         if (rectActive) {
             let cursorPositions = getCursorPosition(canvas, event);
@@ -1138,9 +1208,9 @@ jQuery(document).ready(function($) {
         resetButtons();
     })
 
-    $(".bSelect").click(() => {
-        $(".bSelect").toggleClass("active");
-        activeButtons.push(".bSelect");
+    $(".bCopyPaste").click(() => {
+        $(".bCopyPaste").toggleClass("active");
+        activeButtons.push(".bCopyPaste");
         resetButtons();
     });
 
@@ -1232,5 +1302,11 @@ jQuery(document).ready(function($) {
     //     }, 10)
     //   }
     // }
+
+
+
+
+
+
 
 });
