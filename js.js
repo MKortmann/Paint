@@ -1,7 +1,8 @@
 "use strict";
 
 /*TODO:
-*) Important: look about redo function!
+*) Important: look about tip menu explaining how to work with the program!,
+improve copy&paste and do a way to select elements.
 
 1) Bezier Curve the coordinates are not correct in the tutorial.
 At least, it is not matching the code! TOBECHECKED!
@@ -712,7 +713,7 @@ jQuery(document).ready(function($) {
     //MOUSEEEEEEEEEEEEEEEEEEEEEEEE UP
     $("#canvas").mousedown(function(event) {
 
-      if($(".bCopyPaste").hasClass("active")) {
+      if($(".bCopyPaste").hasClass("active") || $(".bCutPaste").hasClass("active")) {
 
         if(paste === false) {
         let cursorPositions = getCursorPosition(canvas, event);
@@ -725,8 +726,14 @@ jQuery(document).ready(function($) {
         //sw:The width of the rectangle from which the ImageData will be extracted.
         //Positive values are to the right, and negative to the left.
         //sy: same but is vertical
+        console.log($("#canvasRegion")[0].value);
+        //the imageData object represents the underlying pixel data of an area of a canvas object.
         pixel = ctx.getImageData(cursorPositions[0], cursorPositions[1], 1, 1).data;
-        imageData = ctx.getImageData(cursorPositions[0], cursorPositions[1], 200, 100);
+        imageData = ctx.getImageData(cursorPositions[0], cursorPositions[1], $("#canvasRegion")[0].value, $("#canvasRegion")[0].value);
+
+        if($(".bCutPaste").hasClass("active")) {
+          ctx.clearRect(cursorPositions[0], cursorPositions[1], $("#canvasRegion")[0].value, $("#canvasRegion")[0].value);
+        }
 
         //create a rgb color profile for that clicked pixel region
         color = `rgb(${pixel[0]}, ${pixel[1]}, ${pixel[2]})`;
@@ -1211,6 +1218,12 @@ jQuery(document).ready(function($) {
     $(".bCopyPaste").click(() => {
         $(".bCopyPaste").toggleClass("active");
         activeButtons.push(".bCopyPaste");
+        resetButtons();
+    });
+
+    $(".bCutPaste").click(() => {
+        $(".bCutPaste").toggleClass("active");
+        activeButtons.push(".bCutPaste");
         resetButtons();
     });
 
