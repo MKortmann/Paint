@@ -78,7 +78,6 @@ margin-bottom: 0;
   border-width: 1px;
   border-radius: 4px;
   cursor: pointer;
-
 }
 /* FOR PERFORMANCE:
 Use plain CSS for large background images
@@ -148,8 +147,8 @@ Use plain CSS for large background images
 }
 
 #canvas {
-  width: 1000px;
-  height: 500px;
+  width: 500px;
+  height: 300px;
   border: 2px solid black;
   background-color: white;
 }

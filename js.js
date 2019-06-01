@@ -81,8 +81,8 @@ jQuery(document).ready(function($) {
     // $("#lineDash")[0].value = 0
     //free style stift.
     let lineCapString = "round";
-    let width = 1000;
-    let height = 500;
+    let width = 500;
+    let height = 300;
     // let thickness = [4,8,12,16,20,24,28,36,42];
     // let indexThickness = 0;
     let oImage = {
@@ -96,7 +96,7 @@ jQuery(document).ready(function($) {
       }
     };
 
-    let ObjectArray = [];
+    let ObjectGlobalArray = [];
 
     class Rectangle {
       constructor(posClickX, posClickY, width, height) {
@@ -112,41 +112,68 @@ jQuery(document).ready(function($) {
         this.dashIndex = dashIndex;
         this.globalAlpha = transparency;
         this.fillStyle = linearGradient;
+        //flags
+        this.clicked = false;
       }
 
       eraseRect() {
         ctx.beginPath();
-        ctx.lineWidth = this.lineWidth+2;
+        ctx.lineWidth = this.lineWidth+4;
         ctx.strokeStyle = "white";
         ctx.fillStyle = "white";
+        //reset setLineDash
+        ctx.setLineDash([]);
         ctx.fillRect(this.posClickX,this.posClickY, this.width, this.height);
         ctx.rect(this.posClickX,this.posClickY, this.width, this.height);
         ctx.stroke();
       }
 
-      drawRect(newPosClickX,newPosClickY) {
+      focusRect() {
+        ctx.beginPath();
+        ctx.lineWidth = 5;
+        ctx.strokeStyle = "red";
+        ctx.setLineDash([this.lineWidth, 2 * this.lineWidth]);
+        ctx.fillRect(this.posClickX,this.posClickY, this.width, this.height);
+        ctx.rect(this.posClickX,this.posClickY, this.width, this.height);
+        ctx.stroke();
+        $("#canvas").css("cursor", "pointer");
 
+      }
+
+      drawRect(newPosClickX,newPosClickY) {
         if(this.gradient === "true") {
           ctx.beginPath();
-          linearGradient = ctx.createLinearGradient(0, 0, this.width, this.height);
+          //ctx.createLinearGradient(x0, y0, x1, y1);
+          //it determines the start of the gradient (x0,y0) and the end of the gradient (x1,y1);
+          linearGradient = ctx.createLinearGradient(newPosClickX, newPosClickY, newPosClickX+this.width, newPosClickY+this.height);
+          console.log(`The values are: X: ${newPosClickX}, Y: ${newPosClickY}, W: ${this.width}, H: ${this.height}`);
           linearGradient.addColorStop(0, this.activeColor);
           linearGradient.addColorStop(1, 'white');
+          console.log(linearGradient);
           ctx.fillStyle = linearGradient;
-          ctx.fillRect(0, 0,this.width, this.height);
+          ctx.fillRect(newPosClickX, newPosClickY,this.width, this.height);
           ctx.strokeStyle = "black";
           ctx.lineWidth = 2;
-          ctx.rect(0,0, this.width, this.height);
+          ctx.rect(newPosClickX,newPosClickY, this.width, this.height);
           ctx.stroke();
+          $("#canvas").css("cursor", "default");
         } else {
           ctx.beginPath();
+          ctx.lineWidth = this.lineWidth;
           ctx.fillStyle = "white";
           ctx.strokeStyle = this.activeColor;
           ctx.setLineDash([this.lineWidth, this.dashIndex * this.lineWidth]);
           // ctx.rect(newPosClickX,newPosClickY, this.height, this.width);
-          ctx.rect(0,0, this.width, this.height);
+          ctx.rect(newPosClickX,newPosClickY, this.width, this.height);
           ctx.stroke();
+          $("#canvas").css("cursor", "default");
         }
 
+      }
+      update(newPosClickX,newPosClickY) {
+        this.posClickX = newPosClickX;
+        this.posClickY = newPosClickY;
+        this.clicked = false;
       }
     }
 
@@ -392,7 +419,7 @@ jQuery(document).ready(function($) {
             ctx.fillRect(firstPosClickX, firstPosClickY, width, height);
             ctx.stroke();
             let oRectangle = new Rectangle(firstPosClickX, firstPosClickY, width, height);
-            ObjectArray.push(oRectangle);
+            ObjectGlobalArray.push(oRectangle);
             debugger
         } else {
             ctx.fillStyle = "white";
@@ -405,7 +432,7 @@ jQuery(document).ready(function($) {
             oImage.arrayImages.push(path);
 
             let oRectangle = new Rectangle(firstPosClickX, firstPosClickY, width, height);
-            ObjectArray.push(oRectangle);
+            ObjectGlobalArray.push(oRectangle);
             debugger
         }
     }
@@ -775,18 +802,43 @@ jQuery(document).ready(function($) {
 
        console.log(`You clicked at X: ${posClickX} and y: ${posClickY}`);
        let enlargeTarged = 5;
-       for(let index=0; index < ObjectArray.length; index++) {
-
-         if(ObjectArray[index].posClickX-enlargeTarged <= posClickX && posClickX <= (ObjectArray[index].posClickX+ObjectArray[index].width+enlargeTarged) )
+       //moving, second time clicked:
+       //first time clicked:
+       for(let index=0; index < ObjectGlobalArray.length; index++)
+       {
+         if(ObjectGlobalArray[index].clicked === true)
          {
-           if(ObjectArray[index].posClickY <= posClickY && posClickY <= (ObjectArray[index].posClickY+ObjectArray[index].height) )
+           console.log("true");
+           ObjectGlobalArray[index].eraseRect();
+           ObjectGlobalArray[index].drawRect(posClickX,posClickY);
+           ObjectGlobalArray[index].update(posClickX,posClickY);
+         } else {
+           if(ObjectGlobalArray[index].posClickX-enlargeTarged <= posClickX && posClickX <= (ObjectGlobalArray[index].posClickX+ObjectGlobalArray[index].width+enlargeTarged) )
            {
-             console.log(`The object number ${index} is clicked!`);
+             if(ObjectGlobalArray[index].posClickY <= posClickY && posClickY <= (ObjectGlobalArray[index].posClickY+ObjectGlobalArray[index].height) )
+             {
+               console.log(`The object number ${index} is clicked!`);
+               ObjectGlobalArray[index].focusRect();
+               ObjectGlobalArray[index].clicked = true;
+             }
            }
          }
-
-
        }
+
+       // //first time clicked:
+       // for(let index=0; index < ObjectGlobalArray.length; index++)
+       // {
+       //   if(ObjectGlobalArray[index].posClickX-enlargeTarged <= posClickX && posClickX <= (ObjectGlobalArray[index].posClickX+ObjectGlobalArray[index].width+enlargeTarged) )
+       //   {
+       //     if(ObjectGlobalArray[index].posClickY <= posClickY && posClickY <= (ObjectGlobalArray[index].posClickY+ObjectGlobalArray[index].height) )
+       //     {
+       //       console.log(`The object number ${index} is clicked!`);
+       //       ObjectGlobalArray[index].focusRect();
+       //       ObjectGlobalArray[index].clicked = true;
+       //     }
+       //   }
+       // }
+
      }
 
     ////////////////////////////////////////////////////
@@ -1323,7 +1375,7 @@ jQuery(document).ready(function($) {
     //Zoom
     $(".bZoom").click(function() {
         $(".bZoom").toggleClass("active");
-        resizeCanvas(window.innerWidth, 500);
+        resizeCanvas(window.innerWidth, 300);
         activeButtons.push(".bZoom");
         resetButtons();
     });
@@ -1382,7 +1434,7 @@ jQuery(document).ready(function($) {
     // });
     $(window).on("resize", function() {
         if ($(".bZoom").hasClass("active")) {
-            resizeCanvas(window.innerWidth, 500);
+            resizeCanvas(window.innerWidth, 300);
         }
     });
 
