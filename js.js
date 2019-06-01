@@ -75,6 +75,7 @@ jQuery(document).ready(function($) {
     let lineCap = ["square", "round", "butt"]; //"butt" lineCap DO NOT WORK, With
     let dashIndex = 0;
     let gradient = false;
+    let linearGradient = 0;
     let textDraw = false;
     //starting with the value of 0
     // $("#lineDash")[0].value = 0
@@ -88,12 +89,66 @@ jQuery(document).ready(function($) {
       arrayImages: [],
 
       imageMethod () {
-        console.log("method here" + this.arrayImages.length);
+        console.log("method here: arrayImages.length: " + this.arrayImages.length);
       },
       imageMethod2 () {
 
       }
     };
+
+    let ObjectArray = [];
+
+    class Rectangle {
+      constructor(posClickX, posClickY, width, height) {
+        this.posClickX = posClickX;
+        this.posClickY = posClickY;
+        this.height = height;
+        this.width = width;
+        //global infos
+        this.gradient = gradient;
+        this.lineWidth = thickness;
+        this.lineCap = lineCapString;
+        this.activeColor = activeColor;
+        this.dashIndex = dashIndex;
+        this.globalAlpha = transparency;
+        this.fillStyle = linearGradient;
+      }
+
+      eraseRect() {
+        ctx.beginPath();
+        ctx.lineWidth = this.lineWidth+2;
+        ctx.strokeStyle = "white";
+        ctx.fillStyle = "white";
+        ctx.fillRect(this.posClickX,this.posClickY, this.width, this.height);
+        ctx.rect(this.posClickX,this.posClickY, this.width, this.height);
+        ctx.stroke();
+      }
+
+      drawRect(newPosClickX,newPosClickY) {
+
+        if(this.gradient === "true") {
+          ctx.beginPath();
+          linearGradient = ctx.createLinearGradient(0, 0, this.width, this.height);
+          linearGradient.addColorStop(0, this.activeColor);
+          linearGradient.addColorStop(1, 'white');
+          ctx.fillStyle = linearGradient;
+          ctx.fillRect(0, 0,this.width, this.height);
+          ctx.strokeStyle = "black";
+          ctx.lineWidth = 2;
+          ctx.rect(0,0, this.width, this.height);
+          ctx.stroke();
+        } else {
+          ctx.beginPath();
+          ctx.fillStyle = "white";
+          ctx.strokeStyle = this.activeColor;
+          ctx.setLineDash([this.lineWidth, this.dashIndex * this.lineWidth]);
+          // ctx.rect(newPosClickX,newPosClickY, this.height, this.width);
+          ctx.rect(0,0, this.width, this.height);
+          ctx.stroke();
+        }
+
+      }
+    }
 
 
     oImage.imageMethod();
@@ -327,24 +382,31 @@ jQuery(document).ready(function($) {
         //Draw the countour of a rectangle
 
         if (gradient === "true") {
-            let linearGradient = ctx.createLinearGradient(firstPosClickX, firstPosClickY, posX, posY);
-            linearGradient.addColorStop(1, 'white');
+            linearGradient = ctx.createLinearGradient(firstPosClickX, firstPosClickY, posX, posY);
             linearGradient.addColorStop(0, activeColor);
+            linearGradient.addColorStop(1, 'white');
             // ctx.fillStyle = linearGradient;
             ctx.strokeStyle = activeColor;
             console.log("inside");
             ctx.fillStyle = linearGradient;
             ctx.fillRect(firstPosClickX, firstPosClickY, width, height);
             ctx.stroke();
+            let oRectangle = new Rectangle(firstPosClickX, firstPosClickY, width, height);
+            ObjectArray.push(oRectangle);
+            debugger
         } else {
             ctx.fillStyle = "white";
             ctx.rect(firstPosClickX, firstPosClickY, width, height);
             ctx.stroke();
             //I was trying the lines below to see if I can store each element.
             //however, I need more information about Path2D
-            // let path = new Path2D();
-            // path.rect(firstPosClickX, firstPosClickY, width, height);
-            // oImage.arrayImages.push(path);
+            let path = new Path2D();
+            path.rect(firstPosClickX, firstPosClickY, width, height);
+            oImage.arrayImages.push(path);
+
+            let oRectangle = new Rectangle(firstPosClickX, firstPosClickY, width, height);
+            ObjectArray.push(oRectangle);
+            debugger
         }
     }
 
@@ -709,9 +771,34 @@ jQuery(document).ready(function($) {
 
      }
 
+     function elementClicked(posClickX,posClickY) {
+
+       console.log(`You clicked at X: ${posClickX} and y: ${posClickY}`);
+       let enlargeTarged = 5;
+       for(let index=0; index < ObjectArray.length; index++) {
+
+         if(ObjectArray[index].posClickX-enlargeTarged <= posClickX && posClickX <= (ObjectArray[index].posClickX+ObjectArray[index].width+enlargeTarged) )
+         {
+           if(ObjectArray[index].posClickY <= posClickY && posClickY <= (ObjectArray[index].posClickY+ObjectArray[index].height) )
+           {
+             console.log(`The object number ${index} is clicked!`);
+           }
+         }
+
+
+       }
+     }
+
     ////////////////////////////////////////////////////
     //MOUSEEEEEEEEEEEEEEEEEEEEEEEE UP
     $("#canvas").mousedown(function(event) {
+
+      if ($(".bSelectMove").hasClass("active")) {
+          let cursorPositions = getCursorPosition(canvas, event);
+          firstPosClickX = cursorPositions[0];
+          firstPosClickY = cursorPositions[1];
+          elementClicked(cursorPositions[0],cursorPositions[1])
+      };
 
       if($(".bCopyPaste").hasClass("active") || $(".bCutPaste").hasClass("active")) {
 
@@ -1145,6 +1232,12 @@ jQuery(document).ready(function($) {
     $(".bPrint").click(() => {
         printCanvas();
         console.log("Printing");
+    })
+    //Select&Move
+    $(".bSelectMove").click(() => {
+      $(".bSelectMove").toggleClass("active");
+      activeButtons.push(".bSelectMove");
+      resetButtons();
     })
     ///////////////////////////TOOLS
     //Stift
