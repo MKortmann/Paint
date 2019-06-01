@@ -96,7 +96,7 @@ jQuery(document).ready(function($) {
       }
     };
 
-    let ObjectGlobalArray = [];
+    let oGlobalArray = [];
 
     class Rectangle {
       constructor(posClickX, posClickY, width, height) {
@@ -131,10 +131,10 @@ jQuery(document).ready(function($) {
       focusRect() {
         ctx.beginPath();
         ctx.lineWidth = 5;
-        ctx.strokeStyle = "red";
+        ctx.strokeStyle = "rgba(255, 160, 122, 0.8)";
         ctx.setLineDash([this.lineWidth, 2 * this.lineWidth]);
         ctx.fillRect(this.posClickX,this.posClickY, this.width, this.height);
-        ctx.rect(this.posClickX,this.posClickY, this.width, this.height);
+        ctx.rect(this.posClickX-4,this.posClickY-4, this.width+8, this.height+8);
         ctx.stroke();
         $("#canvas").css("cursor", "pointer");
 
@@ -392,72 +392,23 @@ jQuery(document).ready(function($) {
 
     /////FOR Rectangle//////////////////////////////
     function drawRect(posX, posY) {
-        // ctx.clearRect(0,0, innerWidth, innerHeight);
-        ctx.beginPath();
-        ctx.lineWidth = thickness;
-        ctx.lineCap = lineCapString;
-        ctx.strokeStyle = activeColor;
-        ctx.setLineDash([thickness, dashIndex * thickness]); /*dashes are x and spaces are y*/
-        ctx.globalAlpha = transparency;
-        console.log(firstPosClickX, firstPosClickY);
-
-        let width = posX - firstPosClickX;
-        let height = posY - firstPosClickY;
-
-        //ctx.fillRect-> draw and fill the inside of a rectangle
-        // ctx.fillRect(firstPosClickX, firstPosClickY, width, height);
-        //Draw the countour of a rectangle
-
-        if (gradient === "true") {
-            linearGradient = ctx.createLinearGradient(firstPosClickX, firstPosClickY, posX, posY);
-            linearGradient.addColorStop(0, activeColor);
-            linearGradient.addColorStop(1, 'white');
-            // ctx.fillStyle = linearGradient;
-            ctx.strokeStyle = activeColor;
-            console.log("inside");
-            ctx.fillStyle = linearGradient;
-            ctx.fillRect(firstPosClickX, firstPosClickY, width, height);
-            ctx.stroke();
-            let oRectangle = new Rectangle(firstPosClickX, firstPosClickY, width, height);
-            ObjectGlobalArray.push(oRectangle);
-            debugger
-        } else {
-            ctx.fillStyle = "white";
-            ctx.rect(firstPosClickX, firstPosClickY, width, height);
-            ctx.stroke();
-            //I was trying the lines below to see if I can store each element.
-            //however, I need more information about Path2D
-            let path = new Path2D();
-            path.rect(firstPosClickX, firstPosClickY, width, height);
-            oImage.arrayImages.push(path);
-
-            let oRectangle = new Rectangle(firstPosClickX, firstPosClickY, width, height);
-            ObjectGlobalArray.push(oRectangle);
-            debugger
-        }
+        let oRectangle = new Rectangle(firstPosClickX, firstPosClickY, posX - firstPosClickX, posY - firstPosClickY);
+        oGlobalArray.push(oRectangle);
+        oGlobalArray[oGlobalArray.length-1].drawRect(firstPosClickX, firstPosClickY);
     }
 
     function drawRectGhost(posX, posY) {
-        // ctx.clearRect(0,0, innerWidth, innerHeight);
         ctx.beginPath();
         ctx.lineWidth = 5;
         ctx.lineCap = "round";
-        ctx.fillStyle = "rgba(255, 160, 122, 0.3)";
-        console.log(firstPosClickX, firstPosClickY);
-        // ctx.fillRect(x, y, width, height);
+        ctx.strokeStyle = "rgba(255, 160, 122, 0.3)";
 
-        let width = posX - firstPosClickX;
-        let height = posY - firstPosClickY;
-
-        // ctx.fillRect(firstPosClickX, firstPosClickY, width, height);
-        ctx.rect(firstPosClickX, firstPosClickY, width, height);
+        ctx.rect(firstPosClickX, firstPosClickY, posX - firstPosClickX, posY - firstPosClickY);
         ctx.stroke();
 
         setTimeout(function() {
-            //ctx.clearRect(0,0, innerWidth, innerHeight);
             deleteRectGhost(posX, posY);
         }, 50);
-
     }
 
     function deleteRectGhost(posX, posY) {
@@ -465,14 +416,8 @@ jQuery(document).ready(function($) {
         ctx.lineWidth = 6;
         ctx.lineCap = "round";
         ctx.fillStyle = "white";
-
-        let width = posX - firstPosClickX;
-        let height = posY - firstPosClickY;
-
         /*clear and fill Rect have the same results*/
-        ctx.fillRect(firstPosClickX, firstPosClickY, width, height);
-        // ctx.clearRect(firstPosClickX, firstPosClickY, width, height);
-
+        ctx.fillRect(firstPosClickX-3, firstPosClickY-3, posX - firstPosClickX+8, posY - firstPosClickY+8);
     }
 
     /////FOR Circle//////////////////////////////
@@ -804,37 +749,37 @@ jQuery(document).ready(function($) {
        let enlargeTarged = 5;
        //moving, second time clicked:
        //first time clicked:
-       for(let index=0; index < ObjectGlobalArray.length; index++)
+       for(let index=0; index < oGlobalArray.length; index++)
        {
-         if(ObjectGlobalArray[index].clicked === true)
+         if(oGlobalArray[index].clicked === true)
          {
            console.log("true");
-           ObjectGlobalArray[index].eraseRect();
-           ObjectGlobalArray[index].drawRect(posClickX,posClickY);
-           ObjectGlobalArray[index].update(posClickX,posClickY);
+           oGlobalArray[index].eraseRect();
+           oGlobalArray[index].drawRect(posClickX,posClickY);
+           oGlobalArray[index].update(posClickX,posClickY);
          } else {
-           if(ObjectGlobalArray[index].posClickX-enlargeTarged <= posClickX && posClickX <= (ObjectGlobalArray[index].posClickX+ObjectGlobalArray[index].width+enlargeTarged) )
+           if(oGlobalArray[index].posClickX-enlargeTarged <= posClickX && posClickX <= (oGlobalArray[index].posClickX+oGlobalArray[index].width+enlargeTarged) )
            {
-             if(ObjectGlobalArray[index].posClickY <= posClickY && posClickY <= (ObjectGlobalArray[index].posClickY+ObjectGlobalArray[index].height) )
+             if(oGlobalArray[index].posClickY <= posClickY && posClickY <= (oGlobalArray[index].posClickY+oGlobalArray[index].height) )
              {
                console.log(`The object number ${index} is clicked!`);
-               ObjectGlobalArray[index].focusRect();
-               ObjectGlobalArray[index].clicked = true;
+               oGlobalArray[index].focusRect();
+               oGlobalArray[index].clicked = true;
              }
            }
          }
        }
 
        // //first time clicked:
-       // for(let index=0; index < ObjectGlobalArray.length; index++)
+       // for(let index=0; index < oGlobalArray.length; index++)
        // {
-       //   if(ObjectGlobalArray[index].posClickX-enlargeTarged <= posClickX && posClickX <= (ObjectGlobalArray[index].posClickX+ObjectGlobalArray[index].width+enlargeTarged) )
+       //   if(oGlobalArray[index].posClickX-enlargeTarged <= posClickX && posClickX <= (oGlobalArray[index].posClickX+oGlobalArray[index].width+enlargeTarged) )
        //   {
-       //     if(ObjectGlobalArray[index].posClickY <= posClickY && posClickY <= (ObjectGlobalArray[index].posClickY+ObjectGlobalArray[index].height) )
+       //     if(oGlobalArray[index].posClickY <= posClickY && posClickY <= (oGlobalArray[index].posClickY+oGlobalArray[index].height) )
        //     {
        //       console.log(`The object number ${index} is clicked!`);
-       //       ObjectGlobalArray[index].focusRect();
-       //       ObjectGlobalArray[index].clicked = true;
+       //       oGlobalArray[index].focusRect();
+       //       oGlobalArray[index].clicked = true;
        //     }
        //   }
        // }
@@ -1022,7 +967,7 @@ jQuery(document).ready(function($) {
             }
         };
     })
-    //MOUSE DOWN//
+    //MOUSE MOVE//
     $("#canvas").mousemove(function(event) {
         if (stiftActive) {
             let cursorPositions = getCursorPosition(canvas, event);
