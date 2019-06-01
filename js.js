@@ -83,22 +83,11 @@ jQuery(document).ready(function($) {
     let lineCapString = "round";
     let width = 500;
     let height = 300;
-    // let thickness = [4,8,12,16,20,24,28,36,42];
-    // let indexThickness = 0;
-    let oImage = {
-      arrayImages: [],
-
-      imageMethod () {
-        console.log("method here: arrayImages.length: " + this.arrayImages.length);
-      },
-      imageMethod2 () {
-
-      }
-    };
 
   //the array below will store all the object created in canvas! In this way
   //it will be easy to move, copy and delete then!
-  let oGlobalArray = [];
+  let oGlobalLineArray = [];
+  let oGlobalRectArray = [];
 
   class Line {
     constructor(posX, posY)
@@ -120,6 +109,15 @@ jQuery(document).ready(function($) {
 
     };
 
+    calcLineEqMatchClicked(clickedX, clickedY) {
+      let m = (this.firstPosClickY-this.posY)/(this.firstPosClickX-this.posX);
+      let b = this.posY-m*this.posX;
+
+      let result = -clickedY + m*clickedX + b;
+      return result;
+
+    }
+
     drawStraightLine(posX, posY) {
       ctx.beginPath();
       ctx.lineWidth = this.thickness;
@@ -137,6 +135,32 @@ jQuery(document).ready(function($) {
       ctx.lineTo(this.firstPosClickX, this.firstPosClickY);
       ctx.lineTo(this.posX, this.posY);
       ctx.stroke();
+    }
+
+    drawStraightLineGhost(posX, posY) {
+        ctx.beginPath();
+        ctx.lineWidth = 5;
+        ctx.lineCap = "round";
+        ctx.strokeStyle = "rgba(255, 160, 122, 0.3)";
+        ctx.lineTo(firstPosClickX, firstPosClickY);
+        ctx.lineTo(posX, posY);
+        ctx.stroke();
+
+        setTimeout( () => {
+            //ctx.clearRect(0,0, innerWidth, innerHeight);
+            this.deleteStraightLineGhost(posX, posY);
+        }, 100);
+
+    }
+
+    deleteStraightLineGhost(posX, posY) {
+        ctx.beginPath();
+        ctx.lineWidth = 6;
+        ctx.lineCap = "round";
+        ctx.strokeStyle = "white";
+        ctx.lineTo(firstPosClickX, firstPosClickY);
+        ctx.lineTo(posX, posY);
+        ctx.stroke();
     }
   }
 
@@ -357,32 +381,6 @@ jQuery(document).ready(function($) {
         ctx.stroke();
     }
 
-    //FOR STRAIGHTLINE////////////////////////////
-    function drawStraightLineGhost(posX, posY) {
-        ctx.beginPath();
-        ctx.lineWidth = 5;
-        ctx.lineCap = "round";
-        ctx.strokeStyle = "rgba(255, 160, 122, 0.3)";
-        ctx.lineTo(firstPosClickX, firstPosClickY);
-        ctx.lineTo(posX, posY);
-        ctx.stroke();
-
-        setTimeout(function() {
-            //ctx.clearRect(0,0, innerWidth, innerHeight);
-            deleteStraightLineGhost(posX, posY);
-        }, 100);
-
-    }
-
-    function deleteStraightLineGhost(posX, posY) {
-        ctx.beginPath();
-        ctx.lineWidth = 6;
-        ctx.lineCap = "round";
-        ctx.strokeStyle = "white";
-        ctx.lineTo(firstPosClickX, firstPosClickY);
-        ctx.lineTo(posX, posY);
-        ctx.stroke();
-    }
 
     /////FOR Circle//////////////////////////////
     function drawCircle(posX, posY) {
@@ -629,32 +627,60 @@ jQuery(document).ready(function($) {
 
      }
 
-     function elementClicked(posClickX,posClickY) {
+     function elementLineClicked(posClickX,posClickY) {
        console.log(`You clicked at X: ${posClickX} and y: ${posClickY}`);
        let enlargeTarged = 5;
        //moving, second time clicked:
        //first time clicked:
-       for(let index=0; index < oGlobalArray.length; index++)
+       //Check The Rectangle
+
+       for(let index=0; index < oGlobalLineArray.length; index++)
        {
-         if(oGlobalArray[index].clicked === true)
+         if(oGlobalLineArray[index].clicked === true)
+         {
+
+         } else
+         {
+           let result = oGlobalLineArray[index].calcLineEqMatchClicked(posClickX,posClickY);
+           console.log(`The result is: ${result}`);
+
+           if(Math.abs(result) < 8 && (posClickX+3) > oGlobalLineArray[index].firstPosClickX
+                                   && (posClickX-3) < oGlobalLineArray[index].posX )
+           {
+             console.log("MATCH");
+            }
+         }
+
+       }
+
+     }
+
+     function elementRectClicked(posClickX,posClickY) {
+       console.log(`You clicked at X: ${posClickX} and y: ${posClickY}`);
+       let enlargeTarged = 5;
+       //moving, second time clicked:
+       //first time clicked:
+       //Check The Rectangle
+       for(let index=0; index < oGlobalRectArray.length; index++)
+       {
+         if(oGlobalRectArray[index].clicked === true)
          {
            console.log("true");
-           oGlobalArray[index].eraseRect();
-           oGlobalArray[index].drawRect(posClickX,posClickY);
-           oGlobalArray[index].update(posClickX,posClickY);
+           oGlobalRectArray[index].eraseRect();
+           oGlobalRectArray[index].drawRect(posClickX,posClickY);
+           oGlobalRectArray[index].update(posClickX,posClickY);
          } else {
-           if(oGlobalArray[index].firstPosClickX-enlargeTarged <= posClickX && posClickX <= (oGlobalArray[index].firstPosClickX+oGlobalArray[index].width+enlargeTarged) )
+           if(oGlobalRectArray[index].firstPosClickX-enlargeTarged <= posClickX && posClickX <= (oGlobalRectArray[index].firstPosClickX+oGlobalRectArray[index].width+enlargeTarged) )
            {
-             if(oGlobalArray[index].firstPosClickY <= posClickY && posClickY <= (oGlobalArray[index].firstPosClickY+oGlobalArray[index].height) )
+             if(oGlobalRectArray[index].firstPosClickY <= posClickY && posClickY <= (oGlobalRectArray[index].firstPosClickY+oGlobalRectArray[index].height) )
              {
                console.log(`The object number ${index} is clicked!`);
-               oGlobalArray[index].focusRect();
-               oGlobalArray[index].clicked = true;
+               oGlobalRectArray[index].focusRect();
+               oGlobalRectArray[index].clicked = true;
              }
            }
          }
        }
-
      }
 
     ////////////////////////////////////////////////////
@@ -680,7 +706,8 @@ jQuery(document).ready(function($) {
           let cursorPositions = getCursorPosition(canvas, event);
           firstPosClickX = cursorPositions[0];
           firstPosClickY = cursorPositions[1];
-          elementClicked(cursorPositions[0],cursorPositions[1])
+          elementRectClicked(cursorPositions[0],cursorPositions[1]);
+          elementLineClicked(cursorPositions[0],cursorPositions[1]);
       };
 
       if($(".bCopyPaste").hasClass("active") || $(".bCutPaste").hasClass("active")) {
@@ -852,7 +879,8 @@ jQuery(document).ready(function($) {
         };
         if (straightLine) {
             let cursorPositions = getCursorPosition(canvas, event);
-            drawStraightLineGhost(cursorPositions[0], cursorPositions[1]);
+            let oStraightLineGhost = new Line(cursorPositions[0], cursorPositions[1]);
+            oStraightLineGhost.drawStraightLineGhost(cursorPositions[0], cursorPositions[1])
         }
 
         if (rectActive) {
@@ -889,6 +917,7 @@ jQuery(document).ready(function($) {
     if (straightLine) {
         let cursorPositions = getCursorPosition(canvas, event);
         let oLine = new Line(cursorPositions[0], cursorPositions[1]);
+        oGlobalLineArray.push(oLine);
         oLine.drawStraightLine(cursorPositions[0], cursorPositions[1]);
         straightLine = false;
     }
@@ -898,8 +927,8 @@ jQuery(document).ready(function($) {
         //creates a new rectangle with (x,y, width, height); -> (x,y) start pos.
         let oRectangle = new Rectangle(firstPosClickX, firstPosClickY, cursorPositions[0], cursorPositions[1]);
         //oGlobal Array to keep track of the rectangle drawed in canvas.
-        oGlobalArray.push(oRectangle);
-        oGlobalArray[oGlobalArray.length-1].drawRect(firstPosClickX, firstPosClickY);
+        oGlobalRectArray.push(oRectangle);
+        oGlobalRectArray[oGlobalRectArray.length-1].drawRect(firstPosClickX, firstPosClickY);
         rectActive = false;
     }
 
@@ -907,8 +936,6 @@ jQuery(document).ready(function($) {
         if(copy === true) {
           paste = true;
         }
-
-
 
         if (circleActive) {
             let cursorPositions = getCursorPosition(canvas, event);
