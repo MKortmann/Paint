@@ -101,7 +101,43 @@ jQuery(document).ready(function($) {
   let oGlobalArray = [];
 
   class Line {
-    constructor(posX, posY){};
+    constructor(posX, posY)
+    {
+      this.firstPosClickX = firstPosClickX;
+      this.firstPosClickY = firstPosClickY;
+      this.posX = posX;
+      this.posY = posY;
+      //global infos
+      this.gradient = gradient;
+      this.lineWidth = thickness;
+      this.lineCap = lineCapString;
+      this.activeColor = activeColor;
+      this.dashIndex = dashIndex;
+      this.globalAlpha = transparency;
+      this.fillStyle = linearGradient;
+      //flags
+      this.clicked = false;
+
+    };
+
+    drawStraightLine(posX, posY) {
+      ctx.beginPath();
+      ctx.lineWidth = this.thickness;
+      ctx.lineCap = this.lineCapString;
+      ctx.setLineDash([this.lineWidth, this.dashIndex * this.lineWidth]); /*dashes are x and spaces are y*/
+      if (this.gradient === "true") {
+        linearGradient = ctx.createLinearGradient(firstPosClickX, firstPosClickY, posX, posY);
+        linearGradient.addColorStop(1, 'white');
+        linearGradient.addColorStop(0, activeColor);
+        ctx.strokeStyle = linearGradient;
+      } else {
+        ctx.strokeStyle = activeColor;
+      }
+      ctx.globalAlpha = this.transparency;
+      ctx.lineTo(this.firstPosClickX, this.firstPosClickY);
+      ctx.lineTo(this.posX, this.posY);
+      ctx.stroke();
+    }
   }
 
   /**
@@ -113,11 +149,12 @@ jQuery(document).ready(function($) {
   * @param {height} height - rectangle width = last y position - firstPosClickY
   */
     class Rectangle {
-      constructor(firstPosClickX = 0, firstPosClickY = 0, width = 100, height = 100) {
-        this.posClickX = firstPosClickX;
-        this.posClickY = firstPosClickY;
-        this.height = height;
-        this.width = width;
+      constructor(firstPosClickX = 0, firstPosClickY = 0, posX = 100, posY = 100)
+      {
+        this.firstPosClickX = firstPosClickX;
+        this.firstPosClickY = firstPosClickY;
+        this.width = posX-firstPosClickX;
+        this.height = posY-firstPosClickY;
         //global infos
         this.gradient = gradient;
         this.lineWidth = thickness;
@@ -137,8 +174,8 @@ jQuery(document).ready(function($) {
         ctx.fillStyle = "white";
         //reset setLineDash
         ctx.setLineDash([]);
-        ctx.fillRect(this.posClickX,this.posClickY, this.width, this.height);
-        ctx.rect(this.posClickX,this.posClickY, this.width, this.height);
+        ctx.fillRect(this.firstPosClickX,this.firstPosClickY, this.width, this.height);
+        ctx.rect(this.firstPosClickX,this.firstPosClickY, this.width, this.height);
         ctx.stroke();
       }
 
@@ -147,14 +184,14 @@ jQuery(document).ready(function($) {
         ctx.lineWidth = 5;
         ctx.strokeStyle = "rgba(255, 160, 122, 0.8)";
         ctx.setLineDash([this.lineWidth, 2 * this.lineWidth]);
-        ctx.fillRect(this.posClickX,this.posClickY, this.width, this.height);
-        ctx.rect(this.posClickX-4,this.posClickY-4, this.width+8, this.height+8);
+        ctx.fillRect(this.firstPosClickX,this.firstPosClickY, this.width, this.height);
+        ctx.rect(this.firstPosClickX-4,this.firstPosClickY-4, this.width+8, this.height+8);
         ctx.stroke();
         $("#canvas").css("cursor", "pointer");
 
       }
 
-      drawRect(newPosClickX,newPosClickY) {
+      drawRect(newPosClickX, newPosClickY) {
         if(this.gradient === "true") {
           ctx.beginPath();
           //ctx.createLinearGradient(x0, y0, x1, y1);
@@ -178,15 +215,15 @@ jQuery(document).ready(function($) {
           ctx.strokeStyle = this.activeColor;
           ctx.setLineDash([this.lineWidth, this.dashIndex * this.lineWidth]);
           // ctx.rect(newPosClickX,newPosClickY, this.height, this.width);
-          ctx.rect(newPosClickX,newPosClickY, this.width, this.height);
+          ctx.rect(newPosClickX, newPosClickY, this.width, this.height);
           ctx.stroke();
           $("#canvas").css("cursor", "default");
         }
 
       }
-      update(newPosClickX,newPosClickY) {
-        this.posClickX = newPosClickX;
-        this.posClickY = newPosClickY;
+      update(newPosClickX, newPosClickY) {
+        this.firstPosClickX = newPosClickX;
+        this.firstPosClickY = newPosClickY;
         this.clicked = false;
       }
 
@@ -215,9 +252,6 @@ jQuery(document).ready(function($) {
           ctx.fillRect(firstPosClickX-3, firstPosClickY-3, posX - firstPosClickX+8, posY - firstPosClickY+8);
       }
     }
-
-
-    oImage.imageMethod();
 
 
     //let index = 0;
@@ -324,29 +358,6 @@ jQuery(document).ready(function($) {
     }
 
     //FOR STRAIGHTLINE////////////////////////////
-    function drawStraightLine(posX, posY) {
-        // ctx.clearRect(0,0, innerWidth, innerHeight);
-        ctx.beginPath();
-        ctx.lineWidth = thickness;
-        ctx.lineCap = lineCapString;
-
-        ctx.setLineDash([thickness, dashIndex * thickness]); /*dashes are x and spaces are y*/
-        if (gradient === "true") {
-            let linearGradient = ctx.createLinearGradient(firstPosClickX, firstPosClickY, posX, posY);
-            linearGradient.addColorStop(1, 'white');
-            linearGradient.addColorStop(0, activeColor);
-            // ctx.fillStyle = linearGradient;
-            // ctx.strokeStyle = activeColor;
-            ctx.strokeStyle = linearGradient;
-        } else {
-            ctx.strokeStyle = activeColor;
-        }
-        ctx.globalAlpha = transparency;
-        ctx.lineTo(firstPosClickX, firstPosClickY);
-        ctx.lineTo(posX, posY);
-        ctx.stroke();
-    }
-
     function drawStraightLineGhost(posX, posY) {
         ctx.beginPath();
         ctx.lineWidth = 5;
@@ -371,19 +382,6 @@ jQuery(document).ready(function($) {
         ctx.lineTo(firstPosClickX, firstPosClickY);
         ctx.lineTo(posX, posY);
         ctx.stroke();
-    }
-
-  /**
-  * @description draw a new Rectangle and store it at global Array
-  * @param {posX, posY} - receives the final (x,y) position of the mouse (this
-  * is the final corner right-x and down-y position of the rectangle)
-  */
-    function drawNewRect(posX, posY) {
-      //creates a new rectangle with (x,y, width, height); -> (x,y) start pos.
-      let oRectangle = new Rectangle(firstPosClickX, firstPosClickY, posX - firstPosClickX, posY - firstPosClickY);
-      //oGlobal Array to keep track of the rectangle drawed in canvas.
-      oGlobalArray.push(oRectangle);
-      oGlobalArray[oGlobalArray.length-1].drawRect(firstPosClickX, firstPosClickY);
     }
 
     /////FOR Circle//////////////////////////////
@@ -632,7 +630,6 @@ jQuery(document).ready(function($) {
      }
 
      function elementClicked(posClickX,posClickY) {
-
        console.log(`You clicked at X: ${posClickX} and y: ${posClickY}`);
        let enlargeTarged = 5;
        //moving, second time clicked:
@@ -646,9 +643,9 @@ jQuery(document).ready(function($) {
            oGlobalArray[index].drawRect(posClickX,posClickY);
            oGlobalArray[index].update(posClickX,posClickY);
          } else {
-           if(oGlobalArray[index].posClickX-enlargeTarged <= posClickX && posClickX <= (oGlobalArray[index].posClickX+oGlobalArray[index].width+enlargeTarged) )
+           if(oGlobalArray[index].firstPosClickX-enlargeTarged <= posClickX && posClickX <= (oGlobalArray[index].firstPosClickX+oGlobalArray[index].width+enlargeTarged) )
            {
-             if(oGlobalArray[index].posClickY <= posClickY && posClickY <= (oGlobalArray[index].posClickY+oGlobalArray[index].height) )
+             if(oGlobalArray[index].firstPosClickY <= posClickY && posClickY <= (oGlobalArray[index].firstPosClickY+oGlobalArray[index].height) )
              {
                console.log(`The object number ${index} is clicked!`);
                oGlobalArray[index].focusRect();
@@ -891,13 +888,18 @@ jQuery(document).ready(function($) {
 
     if (straightLine) {
         let cursorPositions = getCursorPosition(canvas, event);
-        drawStraightLine(cursorPositions[0], cursorPositions[1]);
+        let oLine = new Line(cursorPositions[0], cursorPositions[1]);
+        oLine.drawStraightLine(cursorPositions[0], cursorPositions[1]);
         straightLine = false;
     }
 
     if (rectActive) {
         let cursorPositions = getCursorPosition(canvas, event);
-        drawNewRect(cursorPositions[0], cursorPositions[1]);
+        //creates a new rectangle with (x,y, width, height); -> (x,y) start pos.
+        let oRectangle = new Rectangle(firstPosClickX, firstPosClickY, cursorPositions[0], cursorPositions[1]);
+        //oGlobal Array to keep track of the rectangle drawed in canvas.
+        oGlobalArray.push(oRectangle);
+        oGlobalArray[oGlobalArray.length-1].drawRect(firstPosClickX, firstPosClickY);
         rectActive = false;
     }
 
