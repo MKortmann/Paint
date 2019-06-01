@@ -856,6 +856,7 @@ jQuery(document).ready(function($) {
         };
         if ($(".bRect").hasClass("active")) {
             rectActive = true;
+            $("#canvas").css("cursor", "nwse-resize");
             let cursorPositions = getCursorPosition(canvas, event);
             firstPosClickX = cursorPositions[0];
             firstPosClickY = cursorPositions[1];
