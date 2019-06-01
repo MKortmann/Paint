@@ -96,12 +96,26 @@ jQuery(document).ready(function($) {
       }
     };
 
-    let oGlobalArray = [];
+  //the array below will store all the object created in canvas! In this way
+  //it will be easy to move, copy and delete then!
+  let oGlobalArray = [];
 
+  class Line {
+    constructor(posX, posY){};
+  }
+
+  /**
+  * @description Represents a Rectangle
+  * @constructor
+  * @param {posClickX} posClickX - get the x mouse clicked position at canvas
+  * @param {posClickY} posClickY - get the y mouse clicked position at canvas
+  * @param {width} width - rectangle width = last x position - firstPosClickX
+  * @param {height} height - rectangle width = last y position - firstPosClickY
+  */
     class Rectangle {
-      constructor(posClickX, posClickY, width, height) {
-        this.posClickX = posClickX;
-        this.posClickY = posClickY;
+      constructor(firstPosClickX = 0, firstPosClickY = 0, width = 100, height = 100) {
+        this.posClickX = firstPosClickX;
+        this.posClickY = firstPosClickY;
         this.height = height;
         this.width = width;
         //global infos
@@ -175,6 +189,31 @@ jQuery(document).ready(function($) {
         this.posClickY = newPosClickY;
         this.clicked = false;
       }
+
+      //to make a nice effect and let the program user friendly!
+      drawRectGhost(posX, posY) {
+        $("#canvas").css("cursor", "nwse-resize");
+        ctx.beginPath();
+        ctx.lineWidth = 5;
+        ctx.lineCap = "round";
+        ctx.strokeStyle = "rgba(255, 160, 122, 0.3)";
+
+        ctx.rect(firstPosClickX, firstPosClickY, posX - firstPosClickX, posY - firstPosClickY);
+        ctx.stroke();
+
+        setTimeout( () => {
+            this.deleteRectGhost(posX, posY);
+        }, 50);
+      }
+
+      deleteRectGhost(posX, posY) {
+          ctx.beginPath();
+          ctx.lineWidth = 6;
+          ctx.lineCap = "round";
+          ctx.fillStyle = "white";
+          /*clear and fill Rect have the same results*/
+          ctx.fillRect(firstPosClickX-3, firstPosClickY-3, posX - firstPosClickX+8, posY - firstPosClickY+8);
+      }
     }
 
 
@@ -225,62 +264,6 @@ jQuery(document).ready(function($) {
     /*You make sure that the attributes of canvas and css are the same!*/
     resizeCanvas(width, height);
 
-    // smileFace();
-
-    function smileFace() {
-        ctx.beginPath();
-        ctx.strokeStyle = "black";
-        //Big Circle//////////////////
-        //arc(x,y,radius,startAngle, endAngle, anticlockwise);
-        //Draw an arc which is centerd at (x,y),
-        //Angles in the arc function are measured in radians, not degress.
-        ctx.arc(300, 300, 300, 0, Math.PI * 2, true); // Outer circle
-        /*Another way to draw an arc is to type:
-        arcTo(x1, y1, x2, y2, radius)
-        It draws an arc with the given control poionts and radius, connected to the
-        previous point by a straight line.*/
-
-        //Mouth
-        //MoveTo: moves the pen to the coordinates specified by x,y
-        ctx.moveTo(500, 300);
-        // Mouth (clockwise) - outside part
-        ctx.arc(300, 300, 200, 0, Math.PI, false);
-        // Mouth (clockwise) - inside part
-        ctx.moveTo(500, 300);
-        ctx.arc(300, 300, 220, 0, Math.PI, false); // Mouth (clockwise)
-        ctx.moveTo(80, 300);
-        //draws a line from the current drawing position to the position specified x,y
-        ctx.lineTo(100, 300)
-        // ctx.closePath();
-        ctx.stroke();
-        ctx.beginPath();
-        //eyes
-        ctx.moveTo(260, 200);
-        //eye left
-        ctx.arc(200, 200, 60, 0, Math.PI * 2, true); // Left eye
-        ctx.moveTo(460, 200);
-        //eye right
-        ctx.arc(400, 200, 60, 0, Math.PI * 2, true); // Right eye
-        //Sets the style for shapes outlines
-        ctx.strokeStyle = "blue";
-        ctx.stroke();
-        //nose
-        ctx.beginPath();
-        ctx.moveTo(342, 350);
-        //Sets the style used when filling shapes
-        ctx.fillStyle = "red";
-        ctx.arc(302, 350, 40, 0, Math.PI * 2, true); // Right eye
-        ctx.fill();
-
-        //Nice way to clear
-        for (let index = 0; index <= 310; index = index + 0.3) {
-            setTimeout(function() {
-                ctx.strokeStyle = "white";
-                ctx.arc(300, 300, index, 0, Math.PI * 2, true); // Outer circle
-                ctx.stroke();
-            }.bind(index), 3000);
-        }
-    }
 
     function getCursorPosition(canvas, event) {
         //you can get the bounding box of any element by calling getBoundingClientRecht
@@ -341,7 +324,7 @@ jQuery(document).ready(function($) {
     }
 
     //FOR STRAIGHTLINE////////////////////////////
-    function drawStraightLine(posArrayX, posArrayY) {
+    function drawStraightLine(posX, posY) {
         // ctx.clearRect(0,0, innerWidth, innerHeight);
         ctx.beginPath();
         ctx.lineWidth = thickness;
@@ -349,7 +332,7 @@ jQuery(document).ready(function($) {
 
         ctx.setLineDash([thickness, dashIndex * thickness]); /*dashes are x and spaces are y*/
         if (gradient === "true") {
-            let linearGradient = ctx.createLinearGradient(posArrayX[0], posArrayY[0], posArrayX[1], posArrayY[1]);
+            let linearGradient = ctx.createLinearGradient(firstPosClickX, firstPosClickY, posX, posY);
             linearGradient.addColorStop(1, 'white');
             linearGradient.addColorStop(0, activeColor);
             // ctx.fillStyle = linearGradient;
@@ -359,8 +342,8 @@ jQuery(document).ready(function($) {
             ctx.strokeStyle = activeColor;
         }
         ctx.globalAlpha = transparency;
-        ctx.lineTo(posArrayX[0], posArrayY[0]);
-        ctx.lineTo(posArrayX[1], posArrayY[1]);
+        ctx.lineTo(firstPosClickX, firstPosClickY);
+        ctx.lineTo(posX, posY);
         ctx.stroke();
     }
 
@@ -369,7 +352,7 @@ jQuery(document).ready(function($) {
         ctx.lineWidth = 5;
         ctx.lineCap = "round";
         ctx.strokeStyle = "rgba(255, 160, 122, 0.3)";
-        ctx.lineTo(posArrayX[0], posArrayY[0]);
+        ctx.lineTo(firstPosClickX, firstPosClickY);
         ctx.lineTo(posX, posY);
         ctx.stroke();
 
@@ -385,39 +368,22 @@ jQuery(document).ready(function($) {
         ctx.lineWidth = 6;
         ctx.lineCap = "round";
         ctx.strokeStyle = "white";
-        ctx.lineTo(posArrayX[0], posArrayY[0]);
+        ctx.lineTo(firstPosClickX, firstPosClickY);
         ctx.lineTo(posX, posY);
         ctx.stroke();
     }
 
-    /////FOR Rectangle//////////////////////////////
-    function drawRect(posX, posY) {
-        let oRectangle = new Rectangle(firstPosClickX, firstPosClickY, posX - firstPosClickX, posY - firstPosClickY);
-        oGlobalArray.push(oRectangle);
-        oGlobalArray[oGlobalArray.length-1].drawRect(firstPosClickX, firstPosClickY);
-    }
-
-    function drawRectGhost(posX, posY) {
-        ctx.beginPath();
-        ctx.lineWidth = 5;
-        ctx.lineCap = "round";
-        ctx.strokeStyle = "rgba(255, 160, 122, 0.3)";
-
-        ctx.rect(firstPosClickX, firstPosClickY, posX - firstPosClickX, posY - firstPosClickY);
-        ctx.stroke();
-
-        setTimeout(function() {
-            deleteRectGhost(posX, posY);
-        }, 50);
-    }
-
-    function deleteRectGhost(posX, posY) {
-        ctx.beginPath();
-        ctx.lineWidth = 6;
-        ctx.lineCap = "round";
-        ctx.fillStyle = "white";
-        /*clear and fill Rect have the same results*/
-        ctx.fillRect(firstPosClickX-3, firstPosClickY-3, posX - firstPosClickX+8, posY - firstPosClickY+8);
+  /**
+  * @description draw a new Rectangle and store it at global Array
+  * @param {posX, posY} - receives the final (x,y) position of the mouse (this
+  * is the final corner right-x and down-y position of the rectangle)
+  */
+    function drawNewRect(posX, posY) {
+      //creates a new rectangle with (x,y, width, height); -> (x,y) start pos.
+      let oRectangle = new Rectangle(firstPosClickX, firstPosClickY, posX - firstPosClickX, posY - firstPosClickY);
+      //oGlobal Array to keep track of the rectangle drawed in canvas.
+      oGlobalArray.push(oRectangle);
+      oGlobalArray[oGlobalArray.length-1].drawRect(firstPosClickX, firstPosClickY);
     }
 
     /////FOR Circle//////////////////////////////
@@ -653,84 +619,6 @@ jQuery(document).ready(function($) {
     }
 
 
-    // function draw() {
-    //   var ctx = document.getElementById('canvas').getContext('2d');
-    //   var img = new Image();
-    //   img.onload = function() {
-    //     ctx.drawImage(img, 0, 0);
-    //     ctx.beginPath();
-    //     ctx.moveTo(30, 96);
-    //     ctx.lineTo(70, 66);
-    //     ctx.lineTo(103, 76);
-    //     ctx.lineTo(170, 15);
-    //     ctx.stroke();
-    //   };
-    //   img.src = 'https://mdn.mozillademos.org/files/5395/backdrop.png';
-    // }
-    //
-    // draw();
-
-    /*Drawing text*/
-
-    // function drawText() {
-    //   ctx.font = "64px serif";
-    //   ctx.fillText("Hello World", 10, 50);
-    // }
-
-
-    /*
-    Path2D Objects
-    // The Path2D() constructor returns a newly instantiated Path2D object, optionally with
-    another path as an argument (creates a copy), or optionally with a string consisting of SVG path data.
-    new Path2D();     // empty path object
-    new Path2D(path); // copy from another Path2D object
-    new Path2D(d);    // path from SVG path data
-    All path methods like moveTo, rect, arc or quadraticCurveTo, etc., which we got
-    to know above, are available on Path2D objects.
-
-    It is easier to use it to copy and past, so I will do
-    above an simple example. We will use it to improve
-    our code!
-
-    */
-
-    // function draw() {
-    //
-    //   let rectangle = new Path2D();
-    //   rectangle.rect(10,10,50,50);
-    //
-    //   let circle = new Path2D();
-    //   circle.moveTo(125,35);
-    //   circle.arc(100,35,25,0,2*Math.PI);
-    // console.log("Canvas Width': " + canvas.width);
-    //   for(var indexX=100; indexX < 600; indexX = indexX + 52) {
-    //     circle.arc(indexX,35,25,0,2*Math.PI);
-    //     // ctx.stroke(circle);
-    //     console.log(`Circles: ${circle}`);
-    //   }
-    //   console.log("outside");
-    //   ctx.fill(rectangle);
-    //   ctx.stroke(circle);
-    //
-    // }
-
-    /*Using SVG paths*/
-    /*Another powerful feature of the new canvas Path2D API is using SVG path data
-     to initialize paths on your canvas. */
-
-    /*
-    The path will move to point (M10 10) and then move horizontally 80 points to
-    the right (h 80), then 80 points down (v 80), then 80 points to the left (h -80),
-    and then back to the start (z).
-    */
-    // function SVG() {
-    //   let p = new Path2D('M10 10 h 80 v 180 h -80 Z');
-    //   ctx.stroke(p);
-    // }
-
-    // SVG();
-    // draw();
-
      function selection() {
 
        if(copy === true && paste === true) {
@@ -770,25 +658,26 @@ jQuery(document).ready(function($) {
          }
        }
 
-       // //first time clicked:
-       // for(let index=0; index < oGlobalArray.length; index++)
-       // {
-       //   if(oGlobalArray[index].posClickX-enlargeTarged <= posClickX && posClickX <= (oGlobalArray[index].posClickX+oGlobalArray[index].width+enlargeTarged) )
-       //   {
-       //     if(oGlobalArray[index].posClickY <= posClickY && posClickY <= (oGlobalArray[index].posClickY+oGlobalArray[index].height) )
-       //     {
-       //       console.log(`The object number ${index} is clicked!`);
-       //       oGlobalArray[index].focusRect();
-       //       oGlobalArray[index].clicked = true;
-       //     }
-       //   }
-       // }
-
      }
 
     ////////////////////////////////////////////////////
     //MOUSEEEEEEEEEEEEEEEEEEEEEEEE UP
     $("#canvas").mousedown(function(event) {
+
+    if ($(".bStraightLine").hasClass("active")) {
+        straightLine = true;
+        let cursorPositions = getCursorPosition(canvas, event);
+        firstPosClickX = cursorPositions[0];
+        firstPosClickY = cursorPositions[1];
+    };
+
+    if ($(".bRect").hasClass("active")) {
+      rectActive = true;
+      //Storing the first mouse position clicked at canvas!
+      let cursorPositions = getCursorPosition(canvas, event);
+      firstPosClickX = cursorPositions[0];
+      firstPosClickY = cursorPositions[1];
+    };
 
       if ($(".bSelectMove").hasClass("active")) {
           let cursorPositions = getCursorPosition(canvas, event);
@@ -845,21 +734,6 @@ jQuery(document).ready(function($) {
             eraseActive = true;
             let cursorPositions = getCursorPosition(canvas, event);
             erase(cursorPositions[0], cursorPositions[1]);
-        };
-        if ($(".bStraightLine").hasClass("active")) {
-            straightLine = true;
-            let cursorPositions = getCursorPosition(canvas, event);
-            posArrayX.push(cursorPositions[0]);
-            posArrayY.push(cursorPositions[1]);
-            console.log(`First X position: ${cursorPositions[0]}`);
-            console.log(`First Y position: ${cursorPositions[1]}`);
-        };
-        if ($(".bRect").hasClass("active")) {
-            rectActive = true;
-            $("#canvas").css("cursor", "nwse-resize");
-            let cursorPositions = getCursorPosition(canvas, event);
-            firstPosClickX = cursorPositions[0];
-            firstPosClickY = cursorPositions[1];
         };
 
         if ($(".bCircle").hasClass("active")) {
@@ -985,8 +859,9 @@ jQuery(document).ready(function($) {
         }
 
         if (rectActive) {
-            let cursorPositions = getCursorPosition(canvas, event);
-            drawRectGhost(cursorPositions[0], cursorPositions[1]);
+          let cursorPositions = getCursorPosition(canvas, event);
+          let oGhostRectangle = new Rectangle();
+          oGhostRectangle.drawRectGhost(cursorPositions[0], cursorPositions[1]);
         }
 
         if (circleActive) {
@@ -1014,16 +889,24 @@ jQuery(document).ready(function($) {
         stiftActive = false;
         eraseActive = false;
 
+    if (straightLine) {
+        let cursorPositions = getCursorPosition(canvas, event);
+        drawStraightLine(cursorPositions[0], cursorPositions[1]);
+        straightLine = false;
+    }
+
+    if (rectActive) {
+        let cursorPositions = getCursorPosition(canvas, event);
+        drawNewRect(cursorPositions[0], cursorPositions[1]);
+        rectActive = false;
+    }
+
         selection();
         if(copy === true) {
           paste = true;
         }
 
-        if (rectActive) {
-            let cursorPositions = getCursorPosition(canvas, event);
-            drawRect(cursorPositions[0], cursorPositions[1]);
-            rectActive = false;
-        }
+
 
         if (circleActive) {
             let cursorPositions = getCursorPosition(canvas, event);
@@ -1031,17 +914,7 @@ jQuery(document).ready(function($) {
             circleActive = false;
         }
 
-        if (straightLine) {
-            let cursorPositions = getCursorPosition(canvas, event);
-            posArrayX.push(cursorPositions[0]);
-            posArrayY.push(cursorPositions[1]);
-            console.log(`Last X position: ${cursorPositions[0]}`);
-            console.log(`Last Y position: ${cursorPositions[1]}`);
-            drawStraightLine(posArrayX, posArrayY);
-            straightLine = false;
-            posArrayX = [];
-            posArrayY = [];
-        }
+
 
         if (posArrayY.length >= 3 && bezierQActive) {
             bezierQActive = false;
@@ -1384,29 +1257,65 @@ jQuery(document).ready(function($) {
         }
     });
 
-    /*FUNCTIONS USED ONLY TO LEARN HOW IT WORKS*/
-    /*Draw a house: see that the (x,y) are the end point coordinates in the canvas 2D!*/
-    // ctx.beginPath();
-    // ctx.moveTo(100,10);
-    // ctx.lineTo(200,50);
-    // ctx.lineTo(200,100);
-    // ctx.lineTo(10,100);
-    // ctx.lineTo(10,50);
-    // ctx.lineTo(100,10);
-    // // ctx.closePath(); TO CLOSE THE PATH
-    // ctx.stroke();
-    //
-    // /*The animation function was done only to test!*/
-    // let animation = function() {
-    //   ctx.fillStyle = "green";
-    //   for (let index = 1; index <= canvas[0].width; index++) {
-    //     setTimeout(() => {
-    //       console.log(index);
-    //       ctx.fillRect(0, 0, index, canvas[0].height);
-    //     }, 10)
-    //   }
-    // }
+/*
+ANIMATION THAT CAN BE USE WHEN YOU START THE PROGRAM!
+*/
+// smileFace();
 
+function smileFace() {
+    ctx.beginPath();
+    ctx.strokeStyle = "black";
+    //Big Circle//////////////////
+    //arc(x,y,radius,startAngle, endAngle, anticlockwise);
+    //Draw an arc which is centerd at (x,y),
+    //Angles in the arc function are measured in radians, not degress.
+    ctx.arc(300, 300, 300, 0, Math.PI * 2, true); // Outer circle
+    /*Another way to draw an arc is to type:
+    arcTo(x1, y1, x2, y2, radius)
+    It draws an arc with the given control poionts and radius, connected to the
+    previous point by a straight line.*/
+
+    //Mouth
+    //MoveTo: moves the pen to the coordinates specified by x,y
+    ctx.moveTo(500, 300);
+    // Mouth (clockwise) - outside part
+    ctx.arc(300, 300, 200, 0, Math.PI, false);
+    // Mouth (clockwise) - inside part
+    ctx.moveTo(500, 300);
+    ctx.arc(300, 300, 220, 0, Math.PI, false); // Mouth (clockwise)
+    ctx.moveTo(80, 300);
+    //draws a line from the current drawing position to the position specified x,y
+    ctx.lineTo(100, 300)
+    // ctx.closePath();
+    ctx.stroke();
+    ctx.beginPath();
+    //eyes
+    ctx.moveTo(260, 200);
+    //eye left
+    ctx.arc(200, 200, 60, 0, Math.PI * 2, true); // Left eye
+    ctx.moveTo(460, 200);
+    //eye right
+    ctx.arc(400, 200, 60, 0, Math.PI * 2, true); // Right eye
+    //Sets the style for shapes outlines
+    ctx.strokeStyle = "blue";
+    ctx.stroke();
+    //nose
+    ctx.beginPath();
+    ctx.moveTo(342, 350);
+    //Sets the style used when filling shapes
+    ctx.fillStyle = "red";
+    ctx.arc(302, 350, 40, 0, Math.PI * 2, true); // Right eye
+    ctx.fill();
+
+    //Nice way to clear
+    for (let index = 0; index <= 310; index = index + 0.3) {
+        setTimeout(function() {
+            ctx.strokeStyle = "white";
+            ctx.arc(300, 300, index, 0, Math.PI * 2, true); // Outer circle
+            ctx.stroke();
+        }.bind(index), 3000);
+    }
+}
 
 
 
