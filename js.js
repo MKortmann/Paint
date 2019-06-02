@@ -1,6 +1,9 @@
 "use strict";
 
 /*TODO:
+*) export or save the image as png.
+*) copy the image to clickboard
+*) change the background image
 *) Important: look about tip menu explaining how to work with the program!,
 improve copy&paste and do a way to select elements.
 
@@ -76,6 +79,7 @@ jQuery(document).ready(function($) {
     let dashIndex = 0;
     let gradient = false;
     let linearGradient = 0;
+    let radialGradient = 0;
     let textDraw = false;
     //starting with the value of 0
     // $("#lineDash")[0].value = 0
@@ -88,6 +92,14 @@ jQuery(document).ready(function($) {
   //it will be easy to move, copy and delete then!
   let oGlobalLineArray = [];
   let oGlobalRectArray = [];
+  let oGlobalCircleArray = [];
+
+  /**
+  * @description Represents a Line
+  * @constructor
+  * @param {posX} posX - get the x mouse UP release position at canvas
+  * @param {posY} posY - get the y mouse UP clicked position at canvas
+  */
 
   class Line {
     constructor(posX, posY)
@@ -127,6 +139,7 @@ jQuery(document).ready(function($) {
       ctx.beginPath();
       ctx.lineWidth = this.lineWidth;
       ctx.lineCap = this.lineCapString;
+      console.log(this.lineCapString);
       ctx.setLineDash([this.lineWidth, this.dashIndex * this.lineWidth]); /*dashes are x and spaces are y*/
         if (this.gradient === "true") {
           if(translate === false) {
@@ -134,7 +147,7 @@ jQuery(document).ready(function($) {
             linearGradient = ctx.createLinearGradient(this.firstPosClickX, this.firstPosClickY, posX, posY);
             linearGradient.addColorStop(1, 'white');
             linearGradient.addColorStop(0, this.activeColor);
-          } else {            
+          } else {
             linearGradient = ctx.createLinearGradient(this.firstPosClickX - this.deltaX, this.firstPosClickY - this.deltaY, this.posX - this.deltaX, this.posY - this.deltaY);
             linearGradient.addColorStop(1, 'white');
             linearGradient.addColorStop(0, this.activeColor);
@@ -143,7 +156,7 @@ jQuery(document).ready(function($) {
         } else {
           ctx.strokeStyle = this.activeColor;
         }
-      ctx.globalAlpha = this.transparency;
+      ctx.globalAlpha = this.globalAlpha;
       //check if you draw a new line or only translate it!
       if(translate === true) {
 
@@ -331,119 +344,34 @@ jQuery(document).ready(function($) {
     }
 
 
-    //let index = 0;
+    class Circle {
 
-    /*The Canvas API provides a means for drawing graphics
-    via JavaScript and the HTML <canvas> element.*/
-    /*Among other things, it can be used for animation,
-    game graphics, data visualization, photo manipulation,
-    and real-time video processing.*/
+      constructor(posX, posY) {
+        this.firstPosClickX = firstPosClickX;
+        this.firstPosClickY = firstPosClickY;
+        this.posX = posX;
+        this.posY = posY;
+        //global infos
+        this.gradient = gradient;
+        this.lineWidth = thickness;
+        this.lineCap = lineCapString;
+        this.activeColor = activeColor;
+        this.dashIndex = dashIndex;
+        this.globalAlpha = transparency;
+        this.fillStyle = linearGradient;
+        this.radius = 0;
+        //flags
+        this.clicked = false;
+      }
 
-    /*We need to get the canvas!
-    The first line in the script retrieves the node in the DOM representing the
-    <canvas> element by calling the document.getElementById() method. */
-    const canvas = $("#canvas"); //document.getElementById
-    /*jQuery exposes the actual DOM element in numeric
-    indexes, where you can perform normal JavaScript/DOM functions.*/
-    //javaScript ohne [0];
-    /*We need to specific write the kind of environment we are
-    working: is it 2D or 3D!*/
-    // if(canvas[0].getContext) {
-    const ctx = canvas[0].getContext("2d");
-    // } else {
-    //   alert("Sorry, the canvas is unsupported in your browser");
-    // }
-    /*I have also seen that it's often preferred to use .get(0) to
-    reference a jquery target as HTML element:
-    var myCanvasElem = $("#canvas").get(0);*/
-
-    /*resizing: to avoid cursor position problem, sometimes fine in some browsers and
-    sometimes not. So, let's resize as soon as the document is loaded.*/
-    /*The element can be sized arbitrarily by CSS, but during rendering the image is
-    scaled to fit its layout size: if the CSS sizing doesn't respect the ratio of the
-    initial canvas, it will appear distorted.*/
-
-    /*Another important note:  If your renderings seem distorted, try specifying your
-    width and height attributes explicitly in the <canvas> attributes, and not using CSS.*/
-
-    function resizeCanvas(width, height) {
-        canvas[0].width = width;
-        canvas[0].height = height;
-        canvas.css("width", width);
-        canvas.css("height", height);
-    }
-    /*You make sure that the attributes of canvas and css are the same!*/
-    resizeCanvas(width, height);
-
-
-    function getCursorPosition(canvas, event) {
-        //you can get the bounding box of any element by calling getBoundingClientRecht
-        //javaScript native function
-        const rect = canvas[0].getBoundingClientRect();
-        // const x = event.pageX - rect.left;
-        // const y = event.pageY - rect.top;
-        // let scaleX = canvas[0].width / rect.width;
-        // let scaleY = canvas[0].height / rect.height;
-
-        const x = (event.pageX - rect.left);
-        const y = (event.pageY - rect.top);
-        // console.log("event.pageX: " + event.pageX);
-        //   console.log(" rect.left: " +  rect.left);
-        // console.log("event.pagey: " + event.pageY);
-        // console.log("rect.top: " + rect.top);
-        return [x, y];
-    }
-
-
-    /*get active color*/
-    $(".colorChart").click((e) => {
-        // console.log(`clicked at: ${e.target.id}`);
-        activeColor = e.target.id;
-    });
-
-
-    function draw(posX, posY) {
-
-        //create a new path
-        ctx.beginPath();
-        //path width
-        ctx.lineWidth = thickness;
-        ctx.lineCap = lineCapString;
-        // ctx.lineCap = "round";
-        ctx.strokeStyle = activeColor;
-        ctx.globalAlpha = transparency;
-        //draws a straightLine from the current drawing position to the position
-        //specified by posX, posY
-        ctx.lineTo(posX, posY);
-        //draws the shape by stroking its outline
-        ctx.stroke();
-        //close is an option step that tries to close the path
-        //by drawing a straight line from the current point to the start.
-        //closePath();
-        //Fill: when you call fill(), any open shapes are closed automatically.
-        //when you call fill any open shape are closed automatically. so you do not
-        //need to call stroke();
-    }
-
-    function erase(posX, posY) {
-        ctx.beginPath();
-        ctx.lineWidth = thickness;
-        ctx.lineCap = lineCapString;
-        ctx.strokeStyle = "white";
-        ctx.lineTo(posX, posY);
-        ctx.stroke();
-    }
-
-
-    /////FOR Circle//////////////////////////////
-    function drawCircle(posX, posY) {
+      drawCircle(posX, posY) {
         // ctx.clearRect(0,0, innerWidth, innerHeight);
         ctx.beginPath();
-        ctx.lineWidth = thickness;
-        ctx.lineCap = lineCapString;
-        ctx.setLineDash([thickness, dashIndex * thickness]); /*dashes are x and spaces are y*/
-        ctx.strokeStyle = activeColor;
-        ctx.globalAlpha = transparency;
+        ctx.lineWidth = this.lineWidth;
+        ctx.lineCap = this.lineCap;
+        ctx.setLineDash([this.lineWidth, this.dashIndex * this.lineWidth]); /*dashes are x and spaces are y*/
+        ctx.strokeStyle = this.activeColor;
+        ctx.globalAlpha = this.globalAlpha;
         console.log(posArrayX, posArrayY);
 
         if (gradient === "true") {
@@ -453,10 +381,8 @@ jQuery(document).ready(function($) {
             createRadialGradient(x1, y1, r1, x2, y2, r2)
             We have to circles with each having the center at x1,y1 and x2,y2 and with
             the respective radius: r1 and r2. Interesting that it seems to be given in
-            grad and not radians. TO BE CHECKED!!!
-                  */
-
-            let radialGradient = ctx.createRadialGradient(firstPosClickX, firstPosClickY, 360, posX, posY, 8);
+            grad and not radians. TO BE CHECKED!!!     */
+            radialGradient = ctx.createRadialGradient(firstPosClickX, firstPosClickY, 360, posX, posY, 8);
             radialGradient.addColorStop(0.5, activeColor);
             radialGradient.addColorStop(0.7, "#ECF0F1");
             radialGradient.addColorStop(1, activeColor);
@@ -464,45 +390,43 @@ jQuery(document).ready(function($) {
             // ctx.strokeStyle = activeColor;
             console.log("inside");
             ctx.fillStyle = radialGradient;
+            //ctx.arc(x, y, radius, startAngle, endAngle [, anticlockwise]);
             ctx.arc(posX, posY, Math.abs(((firstPosClickX - posX) + (firstPosClickY - posY)) / 2), Math.PI * 2, false);
             ctx.fill();
         } else {
             ctx.arc(posX, posY, Math.abs(((firstPosClickX - posX) + (firstPosClickY - posY)) / 2), Math.PI * 2, false);
             ctx.stroke();
         }
+        this.radius = Math.abs(((firstPosClickX - posX) + (firstPosClickY - posY)) / 2);
+        console.log(`The radius is: ${this.radius}`);
+      }
 
-    }
-
-    function drawCircleGhost(posX, posY) {
+     drawCircleGhost(posX, posY) {
         // ctx.clearRect(0,0, innerWidth, innerHeight);
         ctx.beginPath();
-        ctx.lineWidth = 4;
+        ctx.lineWidth = this.lineWidth-4;
         ctx.strokeStyle = "rgba(255, 160, 122, 0.3)";
         console.log(posX, posY);
         ctx.arc(posX, posY, Math.abs(((firstPosClickX - posX) + (firstPosClickY - posY)) / 2), Math.PI * 2, false);
-        // ctx.lineTo(posArrayX[0],posArrayY[0]);
-        // ctx.lineTo(posArrayX[1],posArrayY[1]);
         ctx.stroke();
 
-        setTimeout(function() {
-            //ctx.clearRect(0,0, innerWidth, innerHeight);
-            deleteDrawCircleGhost(posX, posY);
+        setTimeout( () => {
+            this.deleteDrawCircleGhost(posX, posY);
         }, 50);
 
     }
 
-    function deleteDrawCircleGhost(posX, posY) {
+    deleteDrawCircleGhost(posX, posY) {
         // ctx.clearRect(0,0, innerWidth, innerHeight);
         ctx.beginPath();
-        ctx.lineWidth = 7;
+        ctx.lineWidth = this.lineWidth+3;
         ctx.strokeStyle = "white";
         console.log(posX, posY);
         ctx.arc(posX, posY, Math.abs(((firstPosClickX - posX) + (firstPosClickY - posY)) / 2), Math.PI * 2, false);
-        // ctx.lineTo(posArrayX[0],posArrayY[0]);
-        // ctx.lineTo(posArrayX[1],posArrayY[1]);
         ctx.stroke();
     }
 
+  }
     /////FOR Bezier Quadratic//////////////////////////////
     function drawBezier(posX, posY) {
         // ctx.clearRect(0,0, innerWidth, innerHeight);
@@ -668,6 +592,108 @@ jQuery(document).ready(function($) {
     }
 
 
+        /*The Canvas API provides a means for drawing graphics
+        via JavaScript and the HTML <canvas> element.*/
+        /*Among other things, it can be used for animation,
+        game graphics, data visualization, photo manipulation,
+        and real-time video processing.*/
+
+        /*We need to get the canvas!
+        The first line in the script retrieves the node in the DOM representing the
+        <canvas> element by calling the document.getElementById() method. */
+        const canvas = $("#canvas"); //document.getElementById
+        /*jQuery exposes the actual DOM element in numeric
+        indexes, where you can perform normal JavaScript/DOM functions.*/
+        //javaScript ohne [0];
+        /*We need to specific write the kind of environment we are
+        working: is it 2D or 3D!*/
+        // if(canvas[0].getContext) {
+        const ctx = canvas[0].getContext("2d");
+        // } else {
+        //   alert("Sorry, the canvas is unsupported in your browser");
+        // }
+        /*I have also seen that it's often preferred to use .get(0) to
+        reference a jquery target as HTML element:
+        var myCanvasElem = $("#canvas").get(0);*/
+
+        /*resizing: to avoid cursor position problem, sometimes fine in some browsers and
+        sometimes not. So, let's resize as soon as the document is loaded.*/
+        /*The element can be sized arbitrarily by CSS, but during rendering the image is
+        scaled to fit its layout size: if the CSS sizing doesn't respect the ratio of the
+        initial canvas, it will appear distorted.*/
+
+        /*Another important note:  If your renderings seem distorted, try specifying your
+        width and height attributes explicitly in the <canvas> attributes, and not using CSS.*/
+
+        function resizeCanvas(width, height) {
+            canvas[0].width = width;
+            canvas[0].height = height;
+            canvas.css("width", width);
+            canvas.css("height", height);
+        }
+        /*You make sure that the attributes of canvas and css are the same!*/
+        resizeCanvas(width, height);
+
+
+        function getCursorPosition(canvas, event) {
+            //you can get the bounding box of any element by calling getBoundingClientRecht
+            //javaScript native function
+            const rect = canvas[0].getBoundingClientRect();
+            // const x = event.pageX - rect.left;
+            // const y = event.pageY - rect.top;
+            // let scaleX = canvas[0].width / rect.width;
+            // let scaleY = canvas[0].height / rect.height;
+
+            const x = (event.pageX - rect.left);
+            const y = (event.pageY - rect.top);
+            // console.log("event.pageX: " + event.pageX);
+            //   console.log(" rect.left: " +  rect.left);
+            // console.log("event.pagey: " + event.pageY);
+            // console.log("rect.top: " + rect.top);
+            return [x, y];
+        }
+
+
+        function draw(posX, posY) {
+
+            //create a new path
+            ctx.beginPath();
+            //path width
+            ctx.lineWidth = thickness;
+            ctx.lineCap = lineCapString;
+            // ctx.lineCap = "round";
+            ctx.strokeStyle = activeColor;
+            ctx.globalAlpha = transparency;
+            //draws a straightLine from the current drawing position to the position
+            //specified by posX, posY
+            ctx.lineTo(posX, posY);
+            //draws the shape by stroking its outline
+            ctx.stroke();
+            //close is an option step that tries to close the path
+            //by drawing a straight line from the current point to the start.
+            //closePath();
+            //Fill: when you call fill(), any open shapes are closed automatically.
+            //when you call fill any open shape are closed automatically. so you do not
+            //need to call stroke();
+        }
+
+        function erase(posX, posY) {
+            ctx.beginPath();
+            ctx.lineWidth = thickness;
+            ctx.lineCap = lineCapString;
+            ctx.strokeStyle = "white";
+            ctx.lineTo(posX, posY);
+            ctx.stroke();
+        }
+
+
+        /*get active color*/
+        $(".colorChart").click((e) => {
+            // console.log(`clicked at: ${e.target.id}`);
+            activeColor = e.target.id;
+        });
+
+
      function selection() {
 
        if(copy === true && paste === true) {
@@ -682,7 +708,7 @@ jQuery(document).ready(function($) {
 
      function elementLineClicked(posClickX,posClickY) {
        console.log(`You clicked at X: ${posClickX} and y: ${posClickY}`);
-       let enlargeTarged = 5;
+       let enlargeTarged = 3;
        //moving, second time clicked:
        //first time clicked:
        //Check The Rectangle
@@ -703,8 +729,8 @@ jQuery(document).ready(function($) {
            let result = oGlobalLineArray[index].calcLineEqMatchClicked(posClickX,posClickY);
            console.log(`The result is: ${result}`);
 
-           if(Math.abs(result) < 8 && (posClickX+3) > oGlobalLineArray[index].firstPosClickX
-                                   && (posClickX-3) < oGlobalLineArray[index].posX )
+           if(Math.abs(result) < 8 && (posClickX+enlargeTarged) > oGlobalLineArray[index].firstPosClickX
+                                   && (posClickX-enlargeTarged) < oGlobalLineArray[index].posX )
            {
              console.log("MATCH");
              oGlobalLineArray[index].clicked = true;
@@ -745,6 +771,33 @@ jQuery(document).ready(function($) {
        }
      }
 
+    function elementCircleClicked(posClickX,posClickY) {
+      console.log(`You clicked at X: ${posClickX} and y: ${posClickY}`);
+      let enlargeTarged = 5;
+
+      //moving, second time clicked:
+      //first time clicked:
+      //Check The Rectangle
+      for(let index=0; index < oGlobalCircleArray.length; index++)
+      { let radius = oGlobalCircleArray[index].radius;
+        let centerX = oGlobalCircleArray[index].firstPosClickX;
+        let centerY = oGlobalCircleArray[index].firstPosClickY;
+
+        //circle equation!!
+
+
+        if(posClickX+radius <  )
+        console.log(`The radius is: ${oGlobalCircleArray[index].radius}`);
+        // if(posClickX )
+        // //ctx.arc(x, y, radius, startAngle, endAngle [, anticlockwise]);
+        // ctx.arc(posX, posY, Math.abs(((firstPosClickX - posX) + (firstPosClickY - posY)) / 2), Math.PI * 2, false);
+
+
+
+      }
+
+    }
+
     ////////////////////////////////////////////////////
     //MOUSEEEEEEEEEEEEEEEEEEEEEEEE UP
     $("#canvas").mousedown(function(event) {
@@ -770,6 +823,7 @@ jQuery(document).ready(function($) {
           firstPosClickY = cursorPositions[1];
           elementRectClicked(cursorPositions[0],cursorPositions[1]);
           elementLineClicked(cursorPositions[0],cursorPositions[1]);
+          elementCircleClicked(cursorPositions[0],cursorPositions[1]);
       };
 
       if($(".bCopyPaste").hasClass("active") || $(".bCutPaste").hasClass("active")) {
@@ -953,7 +1007,8 @@ jQuery(document).ready(function($) {
 
         if (circleActive) {
             let cursorPositions = getCursorPosition(canvas, event);
-            drawCircleGhost(cursorPositions[0], cursorPositions[1]);
+            let oCircleGhost = new Circle(cursorPositions[0], cursorPositions[1]);
+            oCircleGhost.drawCircleGhost(cursorPositions[0], cursorPositions[1]);
         }
 
         if (bezierQActive) {
@@ -976,7 +1031,8 @@ jQuery(document).ready(function($) {
         stiftActive = false;
         eraseActive = false;
 
-    if (straightLine) {
+    if (straightLine)
+    {
         let cursorPositions = getCursorPosition(canvas, event);
         let oLine = new Line(cursorPositions[0], cursorPositions[1]);
         oGlobalLineArray.push(oLine);
@@ -984,7 +1040,8 @@ jQuery(document).ready(function($) {
         straightLine = false;
     }
 
-    if (rectActive) {
+    if (rectActive)
+    {
         let cursorPositions = getCursorPosition(canvas, event);
         //creates a new rectangle with (x,y, width, height); -> (x,y) start pos.
         let oRectangle = new Rectangle(firstPosClickX, firstPosClickY, cursorPositions[0], cursorPositions[1]);
@@ -994,16 +1051,22 @@ jQuery(document).ready(function($) {
         rectActive = false;
     }
 
-        selection();
-        if(copy === true) {
-          paste = true;
-        }
+    if (circleActive)
+    {
+        let cursorPositions = getCursorPosition(canvas, event);
+        let oCircle = new Circle(cursorPositions[0], cursorPositions[1]);
+        //oGlobal Array to keep track of the circle drawed in canvas.
+        oGlobalCircleArray.push(oCircle);
+        oGlobalCircleArray[oGlobalCircleArray.length-1].drawCircle(cursorPositions[0], cursorPositions[1]);
+        circleActive = false;
+    }
 
-        if (circleActive) {
-            let cursorPositions = getCursorPosition(canvas, event);
-            drawCircle(cursorPositions[0], cursorPositions[1]);
-            circleActive = false;
-        }
+    selection();
+    if(copy === true) {
+      paste = true;
+    }
+
+
 
 
 
@@ -1318,7 +1381,8 @@ jQuery(document).ready(function($) {
     $("#lineCap").change(() => {
         lineCapString = lineCap[($("#lineCap")[0].value)];
 
-        console.log(($("#lineCap")[0].value))
+        console.log(($("#lineCap")[0].value));
+        console.log(lineCapString);
     })
 
     $("#lineDash").change(() => {
