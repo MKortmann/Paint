@@ -97,6 +97,7 @@ jQuery(document).ready(function($) {
       this.posX = posX;
       this.posY = posY;
       this.deltaX = 0;
+      this.deltaY = 0;
       //global infos
       this.gradient = gradient;
       this.lineWidth = thickness;
@@ -193,9 +194,10 @@ jQuery(document).ready(function($) {
       ctx.lineWidth = this.lineWidth;
       // ctx.translate(-posX, posY);
       this.deltaX = this.firstPosClickX-posX;
+      this.deltaY = this.firstPosClickY-posY;
       console.log("The Gap is: " + this.deltaX);
-      ctx.moveTo(this.firstPosClickX - this.deltaX, this.firstPosClickY);
-      ctx.lineTo(this.posX - this.deltaX, this.posY);
+      ctx.moveTo(this.firstPosClickX - this.deltaX, this.firstPosClickY - this.deltaY);
+      ctx.lineTo(this.posX - this.deltaX, this.posY - this.deltaY);
       ctx.stroke();
       // ctx.restore();
     }
@@ -203,6 +205,9 @@ jQuery(document).ready(function($) {
     updateLine(posX, posY) {
       this.firstPosClickX = this.firstPosClickX-this.deltaX;
       this.posX = this.posX-this.deltaX;
+
+      this.firstPosClickY = this.firstPosClickY - this.deltaY;
+      this.posY = this.posY - this.deltaY;
       this.clicked = false;
     }
   }
