@@ -112,31 +112,50 @@ jQuery(document).ready(function($) {
     };
 
     calcLineEqMatchClicked(clickedX, clickedY) {
+      //basic math linear equation: y = mx + b; m=line inclination=dy/dx
       let m = (this.firstPosClickY-this.posY)/(this.firstPosClickX-this.posX);
+      //calculate the b
       let b = this.posY-m*this.posX;
-
+      //if the result is very small, it means that you have clicked the line!!
       let result = -clickedY + m*clickedX + b;
       return result;
-
     }
 
-    drawStraightLine(posX, posY) {
+    drawStraightLine(posX, posY, translate) {
+      this.deltaX = this.firstPosClickX-posX;
+      this.deltaY = this.firstPosClickY-posY;
       ctx.beginPath();
-      ctx.lineWidth = this.thickness;
+      ctx.lineWidth = this.lineWidth;
       ctx.lineCap = this.lineCapString;
       ctx.setLineDash([this.lineWidth, this.dashIndex * this.lineWidth]); /*dashes are x and spaces are y*/
-      if (this.gradient === "true") {
-        linearGradient = ctx.createLinearGradient(this.firstPosClickX, this.firstPosClickY, posX, posY);
-        linearGradient.addColorStop(1, 'white');
-        linearGradient.addColorStop(0, this.activeColor);
-        ctx.strokeStyle = linearGradient;
-      } else {
-        ctx.strokeStyle = this.activeColor;
-      }
+        if (this.gradient === "true") {
+          if(translate === false) {
+            console.log(`The values are: X: ${this.firstPosClickX}, Y: ${this.firstPosClickY}, posX: ${this.posX}, posY: ${this.posY}`);
+            linearGradient = ctx.createLinearGradient(this.firstPosClickX, this.firstPosClickY, posX, posY);
+            linearGradient.addColorStop(1, 'white');
+            linearGradient.addColorStop(0, this.activeColor);
+          } else {            
+            linearGradient = ctx.createLinearGradient(this.firstPosClickX - this.deltaX, this.firstPosClickY - this.deltaY, this.posX - this.deltaX, this.posY - this.deltaY);
+            linearGradient.addColorStop(1, 'white');
+            linearGradient.addColorStop(0, this.activeColor);
+          }
+          ctx.strokeStyle = linearGradient;
+        } else {
+          ctx.strokeStyle = this.activeColor;
+        }
       ctx.globalAlpha = this.transparency;
-      ctx.lineTo(this.firstPosClickX, this.firstPosClickY);
-      ctx.lineTo(posX, posY);
-      ctx.stroke();
+      //check if you draw a new line or only translate it!
+      if(translate === true) {
+
+        ctx.moveTo(this.firstPosClickX - this.deltaX, this.firstPosClickY - this.deltaY);
+        ctx.lineTo(this.posX - this.deltaX, this.posY - this.deltaY);
+        ctx.stroke();
+      } else {
+        ctx.moveTo(this.firstPosClickX, this.firstPosClickY);
+        ctx.lineTo(posX, posY);
+        ctx.stroke();
+      }
+
     }
 
     drawStraightLineGhost(posX, posY) {
@@ -144,7 +163,7 @@ jQuery(document).ready(function($) {
         ctx.lineWidth = 5;
         ctx.lineCap = "round";
         ctx.strokeStyle = "rgba(255, 160, 122, 0.3)";
-        ctx.lineTo(firstPosClickX, firstPosClickY);
+        ctx.moveTo(firstPosClickX, firstPosClickY);
         ctx.lineTo(posX, posY);
         ctx.stroke();
 
@@ -159,7 +178,7 @@ jQuery(document).ready(function($) {
         ctx.lineWidth = 6;
         ctx.lineCap = "round";
         ctx.strokeStyle = "white";
-        ctx.lineTo(firstPosClickX, firstPosClickY);
+        ctx.moveTo(firstPosClickX, firstPosClickY);
         ctx.lineTo(posX, posY);
         ctx.stroke();
     }
@@ -170,7 +189,7 @@ jQuery(document).ready(function($) {
       ctx.lineCap = "round";
       ctx.strokeStyle = "rgba(255, 160, 122, 0.8)";
       ctx.setLineDash([this.lineWidth, 2 * this.lineWidth]);
-      ctx.lineTo(this.firstPosClickX, this.firstPosClickY);
+      ctx.moveTo(this.firstPosClickX, this.firstPosClickY);
       ctx.lineTo(this.posX, this.posY);
       ctx.stroke();
       $("#canvas").css("cursor", "pointer");
@@ -182,24 +201,10 @@ jQuery(document).ready(function($) {
       ctx.lineCap = "round";
       ctx.strokeStyle = "white";
       ctx.setLineDash([]);
-      ctx.lineTo(this.firstPosClickX, this.firstPosClickY);
+      ctx.moveTo(this.firstPosClickX, this.firstPosClickY);
       ctx.lineTo(this.posX, this.posY);
       ctx.stroke();
       $("#canvas").css("cursor", "pointer");
-    }
-    drawTranslateLine(posX, posY) {
-      ctx.beginPath();
-      // ctx.save();
-      ctx.strokeStyle = "black";
-      ctx.lineWidth = this.lineWidth;
-      // ctx.translate(-posX, posY);
-      this.deltaX = this.firstPosClickX-posX;
-      this.deltaY = this.firstPosClickY-posY;
-      console.log("The Gap is: " + this.deltaX);
-      ctx.moveTo(this.firstPosClickX - this.deltaX, this.firstPosClickY - this.deltaY);
-      ctx.lineTo(this.posX - this.deltaX, this.posY - this.deltaY);
-      ctx.stroke();
-      // ctx.restore();
     }
 
     updateLine(posX, posY) {
@@ -690,7 +695,7 @@ jQuery(document).ready(function($) {
            oGlobalLineArray[index].clicked = false;
            console.log("flag setted to: " + oGlobalLineArray[index].clicked);
            oGlobalLineArray[index].eraseLine();
-           oGlobalLineArray[index].drawTranslateLine(posClickX,posClickY);
+           oGlobalLineArray[index].drawStraightLine(posClickX,posClickY, true);
            oGlobalLineArray[index].updateLine(posClickX, posClickY);
 
          } else
@@ -975,7 +980,7 @@ jQuery(document).ready(function($) {
         let cursorPositions = getCursorPosition(canvas, event);
         let oLine = new Line(cursorPositions[0], cursorPositions[1]);
         oGlobalLineArray.push(oLine);
-        oLine.drawStraightLine(cursorPositions[0], cursorPositions[1]);
+        oLine.drawStraightLine(cursorPositions[0], cursorPositions[1], false);
         straightLine = false;
     }
 
