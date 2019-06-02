@@ -96,6 +96,7 @@ jQuery(document).ready(function($) {
       this.firstPosClickY = firstPosClickY;
       this.posX = posX;
       this.posY = posY;
+      this.deltaX = 0;
       //global infos
       this.gradient = gradient;
       this.lineWidth = thickness;
@@ -124,16 +125,16 @@ jQuery(document).ready(function($) {
       ctx.lineCap = this.lineCapString;
       ctx.setLineDash([this.lineWidth, this.dashIndex * this.lineWidth]); /*dashes are x and spaces are y*/
       if (this.gradient === "true") {
-        linearGradient = ctx.createLinearGradient(firstPosClickX, firstPosClickY, posX, posY);
+        linearGradient = ctx.createLinearGradient(this.firstPosClickX, this.firstPosClickY, posX, posY);
         linearGradient.addColorStop(1, 'white');
-        linearGradient.addColorStop(0, activeColor);
+        linearGradient.addColorStop(0, this.activeColor);
         ctx.strokeStyle = linearGradient;
       } else {
-        ctx.strokeStyle = activeColor;
+        ctx.strokeStyle = this.activeColor;
       }
       ctx.globalAlpha = this.transparency;
       ctx.lineTo(this.firstPosClickX, this.firstPosClickY);
-      ctx.lineTo(this.posX, this.posY);
+      ctx.lineTo(posX, posY);
       ctx.stroke();
     }
 
@@ -150,7 +151,6 @@ jQuery(document).ready(function($) {
             //ctx.clearRect(0,0, innerWidth, innerHeight);
             this.deleteStraightLineGhost(posX, posY);
         }, 100);
-
     }
 
     deleteStraightLineGhost(posX, posY) {
@@ -161,6 +161,49 @@ jQuery(document).ready(function($) {
         ctx.lineTo(firstPosClickX, firstPosClickY);
         ctx.lineTo(posX, posY);
         ctx.stroke();
+    }
+
+    focusLine() {
+      ctx.beginPath();
+      ctx.lineWidth = 5;
+      ctx.lineCap = "round";
+      ctx.strokeStyle = "rgba(255, 160, 122, 0.8)";
+      ctx.setLineDash([this.lineWidth, 2 * this.lineWidth]);
+      ctx.lineTo(this.firstPosClickX, this.firstPosClickY);
+      ctx.lineTo(this.posX, this.posY);
+      ctx.stroke();
+      $("#canvas").css("cursor", "pointer");
+    }
+
+    eraseLine() {
+      ctx.beginPath();
+      ctx.lineWidth = this.lineWidth+4;
+      ctx.lineCap = "round";
+      ctx.strokeStyle = "white";
+      ctx.setLineDash([]);
+      ctx.lineTo(this.firstPosClickX, this.firstPosClickY);
+      ctx.lineTo(this.posX, this.posY);
+      ctx.stroke();
+      $("#canvas").css("cursor", "pointer");
+    }
+    drawTranslateLine(posX, posY) {
+      ctx.beginPath();
+      // ctx.save();
+      ctx.strokeStyle = "black";
+      ctx.lineWidth = this.lineWidth;
+      // ctx.translate(-posX, posY);
+      this.deltaX = this.firstPosClickX-posX;
+      console.log("The Gap is: " + this.deltaX);
+      ctx.moveTo(this.firstPosClickX - this.deltaX, this.firstPosClickY);
+      ctx.lineTo(this.posX - this.deltaX, this.posY);
+      ctx.stroke();
+      // ctx.restore();
+    }
+
+    updateLine(posX, posY) {
+      this.firstPosClickX = this.firstPosClickX-this.deltaX;
+      this.posX = this.posX-this.deltaX;
+      this.clicked = false;
     }
   }
 
@@ -245,7 +288,7 @@ jQuery(document).ready(function($) {
         }
 
       }
-      update(newPosClickX, newPosClickY) {
+      updateRect(newPosClickX, newPosClickY) {
         this.firstPosClickX = newPosClickX;
         this.firstPosClickY = newPosClickY;
         this.clicked = false;
@@ -638,6 +681,12 @@ jQuery(document).ready(function($) {
        {
          if(oGlobalLineArray[index].clicked === true)
          {
+           console.log("it is true");
+           oGlobalLineArray[index].clicked = false;
+           console.log("flag setted to: " + oGlobalLineArray[index].clicked);
+           oGlobalLineArray[index].eraseLine();
+           oGlobalLineArray[index].drawTranslateLine(posClickX,posClickY);
+           oGlobalLineArray[index].updateLine(posClickX, posClickY);
 
          } else
          {
@@ -648,6 +697,9 @@ jQuery(document).ready(function($) {
                                    && (posClickX-3) < oGlobalLineArray[index].posX )
            {
              console.log("MATCH");
+             oGlobalLineArray[index].clicked = true;
+             console.log("flag setted to: " + oGlobalLineArray[index].clicked);
+             oGlobalLineArray[index].focusLine();
             }
          }
 
@@ -668,7 +720,7 @@ jQuery(document).ready(function($) {
            console.log("true");
            oGlobalRectArray[index].eraseRect();
            oGlobalRectArray[index].drawRect(posClickX,posClickY);
-           oGlobalRectArray[index].update(posClickX,posClickY);
+           oGlobalRectArray[index].updateRect(posClickX,posClickY);
          } else {
            if(oGlobalRectArray[index].firstPosClickX-enlargeTarged <= posClickX && posClickX <= (oGlobalRectArray[index].firstPosClickX+oGlobalRectArray[index].width+enlargeTarged) )
            {
