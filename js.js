@@ -278,7 +278,6 @@ jQuery(document).ready(function($) {
         ctx.rect(this.firstPosClickX-4,this.firstPosClickY-4, this.width+8, this.height+8);
         ctx.stroke();
         $("#canvas").css("cursor", "pointer");
-
       }
 
       drawRect(newPosClickX, newPosClickY) {
@@ -297,7 +296,6 @@ jQuery(document).ready(function($) {
           ctx.lineWidth = 2;
           ctx.rect(newPosClickX,newPosClickY, this.width, this.height);
           ctx.stroke();
-          $("#canvas").css("cursor", "default");
         } else {
           ctx.beginPath();
           ctx.lineWidth = this.lineWidth;
@@ -307,16 +305,14 @@ jQuery(document).ready(function($) {
           // ctx.rect(newPosClickX,newPosClickY, this.height, this.width);
           ctx.rect(newPosClickX, newPosClickY, this.width, this.height);
           ctx.stroke();
-          $("#canvas").css("cursor", "default");
         }
-
+        $("#canvas").css("cursor", "default");
       }
       updateRect(newPosClickX, newPosClickY) {
         this.firstPosClickX = newPosClickX;
         this.firstPosClickY = newPosClickY;
         this.clicked = false;
       }
-
       //to make a nice effect and let the program user friendly!
       drawRectGhost(posX, posY) {
         $("#canvas").css("cursor", "nwse-resize");
@@ -332,7 +328,6 @@ jQuery(document).ready(function($) {
             this.deleteRectGhost(posX, posY);
         }, 50);
       }
-
       deleteRectGhost(posX, posY) {
           ctx.beginPath();
           ctx.lineWidth = 6;
@@ -343,6 +338,12 @@ jQuery(document).ready(function($) {
       }
     }
 
+    /**
+    * @description Represents a Circle
+    * @constructor
+    * @param {posX} posX - the x center position of the circle get at mouseUp
+    * @param {posY} posY - the y center position of the circle get at mouseUp
+    */
 
     class Circle {
 
@@ -359,12 +360,13 @@ jQuery(document).ready(function($) {
         this.dashIndex = dashIndex;
         this.globalAlpha = transparency;
         this.fillStyle = linearGradient;
-        this.radius = 0;
+        this.radius = Math.abs(((firstPosClickX - posX) + (firstPosClickY - posY)) / 2);
         //flags
         this.clicked = false;
       }
 
       drawCircle(posX, posY) {
+        $("#canvas").css("cursor", "default");
         // ctx.clearRect(0,0, innerWidth, innerHeight);
         ctx.beginPath();
         ctx.lineWidth = this.lineWidth;
@@ -382,7 +384,7 @@ jQuery(document).ready(function($) {
             We have to circles with each having the center at x1,y1 and x2,y2 and with
             the respective radius: r1 and r2. Interesting that it seems to be given in
             grad and not radians. TO BE CHECKED!!!     */
-            radialGradient = ctx.createRadialGradient(firstPosClickX, firstPosClickY, 360, posX, posY, 8);
+            radialGradient = ctx.createRadialGradient(this.posX-this.radius, this.posY-this.radius, 360, this.posX, this.posY, 8);
             radialGradient.addColorStop(0.5, activeColor);
             radialGradient.addColorStop(0.7, "#ECF0F1");
             radialGradient.addColorStop(1, activeColor);
@@ -391,28 +393,30 @@ jQuery(document).ready(function($) {
             console.log("inside");
             ctx.fillStyle = radialGradient;
             //ctx.arc(x, y, radius, startAngle, endAngle [, anticlockwise]);
-            ctx.arc(posX, posY, Math.abs(((firstPosClickX - posX) + (firstPosClickY - posY)) / 2), Math.PI * 2, false);
+            ctx.arc(posX, posY, this.radius, Math.PI * 2, false);
             ctx.fill();
         } else {
-            ctx.arc(posX, posY, Math.abs(((firstPosClickX - posX) + (firstPosClickY - posY)) / 2), Math.PI * 2, false);
+            ctx.arc(posX, posY, this.radius, Math.PI * 2, false);
             ctx.stroke();
+
         }
-        this.radius = Math.abs(((firstPosClickX - posX) + (firstPosClickY - posY)) / 2);
         console.log(`The radius is: ${this.radius}`);
+          $("#canvas").css("cursor", "default");
       }
 
      drawCircleGhost(posX, posY) {
-        // ctx.clearRect(0,0, innerWidth, innerHeight);
-        ctx.beginPath();
-        ctx.lineWidth = this.lineWidth-4;
-        ctx.strokeStyle = "rgba(255, 160, 122, 0.3)";
-        console.log(posX, posY);
-        ctx.arc(posX, posY, Math.abs(((firstPosClickX - posX) + (firstPosClickY - posY)) / 2), Math.PI * 2, false);
-        ctx.stroke();
+       $("#canvas").css("cursor", "nwse-resize");
+      // ctx.clearRect(0,0, innerWidth, innerHeight);
+      ctx.beginPath();
+      ctx.lineWidth = this.lineWidth-4;
+      ctx.strokeStyle = "rgba(255, 160, 122, 0.3)";
+      console.log(posX, posY);
+      ctx.arc(posX, posY, this.radius, Math.PI * 2, false);
+      ctx.stroke();
 
         setTimeout( () => {
             this.deleteDrawCircleGhost(posX, posY);
-        }, 50);
+        }, 100);
 
     }
 
@@ -422,9 +426,34 @@ jQuery(document).ready(function($) {
         ctx.lineWidth = this.lineWidth+3;
         ctx.strokeStyle = "white";
         console.log(posX, posY);
-        ctx.arc(posX, posY, Math.abs(((firstPosClickX - posX) + (firstPosClickY - posY)) / 2), Math.PI * 2, false);
+        ctx.arc(posX, posY, this.radius, Math.PI * 2, false);
         ctx.stroke();
     }
+
+    focusCircle() {
+       ctx.beginPath();
+       ctx.lineWidth = 5;
+       ctx.strokeStyle = "rgba(255, 160, 122, 0.8)";
+       ctx.setLineDash([this.lineWidth, 2 * this.lineWidth]);
+       console.log(this.posX, this.posY);
+       ctx.arc(this.posX, this.posY, this.radius, Math.PI * 2, false);
+       ctx.stroke();
+       $("#canvas").css("cursor", "pointer");
+   }
+
+   eraseCircle() {
+      ctx.beginPath();
+      ctx.fillStyle = "white";
+      ctx.setLineDash([]);
+      console.log(this.posX, this.posY);
+      ctx.arc(this.posX, this.posY, this.radius+8, Math.PI * 2, false);
+      ctx.fill();
+  }
+
+  updateCircle(posX, posY) {
+     this.posX = posX;
+     this.posY = posY;
+ }
 
   }
     /////FOR Bezier Quadratic//////////////////////////////
@@ -799,6 +828,7 @@ jQuery(document).ready(function($) {
         circle!!
         */
       if(oGlobalCircleArray[index].clicked === false) {
+
         let radius = oGlobalCircleArray[index].radius;
         let centerXa = oGlobalCircleArray[index].posX;
         let centerYb = oGlobalCircleArray[index].posY;
@@ -808,10 +838,16 @@ jQuery(document).ready(function($) {
         let circleEqResult =  (posClickX-centerXa)**2+(posClickY-centerYb)**2-radius**2 ;
 
         if(circleEqResult <= 0) {
+          console.log("matched");
           oGlobalCircleArray[index].clicked = true;
+          oGlobalCircleArray[index].focusCircle();
         }
       } else {
         oGlobalCircleArray[index].clicked = false;
+        oGlobalCircleArray[index].eraseCircle();
+        oGlobalCircleArray[index].updateCircle(posClickX, posClickY);
+        oGlobalCircleArray[index].drawCircle(posClickX,   posClickY);
+
       }
 
 
