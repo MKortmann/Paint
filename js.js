@@ -455,56 +455,61 @@ jQuery(document).ready(function($) {
      this.posY = posY;
  }
 
-  }
-    /////FOR Bezier Quadratic//////////////////////////////
-    function drawBezier(posX, posY) {
-        // ctx.clearRect(0,0, innerWidth, innerHeight);
-        ctx.beginPath();
-        ctx.lineWidth = thickness;
-        ctx.lineCap = lineCapString;
-        ctx.setLineDash([thickness, dashIndex * thickness]); /*dashes are x and spaces are y*/
-        ctx.strokeStyle = activeColor;
-        ctx.globalAlpha = transparency;
+}
 
-        if (gradient === "true") {
-            let linearGradient = ctx.createLinearGradient(posX, posY, posArrayX[1], posArrayY[1]);
-            linearGradient.addColorStop(1, 'white');
-            linearGradient.addColorStop(0, activeColor);
-            // ctx.fillStyle = linearGradient;
-            // ctx.strokeStyle = activeColor;
-            ctx.strokeStyle = linearGradient;
-            // console.log(posArrayX, posArrayY);
-            //quadraticCurveTo(cp1x, cp1y, x, y)
-            //x,y = coordinates of the end poionts of the curve
-            //cp1x, cp1y = coordinates of the first control point
-            //In this case I think we have to use the moveTo
-            ctx.moveTo(posArrayX[0], posArrayY[0])
-            // ctx.quadraticCurveTo(canvas.width/2, canvas.height/2, posX, posY);
-            ctx.quadraticCurveTo(posX, posY, posArrayX[1], posArrayY[1]);
-            ctx.stroke();
-        } else {
-            ctx.strokeStyle = activeColor;
-            // console.log(posArrayX, posArrayY);
-            //quadraticCurveTo(cp1x, cp1y, x, y)
-            //x,y = coordinates of the end poionts of the curve
-            //cp1x, cp1y = coordinates of the first control point
-            //In this case I think we have to use the moveTo
-            ctx.moveTo(posArrayX[0], posArrayY[0])
-            // ctx.quadraticCurveTo(canvas.width/2, canvas.height/2, posX, posY);
-            ctx.quadraticCurveTo(posX, posY, posArrayX[1], posArrayY[1]);
-            ctx.stroke();
-        }
+class Bezier extends Line {
+  constructor(posX, posY) {
+        super(posX, posY);
+  }
+
+  drawBezier(posX, posY) {
+      // ctx.clearRect(0,0, innerWidth, innerHeight);
+      ctx.beginPath();
+      ctx.lineWidth = this.lineWidth;
+      ctx.lineCap = this.lineCap;
+      ctx.setLineDash([this.lineWidth, this.dashIndex * this.lineWidth]); /*dashes are x and spaces are y*/
+      ctx.strokeStyle = this.activeColor;
+      ctx.globalAlpha = this.globalAlpha;
+
+      if (gradient === "true") {
+          linearGradient = ctx.createLinearGradient(this.posX, this.posY, posArrayX[1], posArrayY[1]);
+          linearGradient.addColorStop(1, 'white');
+          linearGradient.addColorStop(0, activeColor);
+          // ctx.fillStyle = linearGradient;
+          // ctx.strokeStyle = activeColor;
+          ctx.strokeStyle = linearGradient;
+          // console.log(posArrayX, posArrayY);
+          //quadraticCurveTo(cp1x, cp1y, x, y)
+          //x,y = coordinates of the end poionts of the curve
+          //cp1x, cp1y = coordinates of the first control point
+          //In this case I think we have to use the moveTo
+          ctx.moveTo(posArrayX[0], posArrayY[0])
+          // ctx.quadraticCurveTo(canvas.width/2, canvas.height/2, posX, posY);
+          ctx.quadraticCurveTo(this.posX, this.posY, posArrayX[1], posArrayY[1]);
+          ctx.stroke();
+      } else {
+          ctx.strokeStyle = this.activeColor;
+          // console.log(posArrayX, posArrayY);
+          //quadraticCurveTo(cp1x, cp1y, x, y)
+          //x,y = coordinates of the end poionts of the curve
+          //cp1x, cp1y = coordinates of the first control point
+          //In this case I think we have to use the moveTo
+          ctx.moveTo(posArrayX[0], posArrayY[0])
+          // ctx.quadraticCurveTo(canvas.width/2, canvas.height/2, posX, posY);
+          ctx.quadraticCurveTo(this.posX, this.posY, posArrayX[1], posArrayY[1]);
+          ctx.stroke();
+      }
 
     }
 
-    function drawBezierGhost(posX, posY) {
+    drawBezierGhost(posX, posY) {
         // ctx.clearRect(0,0, innerWidth, innerHeight);
 
         ctx.beginPath();
-        ctx.lineWidth = thickness;
-        ctx.lineCap = lineCapString;
-        ctx.strokeStyle = activeColor;
-        ctx.globalAlpha = transparency;
+        ctx.lineWidth = this.lineWidth;
+        ctx.lineCap = this.lineCap;
+        ctx.strokeStyle = this.activeColor;
+        ctx.globalAlpha = this.globalAlpha;
         // console.log(posArrayX, posArrayY);
         //quadraticCurveTo(cp1x, cp1y, x, y)
         //x,y = coordinates of the end poionts of the curve
@@ -515,15 +520,15 @@ jQuery(document).ready(function($) {
         ctx.stroke();
 
         setTimeout(() => {
-            deleteDrawBezierGhost(posX, posY);
+            this.deleteDrawBezierGhost(posX, posY);
         }, 50)
     }
 
-    function deleteDrawBezierGhost(posX, posY) {
+    deleteDrawBezierGhost(posX, posY) {
         // ctx.clearRect(0,0, innerWidth, innerHeight);
         ctx.beginPath();
-        ctx.lineWidth = thickness + 20;
-        ctx.lineCap = lineCapString;
+        ctx.lineWidth = this.lineWidth + 20;
+        ctx.lineCap = this.lineCap;
         ctx.strokeStyle = "white";
         // console.log(posArrayX, posArrayY);
         //quadraticCurveTo(cp1x, cp1y, x, y)
@@ -534,6 +539,15 @@ jQuery(document).ready(function($) {
         ctx.quadraticCurveTo(posX, posY, posArrayX[1], posArrayY[1]);
         ctx.stroke();
     }
+
+  };
+
+let oBezier = new Bezier(100,100);
+
+    /////FOR Bezier Quadratic//////////////////////////////
+
+
+
 
     /////FOR Bezier Curve//////////////////////////////
     function drawBezierCurve(posX, posY) {
@@ -1069,7 +1083,8 @@ jQuery(document).ready(function($) {
 
         if (bezierQActive) {
             let cursorPositions = getCursorPosition(canvas, event);
-            drawBezierGhost(cursorPositions[0], cursorPositions[1]);
+            let oBezierQGhost = new Bezier(cursorPositions[0], cursorPositions[1]);
+            oBezierQGhost.drawBezierGhost(cursorPositions[0], cursorPositions[1]);
         }
 
         if (bezierCActive) {
@@ -1140,7 +1155,8 @@ jQuery(document).ready(function($) {
             ctx.strokeText("2", posArrayX[1], posArrayY[1]);
             ctx.strokeText("3", posArrayX[2], posArrayY[2]);
 
-            drawBezier(cursorPositions[0], cursorPositions[1]);
+            let oBezierQ = new Bezier(cursorPositions[0], cursorPositions[1]);
+            oBezierQ.drawBezier(cursorPositions[0], cursorPositions[1]);
 
             posArrayX = [];
             posArrayY = [];
