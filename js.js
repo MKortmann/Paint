@@ -772,31 +772,51 @@ jQuery(document).ready(function($) {
      }
 
     function elementCircleClicked(posClickX,posClickY) {
-      console.log(`You clicked at X: ${posClickX} and y: ${posClickY}`);
-      let enlargeTarged = 5;
 
-      //moving, second time clicked:
-      //first time clicked:
-      //Check The Rectangle
+
       for(let index=0; index < oGlobalCircleArray.length; index++)
-      { let radius = oGlobalCircleArray[index].radius;
-        let centerX = oGlobalCircleArray[index].firstPosClickX;
-        let centerY = oGlobalCircleArray[index].firstPosClickY;
+      {  //circle equation!!
 
-        //circle equation!!
+        //In all cases a point on the circle follows the rule x^2+y^2=radius^2
+        //Most General Case:
+        /* (x-a)^2+(y-b)^2=radius^2
+        x = x-a;
+        y = y-b;
+        (a,b) are the point clicked at canvas
+        (x,y) are the inicial point clicked at canvas firstPosClickX, firstPosClickY
+        it represents the center of the circle.
+        x-a, y-b we translate the center of the circle to another place.
+        In this case, if radius is lower than initial radius, it means that we
+        have clicked at the circle. Otherwise you clicked far away of it.
 
+        In real case, our center will never be at 0,0. So, our a,b will be settle
+        as soon as we create our rectangle. Let's say: firstPosClickX=3 and
+        firstPosClickY=4. Radius = 6.
+        So we have:
+        (x-3)^2+(y-4)^2=6^2
 
-        if(posClickX+radius <  )
-        console.log(`The radius is: ${oGlobalCircleArray[index].radius}`);
-        // if(posClickX )
-        // //ctx.arc(x, y, radius, startAngle, endAngle [, anticlockwise]);
-        // ctx.arc(posX, posY, Math.abs(((firstPosClickX - posX) + (firstPosClickY - posY)) / 2), Math.PI * 2, false);
+        so, if (x,y) clicked is lower than 36 means that we have clicked at the
+        circle!!
+        */
+      if(oGlobalCircleArray[index].clicked === false) {
+        let radius = oGlobalCircleArray[index].radius;
+        let centerXa = oGlobalCircleArray[index].posX;
+        let centerYb = oGlobalCircleArray[index].posY;
+        //circleEqResult should be less than 0, means that you have clicked at any pos.
+        //inside the circle
 
+        let circleEqResult =  (posClickX-centerXa)**2+(posClickY-centerYb)**2-radius**2 ;
 
-
+        if(circleEqResult <= 0) {
+          oGlobalCircleArray[index].clicked = true;
+        }
+      } else {
+        oGlobalCircleArray[index].clicked = false;
       }
 
+
     }
+  }
 
     ////////////////////////////////////////////////////
     //MOUSEEEEEEEEEEEEEEEEEEEEEEEE UP
