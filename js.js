@@ -94,6 +94,7 @@ jQuery(document).ready(function($) {
   let oGlobalRectArray = [];
   let oGlobalCircleArray = [];
   let oGlobalBezierArray = [];
+  let oGlobalBezierCArray = [];
 
   /**
   * @description Represents a Line
@@ -479,7 +480,7 @@ class Bezier extends Line {
     //Let's so find this point!
     /*P0x = posArrayX[0]; 364, 76
     P1x =  this.posX;   267, 129
-    P2x = posArrayX[1]*/ 374,207
+    P2x = posArrayX[1]*/ //374,207
     //
     this.t = 0.5;
     //364,25 + 133,5 +    93,5 = 591,25
@@ -599,21 +600,6 @@ class Bezier extends Line {
 
   updateBezier(posX, posY) {
 
-    //lösung 01: we have to move the curve at same delta. So, I am using the
-    //control point the position posArrayX[0] abd posArrayY[0] as reference.
-
-    // let DeltaYGap = this.posArrayY[0]-posY;
-    // let DeltaXGap = this.posArrayX[0]-posX;
-    //
-    // this.posArrayX[0] = this.posArrayX[0] - DeltaXGap;
-    // this.posArrayX[1] = this.posArrayX[1] - DeltaXGap;
-    //
-    // this.posArrayY[0] = this.posArrayY[0] - DeltaYGap;
-    // this.posArrayY[1] = this.posArrayY[1] - DeltaYGap;
-    //
-    // this.posX = this.posX - DeltaXGap;
-    // this.posY = this.posY - DeltaYGap;
-
     //lösung 02: Finde the middle point and update from then!
     //we have to move the curve at same delta. So, I am using the
     //control point the position posArrayX[0] abd posArrayY[0] as reference.
@@ -644,14 +630,49 @@ class Bezier extends Line {
 
   };
 
-let oBezier = new Bezier(100,100);
 
-    /////FOR Bezier Quadratic//////////////////////////////
+/////FOR Bezier Quadratic//////////////////////////////
 class BezierC extends Line {
 
   constructor(posX, posY) {
     super(posX, posY);
+    this.posArrayX = posArrayX;
+    this.posArrayY = posArrayY;
+    this.t = 0;
+    this.x = 0;
+    this.y = 0;
+    this.middlePointCurve();
   }
+
+  /*We calculate the middle point to be use here to move the line and to refine
+  the computation for the select function.*/
+  middlePointCurve() {
+    //Given the bézier Curves as given in Wikipedia
+    // B(t) = (1-t)**2 * P0 + 2(1-t)tP1 + t**2P2, t as [0,1];
+
+    //Let's so find this point!
+    /*P0x = posArrayX[0]; 364, 76
+    P1x =  this.posX;   267, 129
+    P2x = posArrayX[1]*/ //374,207
+    //
+    this.t = 0.5;
+    //364,25 + 133,5 +    93,5 = 591,25
+            //
+    this.x = ((1-this.t)**3)*this.posArrayX[0] + 3*((1-this.t)**2)*this.t*this.posArrayX[1] +
+             3*((1-this.t)*this.t**2)*this.posArrayX[2] + (this.t**3)*this.posX;
+
+    this.y = ((1-this.t)**3)*this.posArrayY[0] + 3*((1-this.t)**2)*this.t*this.posArrayY[1] +
+            3*((1-this.t)*this.t**2)*this.posArrayY[2] + (this.t**3)*this.posY;
+
+
+
+          console.log(`posArrayX: ${this.posArrayX}, Y: ${this.posArrayX}`);
+            console.log(`posX: ${this.posX}, Y: ${this.posY}`);
+    console.log(`the NEW x and y values are: X: ${this.x}, Y: ${this.y}`);
+
+
+  }
+
 
   drawBezierCurve(posX, posY) {
       // ctx.clearRect(0,0, innerWidth, innerHeight);
@@ -664,7 +685,7 @@ class BezierC extends Line {
       console.log(posArrayX, posArrayY);
 
       if (gradient === "true") {
-          linearGradient = ctx.createLinearGradient(posArrayX[1], posArrayY[1], this.posX, this.posY);
+          linearGradient = ctx.createLinearGradient(this.posArrayX[1], this.posArrayY[1], this.posX, this.posY);
           linearGradient.addColorStop(1, 'white');
           linearGradient.addColorStop(0, activeColor);
           // ctx.fillStyle = linearGradient;
@@ -675,10 +696,10 @@ class BezierC extends Line {
           //x,y = coordinates of the end poionts of the curve
           //cp1x, cp1y = coordinates of the first control point
           //In this case I think we have to use the moveTo
-          ctx.moveTo(posArrayX[0], posArrayY[0]);
+          ctx.moveTo(this.posArrayX[0], this.posArrayY[0]);
           // bezierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y)
           //ctx.quadraticCurveTo(posArrayX[1], posArrayY[1], posArrayX[2], posArrayY[2], posX, posY);
-          ctx.quadraticCurveTo(posArrayX[1], posArrayY[1], this.posX, this.posY, posArrayX[2], posArrayY[2]);
+          ctx.quadraticCurveTo(this.posArrayX[1], this.posArrayY[1], this.posX, this.posY, this.this.posArrayX[2], this.this.posArrayY[2]);
           ctx.stroke();
       } else {
           ctx.strokeStyle = this.activeColor;
@@ -686,10 +707,10 @@ class BezierC extends Line {
           //x,y = coordinates of the end poionts of the curve
           //cp1x, cp1y = coordinates of the first control point
           //In this case I think we have to use the moveTo
-          ctx.moveTo(posArrayX[0], posArrayY[0]);
+          ctx.moveTo(this.posArrayX[0], this.posArrayY[0]);
           // bezierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y)
           //ctx.quadraticCurveTo(posArrayX[1], posArrayY[1], posArrayX[2], posArrayY[2], posX, posY);
-          ctx.quadraticCurveTo(posArrayX[1], posArrayY[1], this.posX, this.posY, posArrayX[2], posArrayY[2]);
+          ctx.quadraticCurveTo(this.posArrayX[1], this.posArrayY[1], this.posX, this.posY, this.posArrayX[2], this.posArrayY[2]);
           ctx.stroke();
       }
   }
@@ -707,10 +728,10 @@ class BezierC extends Line {
       //x,y = coordinates of the end poionts of the curve
       //cp1x, cp1y = coordinates of the first control point
       //In this case I think we have to use the moveTo
-      ctx.moveTo(posArrayX[0], posArrayY[0]);
+      ctx.moveTo(this.posArrayX[0], this.posArrayY[0]);
       // ctx.quadraticCurveTo(canvas.width/2, canvas.height/2, posX, posY);
       //ctx.quadraticCurveTo(posArrayX[1], posArrayY[1], posArrayX[2], posArrayY[2], posX, posY);
-      ctx.quadraticCurveTo(posArrayX[1], posArrayY[1], posX, posY, posArrayX[2], posArrayY[2]);
+      ctx.quadraticCurveTo(this.posArrayX[1], this.posArrayY[1], posX, posY, this.posArrayX[2], this.posArrayY[2]);
       ctx.stroke();
 
       setTimeout(() => {
@@ -735,6 +756,64 @@ class BezierC extends Line {
       ctx.quadraticCurveTo(posArrayX[1], posArrayY[1], posX, posY, posArrayX[2], posArrayY[2]);
       ctx.stroke();
   }
+
+  focusBezierCurve() {
+     ctx.beginPath();
+     ctx.lineWidth = 5;
+     ctx.strokeStyle = "rgba(255, 160, 122, 0.8)";
+     ctx.setLineDash([this.lineWidth, 2 * this.lineWidth]);
+
+     ctx.moveTo(this.posArrayX[0], this.posArrayY[0])
+     ctx.quadraticCurveTo(this.posArrayX[1], this.posArrayY[1], this.posX, this.posY, this.posArrayX[2], this.posArrayY[2]);
+     ctx.stroke();
+     $("#canvas").css("cursor", "pointer");
+ }
+
+ eraseBezierCurve() {
+   ctx.beginPath();
+   ctx.lineWidth = this.lineWidth+5;
+   ctx.strokeStyle = "white";
+   ctx.setLineDash([]);
+
+   ctx.moveTo(this.posArrayX[0], this.posArrayY[0])
+   ctx.quadraticCurveTo(this.posArrayX[1], this.posArrayY[1], this.posX, this.posY, this.posArrayX[2], this.posArrayY[2]);
+   ctx.stroke();
+   this.clicked = false;
+
+ }
+
+ updateBezierCurve(posX, posY) {
+   //lösung 02: Finde the middle point and update from then!
+   //we have to move the curve at same delta. So, I am using the
+   //control point the position posArrayX[0] abd posArrayY[0] as reference.
+
+   this.middlePointCurve();
+
+   let DeltaYGap = this.y-posY;
+   let DeltaXGap = this.x-posX;
+
+
+   console.log(`the DeltaXGap and DeltaYGap values are: X: ${DeltaXGap}, Y: ${DeltaYGap}`);
+   console.log(`the Array values are: X: ${this.posArrayX}, Y: ${this.posArrayY}`);
+   console.log(`the this.posX and this.posY: X ${this.posX}, Y: ${this.posY}`);
+
+   this.posArrayX[0] = this.posArrayX[0] - DeltaXGap;
+   this.posArrayX[1] = this.posArrayX[1] - DeltaXGap;
+   this.posArrayX[2] = this.posArrayX[2] - DeltaXGap;
+
+   this.posArrayY[0] = this.posArrayY[0] - DeltaYGap;
+   this.posArrayY[1] = this.posArrayY[1] - DeltaYGap;
+   this.posArrayY[2] = this.posArrayY[2] - DeltaYGap;
+
+   this.posX = this.posX - DeltaXGap;
+   this.posY = this.posY - DeltaYGap;
+   //
+   // this.posArrayX[0] = posX;
+   // this.posArrayY[0] = posY;
+
+   this.middlePointCurve();
+
+ }
 
 
 
@@ -1021,7 +1100,7 @@ class BezierC extends Line {
       } else {
 
         oGlobalBezierArray[index].eraseBezier();
-        oGlobalBezierArray[index].updateBezier(posClickX, posClickY);
+        oGlobalBezierArray[index].updateBezierCurve(posClickX, posClickY);
         oGlobalBezierArray[index].clicked = false;
         oGlobalBezierArray[index].drawBezier(posClickX, posClickY);
 
@@ -1031,6 +1110,65 @@ class BezierC extends Line {
 
     }
 }
+
+function elementBezierCClicked(posClickX, posClickY) {
+
+
+  for(let index=0; index < oGlobalBezierCArray.length; index++)
+  {  //circle equation!!
+    if(oGlobalBezierCArray[index].clicked === false) {
+
+      //let's calculate as it was a small rectangle. It will be computational
+      //faster to calculate all the t parameters that would be at least 8 towards
+      //to infinite.
+      //not so precise but as it is ok as proof of concept!
+      //Now, instead of posX and posY we will use the middlePoint.
+      //it will be preciser!!
+      let xMax = Math.max(oGlobalBezierCArray[index].posX,
+        oGlobalBezierCArray[index].posArrayX[0],
+        oGlobalBezierCArray[index].posArrayX[1],
+        oGlobalBezierCArray[index].posArrayX[2]);
+      let xMin = Math.min(oGlobalBezierCArray[index].posX,
+        oGlobalBezierCArray[index].posArrayX[0],
+        oGlobalBezierCArray[index].posArrayX[1],
+        oGlobalBezierCArray[index].posArrayX[2]);
+
+      let yMax = Math.max(oGlobalBezierCArray[index].posY,
+        oGlobalBezierCArray[index].posArrayY[0],
+        oGlobalBezierCArray[index].posArrayY[1],
+        oGlobalBezierCArray[index].posArrayY[2]);
+      let yMin = Math.min(oGlobalBezierCArray[index].posY,
+        oGlobalBezierCArray[index].posArrayY[0],
+        oGlobalBezierCArray[index].posArrayY[1],
+        oGlobalBezierCArray[index].posArrayY[2]);
+
+
+      console.log(`X values: xMax: ${xMax}, xMin: ${xMin}`);
+      console.log(`Y values: yMax: ${yMax}, yMin: ${yMin}`);
+      console.log(`You clicked at: ${posClickX}, ${posClickY}`);
+
+      if(xMin < posClickX && posClickX < xMax && yMin < posClickY && posClickY < yMax)
+      {
+
+      console.log("MATCHED");
+      oGlobalBezierCArray[index].focusBezierCurve();
+      oGlobalBezierCArray[index].clicked = true;
+
+      }
+
+    } else {
+      console.log("SETTING CLICKED TO FALSE! Not matched!");
+      oGlobalBezierCArray[index].eraseBezierCurve();
+      oGlobalBezierCArray[index].updateBezierCurve(posClickX, posClickY);
+      oGlobalBezierCArray[index].clicked = false;
+      oGlobalBezierCArray[index].drawBezierCurve(posClickX, posClickY);
+    }
+
+
+
+  }
+}
+
 
     ////////////////////////////////////////////////////
     //MOUSEEEEEEEEEEEEEEEEEEEEEEEE UP
@@ -1059,6 +1197,7 @@ class BezierC extends Line {
           elementLineClicked(cursorPositions[0],cursorPositions[1]);
           elementCircleClicked(cursorPositions[0],cursorPositions[1]);
           elementBezierClicked(cursorPositions[0],cursorPositions[1]);
+          elementBezierCClicked(cursorPositions[0],cursorPositions[1]);
       };
 
       if($(".bCopyPaste").hasClass("active") || $(".bCutPaste").hasClass("active")) {
@@ -1342,9 +1481,11 @@ class BezierC extends Line {
             let cursorPositions = getCursorPosition(canvas, event);
             let oBezierCurve = new BezierC(cursorPositions[0], cursorPositions[1]);
             oBezierCurve.drawBezierCurve(cursorPositions[0], cursorPositions[1]);
+            oGlobalBezierCArray.push(oBezierCurve);
             posArrayX = [];
             posArrayY = [];
             bezierCActive = false;
+
         }
 
         // //Saving the last status of the canvas!
