@@ -657,13 +657,12 @@ class BezierC extends Line {
     //
     this.t = 0.5;
     //364,25 + 133,5 +    93,5 = 591,25
-            //
-    this.x = ((1-this.t)**3)*this.posArrayX[0] + 3*((1-this.t)**2)*this.t*this.posArrayX[1] +
-             3*((1-this.t)*this.t**2)*this.posArrayX[2] + (this.t**3)*this.posX;
+            //35,625 + 127,125 + 127,875 + 35,75
+    this.x = (1-this.t)**3*this.posArrayX[0] + 3*(1-this.t)**2*this.t*this.posArrayX[1] +
+             3*(1-this.t)*this.t**2*this.posArrayX[2] + (this.t**3)*this.posX;
 
-    this.y = ((1-this.t)**3)*this.posArrayY[0] + 3*((1-this.t)**2)*this.t*this.posArrayY[1] +
-            3*((1-this.t)*this.t**2)*this.posArrayY[2] + (this.t**3)*this.posY;
-
+    this.y = (1-this.t)**3*this.posArrayY[0] + 3*(1-this.t)**2*this.t*this.posArrayY[1] +
+             3*(1-this.t)*this.t**2*this.posArrayY[2] + (this.t**3)*this.posY;
 
 
           console.log(`posArrayX: ${this.posArrayX}, Y: ${this.posArrayX}`);
@@ -789,8 +788,10 @@ class BezierC extends Line {
 
    this.middlePointCurve();
 
-   let DeltaYGap = this.y-posY;
-   let DeltaXGap = this.x-posX;
+   //for better precision I will get the end point ! The middle point works not so
+   //well as bezier quadratic because the middle point is not exactly in the curve.
+   let DeltaYGap = this.posY-posY;
+   let DeltaXGap = this.posX-posX;
 
 
    console.log(`the DeltaXGap and DeltaYGap values are: X: ${DeltaXGap}, Y: ${DeltaYGap}`);
