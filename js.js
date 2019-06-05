@@ -807,9 +807,7 @@ class BezierC extends Line {
 
    this.posX = this.posX - DeltaXGap;
    this.posY = this.posY - DeltaYGap;
-   //
-   // this.posArrayX[0] = posX;
-   // this.posArrayY[0] = posY;
+
 
    this.middlePointCurve();
 
@@ -1100,7 +1098,7 @@ class BezierC extends Line {
       } else {
 
         oGlobalBezierArray[index].eraseBezier();
-        oGlobalBezierArray[index].updateBezierCurve(posClickX, posClickY);
+        oGlobalBezierArray[index].updateBezier(posClickX, posClickY);
         oGlobalBezierArray[index].clicked = false;
         oGlobalBezierArray[index].drawBezier(posClickX, posClickY);
 
@@ -1126,21 +1124,17 @@ function elementBezierCClicked(posClickX, posClickY) {
       //it will be preciser!!
       let xMax = Math.max(oGlobalBezierCArray[index].posX,
         oGlobalBezierCArray[index].posArrayX[0],
-        oGlobalBezierCArray[index].posArrayX[1],
-        oGlobalBezierCArray[index].posArrayX[2]);
+        oGlobalBezierCArray[index].x);
       let xMin = Math.min(oGlobalBezierCArray[index].posX,
         oGlobalBezierCArray[index].posArrayX[0],
-        oGlobalBezierCArray[index].posArrayX[1],
-        oGlobalBezierCArray[index].posArrayX[2]);
+        oGlobalBezierCArray[index].x);
 
       let yMax = Math.max(oGlobalBezierCArray[index].posY,
         oGlobalBezierCArray[index].posArrayY[0],
-        oGlobalBezierCArray[index].posArrayY[1],
-        oGlobalBezierCArray[index].posArrayY[2]);
+        oGlobalBezierCArray[index].y);
       let yMin = Math.min(oGlobalBezierCArray[index].posY,
         oGlobalBezierCArray[index].posArrayY[0],
-        oGlobalBezierCArray[index].posArrayY[1],
-        oGlobalBezierCArray[index].posArrayY[2]);
+        oGlobalBezierCArray[index].y);
 
 
       console.log(`X values: xMax: ${xMax}, xMin: ${xMin}`);
