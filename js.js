@@ -463,6 +463,32 @@ class Bezier extends Line {
         super(posX, posY);
         this.posArrayX = posArrayX;
         this.posArrayY = posArrayY;
+        this.x = 0;
+        this.y = 0;
+        this.t = 0.5;
+
+        this.middlePoint();
+  }
+
+  /*We calculate the middle point to be use here to move the line and to refine
+  the computation for the select function.*/
+  middlePoint() {
+    //Given the bézier Curves as given in Wikipedia
+    // B(t) = (1-t)**2 * P0 + 2(1-t)tP1 + t**2P2, t as [0,1];
+
+    //Let's so find this point!
+    /*P0x = posArrayX[0]; 364, 76
+    P1x =  this.posX;   267, 129
+    P2x = posArrayX[1]*/ 374,207
+    //
+    this.t = 0.5;
+    //364,25 + 133,5 +    93,5 = 591,25
+    this.x = (1-this.t)**2*this.posArrayX[0] + 2*(1-this.t)*this.t*this.posX + (this.t**2)*this.posArrayX[1];
+    //76,25 + 64,5 + 51,75 = 192,51
+    this.y = (1-this.t)**2*this.posArrayY[0] + 2*(1-this.t)*this.t*this.posY + (this.t**2)*this.posArrayY[1];
+
+    console.log(`the NEW x and y values are: X: ${this.x}, Y: ${this.y}`);
+
   }
 
   drawBezier(posX, posY) {
@@ -502,6 +528,8 @@ class Bezier extends Line {
           ctx.quadraticCurveTo(this.posX, this.posY, this.posArrayX[1], this.posArrayY[1]);
           ctx.stroke();
       }
+
+
 
     }
 
@@ -574,8 +602,32 @@ class Bezier extends Line {
     //lösung 01: we have to move the curve at same delta. So, I am using the
     //control point the position posArrayX[0] abd posArrayY[0] as reference.
 
-    let DeltaYGap = this.posArrayY[0]-posY;
-    let DeltaXGap = this.posArrayX[0]-posX;
+    // let DeltaYGap = this.posArrayY[0]-posY;
+    // let DeltaXGap = this.posArrayX[0]-posX;
+    //
+    // this.posArrayX[0] = this.posArrayX[0] - DeltaXGap;
+    // this.posArrayX[1] = this.posArrayX[1] - DeltaXGap;
+    //
+    // this.posArrayY[0] = this.posArrayY[0] - DeltaYGap;
+    // this.posArrayY[1] = this.posArrayY[1] - DeltaYGap;
+    //
+    // this.posX = this.posX - DeltaXGap;
+    // this.posY = this.posY - DeltaYGap;
+
+    //lösung 02: Finde the middle point and update from then!
+    //we have to move the curve at same delta. So, I am using the
+    //control point the position posArrayX[0] abd posArrayY[0] as reference.
+
+
+    this.middlePoint();
+
+    let DeltaYGap = this.y-posY;
+    let DeltaXGap = this.x-posX;
+
+
+    console.log(`the DeltaXGap and DeltaYGap values are: X: ${DeltaXGap}, Y: ${DeltaYGap}`);
+    console.log(`the Array values are: X: ${this.posArrayX}, Y: ${this.posArrayY}`);
+    console.log(`the this.posX and this.posY: X ${this.posX}, Y: ${this.posY}`);
 
     this.posArrayX[0] = this.posArrayX[0] - DeltaXGap;
     this.posArrayX[1] = this.posArrayX[1] - DeltaXGap;
@@ -586,7 +638,7 @@ class Bezier extends Line {
     this.posX = this.posX - DeltaXGap;
     this.posY = this.posY - DeltaYGap;
 
-
+    this.middlePoint();
 
   }
 
@@ -932,19 +984,23 @@ class BezierC extends Line {
     {  //circle equation!!
       if(oGlobalBezierArray[index].clicked === false) {
 
-        //let's calculate as it was a rect. it will be faster computational.
+        //let's calculate as it was a small rectangle. It will be computational
+        //faster to calculate all the t parameters that would be at least 8 towards
+        //to infinite.
         //not so precise but as it is ok as proof of concept!
-        let xMax = Math.max(oGlobalBezierArray[index].posX,
+        //Now, instead of posX and posY we will use the middlePoint.
+        //it will be preciser!!
+        let xMax = Math.max(oGlobalBezierArray[index].x,
           oGlobalBezierArray[index].posArrayX[0],
           oGlobalBezierArray[index].posArrayX[1]);
-        let xMin = Math.min(oGlobalBezierArray[index].posX,
+        let xMin = Math.min(oGlobalBezierArray[index].x,
           oGlobalBezierArray[index].posArrayX[0],
           oGlobalBezierArray[index].posArrayX[1]);
 
-        let yMax = Math.max(oGlobalBezierArray[index].posY,
+        let yMax = Math.max(oGlobalBezierArray[index].y,
           oGlobalBezierArray[index].posArrayY[0],
           oGlobalBezierArray[index].posArrayY[1]);
-        let yMin = Math.min(oGlobalBezierArray[index].posY,
+        let yMin = Math.min(oGlobalBezierArray[index].y,
           oGlobalBezierArray[index].posArrayY[0],
           oGlobalBezierArray[index].posArrayY[1]);
 
