@@ -648,13 +648,8 @@ class BezierC extends Line {
   the computation for the select function.*/
   middlePointCurve() {
     //Given the bézier Curves as given in Wikipedia
-    // B(t) = (1-t)**2 * P0 + 2(1-t)tP1 + t**2P2, t as [0,1];
+    // B(t) = (1-t)**3 * p0 + 3* (1 - t)**2 * t * P1 + 3*(1-t)*t**2 * P2 + t**3*P3, t as [0,1];
 
-    //Let's so find this point!
-    /*P0x = posArrayX[0]; 364, 76
-    P1x =  this.posX;   267, 129
-    P2x = posArrayX[1]*/ //374,207
-    //
     this.t = 0.5;
     //364,25 + 133,5 +    93,5 = 591,25
             //35,625 + 127,125 + 127,875 + 35,75
@@ -1608,6 +1603,25 @@ function elementBezierCClicked(posClickX, posClickY) {
         }, true);
     }
 
+    //Save Canvas: here we create a link to be able to download it
+    //as image
+    function saveCanvas() {
+      /*setting*/
+        let TYPE = "img/png";
+
+        const imgURL = canvas[0].toDataURL(TYPE);
+
+        let dlLink = document.createElement('a');
+        dlLink.download = "Paint";
+        dlLink.href = imgURL;
+        dlLink.dataset.downloadurl = [TYPE, dlLink.download, dlLink.href].join(':');
+      /*add, click and removing*/
+        document.body.appendChild(dlLink);
+        dlLink.click();
+        document.body.removeChild(dlLink);
+    }
+
+
     ///////////////////////CONTROLS
     //undo
     $(".bUndo").click(() => {
@@ -1627,6 +1641,11 @@ function elementBezierCClicked(posClickX, posClickY) {
     $(".bPrint").click(() => {
         printCanvas();
         console.log("Printing");
+    })
+    //save
+    $(".bSave").click(() => {
+        saveCanvas();
+        console.log("Saving");
     })
     //Select&Move
     $(".bSelectMove").click(() => {
