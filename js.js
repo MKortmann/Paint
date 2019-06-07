@@ -1,9 +1,7 @@
 "use strict";
 
 /*TODO:
-*) export or save the image as png.
 *) copy the image to clickboard
-*) change the background image
 *) Important: look about tip menu explaining how to work with the program!,
 improve copy&paste and do a way to select elements.
 
@@ -135,7 +133,7 @@ jQuery(document).ready(function($) {
       return result;
     }
 
-    drawStraightLine(posX, posY, translate) {
+    drawStraightLine(posX = this.posX, posY = this.posY, translate) {
       this.deltaX = this.firstPosClickX-posX;
       this.deltaY = this.firstPosClickY-posY;
       ctx.beginPath();
@@ -277,12 +275,12 @@ jQuery(document).ready(function($) {
         ctx.strokeStyle = "rgba(255, 160, 122, 0.8)";
         ctx.setLineDash([this.lineWidth, 2 * this.lineWidth]);
         ctx.fillRect(this.firstPosClickX,this.firstPosClickY, this.width, this.height);
-        ctx.rect(this.firstPosClickX-4,this.firstPosClickY-4, this.width+8, this.height+8);
+        ctx.rect(this.firstPosClickX-2,this.firstPosClickY-2, this.width+4, this.height+4);
         ctx.stroke();
         $("#canvas").css("cursor", "pointer");
       }
 
-      drawRect(newPosClickX, newPosClickY) {
+      drawRect(newPosClickX = this.firstPosClickX, newPosClickY = this.firstPosClickY) {
         if(this.gradient === "true") {
           ctx.beginPath();
           //ctx.createLinearGradient(x0, y0, x1, y1);
@@ -367,7 +365,7 @@ jQuery(document).ready(function($) {
         this.clicked = false;
       }
 
-      drawCircle(posX, posY) {
+      drawCircle(posX = this.posX, posY = this.posY) {
         $("#canvas").css("cursor", "default");
         // ctx.clearRect(0,0, innerWidth, innerHeight);
         ctx.beginPath();
@@ -941,7 +939,11 @@ class BezierC extends Line {
            console.log("it is true");
            oGlobalLineArray[index].clicked = false;
            console.log("flag setted to: " + oGlobalLineArray[index].clicked);
-           oGlobalLineArray[index].eraseLine();
+           if(!$(".bSelectPaste").hasClass("active")) {
+             oGlobalLineArray[index].eraseLine();
+           } else {
+             oGlobalLineArray[index].drawStraightLine();
+           }
            oGlobalLineArray[index].drawStraightLine(posClickX,posClickY, true);
            oGlobalLineArray[index].updateLine(posClickX, posClickY);
 
@@ -975,7 +977,11 @@ class BezierC extends Line {
          if(oGlobalRectArray[index].clicked === true)
          {
            console.log("true");
-           oGlobalRectArray[index].eraseRect();
+           if(!$(".bSelectPaste").hasClass("active")) {
+             oGlobalRectArray[index].eraseRect();
+           } else {
+             oGlobalRectArray[index].drawRect();
+           }
            oGlobalRectArray[index].drawRect(posClickX,posClickY);
            oGlobalRectArray[index].updateRect(posClickX,posClickY);
          } else {
@@ -1036,7 +1042,12 @@ class BezierC extends Line {
         }
       } else {
         oGlobalCircleArray[index].clicked = false;
-        oGlobalCircleArray[index].eraseCircle();
+        if(!$(".bSelectPaste").hasClass("active")) {
+          oGlobalCircleArray[index].eraseCircle();
+        } else {
+
+          oGlobalCircleArray[index].drawCircle();
+        }
         oGlobalCircleArray[index].updateCircle(posClickX, posClickY);
         oGlobalCircleArray[index].drawCircle(posClickX,   posClickY);
 
@@ -1087,8 +1098,11 @@ class BezierC extends Line {
         }
 
       } else {
-
-        oGlobalBezierArray[index].eraseBezier();
+        if(!$(".bSelectPaste").hasClass("active")) {
+          oGlobalBezierArray[index].eraseBezier();
+        } else {
+          oGlobalBezierArray[index].drawBezier();
+        }
         oGlobalBezierArray[index].updateBezier(posClickX, posClickY);
         oGlobalBezierArray[index].clicked = false;
         oGlobalBezierArray[index].drawBezier(posClickX, posClickY);
@@ -1143,7 +1157,11 @@ function elementBezierCClicked(posClickX, posClickY) {
 
     } else {
       console.log("SETTING CLICKED TO FALSE! Not matched!");
-      oGlobalBezierCArray[index].eraseBezierCurve();
+      if(!$(".bSelectPaste").hasClass("active")) {
+        oGlobalBezierCArray[index].eraseBezierCurve();
+      } else {
+        oGlobalBezierCArray[index].drawBezierCurve();
+      }
       oGlobalBezierCArray[index].updateBezierCurve(posClickX, posClickY);
       oGlobalBezierCArray[index].clicked = false;
       oGlobalBezierCArray[index].drawBezierCurve(posClickX, posClickY);
@@ -1174,7 +1192,7 @@ function elementBezierCClicked(posClickX, posClickY) {
       firstPosClickY = cursorPositions[1];
     };
 
-      if ($(".bSelectMove").hasClass("active")) {
+      if ($(".bSelectMove").hasClass("active") || $(".bSelectPaste").hasClass("active")) {
           let cursorPositions = getCursorPosition(canvas, event);
           firstPosClickX = cursorPositions[0];
           firstPosClickY = cursorPositions[1];
@@ -1616,6 +1634,7 @@ function elementBezierCClicked(posClickX, posClickY) {
         document.body.removeChild(dlLink);
     }
 
+
     //Fill Background color
     function fillBackgroundColor() {
       ctx.fillStyle = activeColor;
@@ -1653,6 +1672,12 @@ function elementBezierCClicked(posClickX, posClickY) {
     $(".bSelectMove").click(() => {
       $(".bSelectMove").toggleClass("active");
       activeButtons.push(".bSelectMove");
+      resetButtons();
+    })
+    //Select&Paste
+    $(".bSelectPaste").click(() => {
+      $(".bSelectPaste").toggleClass("active");
+      activeButtons.push(".bSelectPaste");
       resetButtons();
     })
     ///////////////////////////TOOLS
