@@ -44,11 +44,23 @@ body {
   background-color: white;
 }
 
+.boxSubContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  flex: 1;
+}
+
 .bText {
   margin-top: 9px;
 }
 
-input {
+#lineCap,
+#lineDash,
+#gradient,
+#textFill,
+#canvasScaling {
   max-width: 48px;
 }
 
@@ -57,8 +69,6 @@ input {
  flex-direction: row;
  justify-content: center;
  align-items: center;
-
-
 }
 
 #canvas {
@@ -72,10 +82,6 @@ input {
   display: flex;
   flex-direction: row;
   justify-content: center;
-}
-
-input {
-  max-height: 24px;
 }
 
 .outText {margin-bottom: 23px;margin-bottom: 22px;margin-bottom: 21px;margin-bottom: 20px;margin-bottom: 19px;margin-bottom: 18px;margin-bottom: 17px;margin-bottom: 16px;margin-bottom: 17px;margin-bottom: 18px;margin-bottom: 19px;margin-bottom: 20px;margin-bottom: 21px;margin-bottom: 22px;margin-bottom: 23px;margin-bottom: 25px;margin-bottom: 26px;margin-bottom: 25px;margin-bottom: 24px;margin-bottom: 23px;margin-bottom: 22px;margin-bottom: 21px;margin-bottom: 20px;margin-bottom: 19px;margin-bottom: 18px;margin-bottom: 17px;margin-bottom: 16px;margin-bottom: 15px;margin-bottom: 13px;margin-bottom: 12px;margin-bottom: 13px;margin-bottom: 14px;margin-bottom: 15px;margin-bottom: 16px;margin-bottom: 15px;margin-bottom: 14px;margin-bottom: 13px;margin-bottom: 12px;margin-bottom: 11px;margin-bottom: 10px;margin-bottom: 11px;margin-bottom: 10px;margin-bottom: 9px;margin-bottom: 8px;margin-bottom: 7px;margin-bottom: 6px;margin-bottom: 5px;margin-bottom: 4px;margin-bottom: 3px;margin-bottom: 2px;color: #fff;font-size: 5em;font-weight: bold;font-family: Helvetica;text-shadow: 0 1px 0 #ccc, 0 2px 0 #c9c9c9, 0 3px 0 #bbb, 0 4px 0 #b9b9b9, 0 5px 0 #aaa, 0 6px 1px rgba(0,0,0,.1), 0 0 5px rgba(0,0,0,.1), 0 1px 3px rgba(0,0,0,.3), 0 3px 5px rgba(0,0,0,.2), 0 5px 10px rgba(0,0,0,.25), 0 10px 10px rgba(0,0,0,.2), 0 20px 20px rgba(0,0,0,.15);margin-top: 10px;margin-bottom: 10px;}
