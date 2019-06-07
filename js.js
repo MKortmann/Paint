@@ -813,11 +813,6 @@ class BezierC extends Line {
 
 }
 
-
-
-
-
-
         /*The Canvas API provides a means for drawing graphics
         via JavaScript and the HTML <canvas> element.*/
         /*Among other things, it can be used for animation,
@@ -1621,6 +1616,13 @@ function elementBezierCClicked(posClickX, posClickY) {
         document.body.removeChild(dlLink);
     }
 
+    //Fill Background color
+    function fillBackgroundColor() {
+      ctx.fillStyle = activeColor;
+      ctx.rect(0,0, canvas[0].width, canvas[0].height);
+      ctx.fill();
+    }
+
 
     ///////////////////////CONTROLS
     //undo
@@ -1666,6 +1668,15 @@ function elementBezierCClicked(posClickX, posClickY) {
         /*reseting other buttons*/
         activeButtons.push(".bErase");
         resetButtons();
+    });
+
+    //bSet Background color
+    $(".bBackColor").click( ()=> {
+      $(".bBackColor").toggleClass("active");
+      fillBackgroundColor();
+      /*reseting other buttons*/
+      activeButtons.push(".bBackColor");
+      resetButtons();
     });
     //bFill
     $(".bFill").click(() => {
