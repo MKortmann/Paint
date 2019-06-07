@@ -1,30 +1,14 @@
 "use strict";
 
 /*TODO:
+*) Change mouse cursor
+*) Shadow effect
 *) copy the image to clickboard
 *) Important: look about tip menu explaining how to work with the program!,
 improve copy&paste and do a way to select elements.
 
-1) Bezier Curve the coordinates are not correct in the tutorial.
-At least, it is not matching the code! TOBECHECKED!
-
 2) Generate a palettes of color through js
 https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Applying_styles_and_colors
-
-
-3) we need an array to push the values of x, y of the mouse position.
-The ghost function should delete and use these values.
-
-4)   createRadialGradient(x1, y1, r1, x2, y2, r2)
-  We have to circles with each having the center at x1,y1 and x2,y2 and with
-  the respective radius: r1 and r2. Interesting that it seems to be given in
-  grad and not radians. TO BE CHECKED!!!
-
-5) Save and restore work only when you are drawing something inside a function
-with specifics attribvute as strokestyle, fillstyle and so on...
-I think it does not replace what we have programmed as undo&redo.
-
-6) Can we use a clip path to do a selection tool?
 
 */
 /*Tutorial: lines MDN:
@@ -83,8 +67,9 @@ jQuery(document).ready(function($) {
     // $("#lineDash")[0].value = 0
     //free style stift.
     let lineCapString = "round";
-    let width = 500;
-    let height = 300;
+    // let width = $(window).width();
+    let width = 1900;
+    let height = 700;
 
   //the array below will store all the object created in canvas! In this way
   //it will be easy to move, copy and delete then!
