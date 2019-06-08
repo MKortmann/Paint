@@ -1738,12 +1738,12 @@ jQuery(document).ready(function($) {
     });
 
     //Zoom
-    $(".bZoom").click(function() {
-        $(".bZoom").toggleClass("active");
-        resizeCanvas(window.innerWidth, 300);
-        activeButtons.push(".bZoom");
-        resetButtons();
-    });
+    // $(".bZoom").click(function() {
+    //     $(".bZoom").toggleClass("active");
+    //     resizeCanvas(window.innerWidth, 300);
+    //     activeButtons.push(".bZoom");
+    //     resetButtons();
+    // });
     //Reload
     $(".bReload").click(function() {
         resizeCanvas(width, height);

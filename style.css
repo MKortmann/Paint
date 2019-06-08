@@ -5,6 +5,23 @@ h1 {
 body {
   background-color: #f1f1f1;
 }
+
+button {
+  width: 96px;
+  height: 56px;
+  cursor: pointer;
+  border-radius: 20px;
+  margin-bottom: 10px;
+  margin-right: 10px;
+}
+
+button:hover {
+  background-color: #EC7063;
+}
+
+button:active {
+  background-color: blue;
+}
 .MainContainer {
   display: flex;
   flex-direction: column;
@@ -13,12 +30,58 @@ body {
   align-items: center;
 }
 .containerControls {
+  margin-top: 10px;
   display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
 }
 
+.bUndo {
+  background: url("./icons/undo.svg") no-repeat ;
+  background-color: white;
+  background-position: center;
+  border: 2px solid black;
+}
+
+.bRedo {
+  background: url("./icons/redo.svg") no-repeat ;
+  background-color: white;
+  background-position: center;
+  border: 2px solid black;
+}
+
+.bPrint {
+  background: url("./icons/print.svg") no-repeat ;
+  background-color: white;
+  background-position: center;
+  border: 2px solid black;
+}
+
+.bSave {
+  background: url("./icons/save.svg") no-repeat ;
+  background-color: white;
+  background-position: center;
+  border: 2px solid black;
+}
+.bSelectMove  {
+  background: url("./icons/selectMove.svg") no-repeat ;
+  background-color: white;
+  background-position: center;
+  border: 2px solid black;
+}
+.bSelectPaste  {
+  background: url("./icons/selectPaste.svg") no-repeat ;
+  background-color: white;
+  background-position: center;
+  border: 2px solid black;
+}
+.bReload  {
+  background: url("./icons/refresh.svg") no-repeat ;
+  background-color: white;
+  background-position: center;
+  border: 2px solid black;
+}
 .containerTools {
   display: flex;
   flex-direction: row;
@@ -76,6 +139,7 @@ body {
   height: 700px;
   border: 2px solid black;
   background-color: white;
+  border-radius: 20px;
 }
 
 .containerColors {
@@ -84,7 +148,14 @@ body {
   justify-content: center;
 }
 
-.outText {margin-bottom: 23px;margin-bottom: 22px;margin-bottom: 21px;margin-bottom: 20px;margin-bottom: 19px;margin-bottom: 18px;margin-bottom: 17px;margin-bottom: 16px;margin-bottom: 17px;margin-bottom: 18px;margin-bottom: 19px;margin-bottom: 20px;margin-bottom: 21px;margin-bottom: 22px;margin-bottom: 23px;margin-bottom: 25px;margin-bottom: 26px;margin-bottom: 25px;margin-bottom: 24px;margin-bottom: 23px;margin-bottom: 22px;margin-bottom: 21px;margin-bottom: 20px;margin-bottom: 19px;margin-bottom: 18px;margin-bottom: 17px;margin-bottom: 16px;margin-bottom: 15px;margin-bottom: 13px;margin-bottom: 12px;margin-bottom: 13px;margin-bottom: 14px;margin-bottom: 15px;margin-bottom: 16px;margin-bottom: 15px;margin-bottom: 14px;margin-bottom: 13px;margin-bottom: 12px;margin-bottom: 11px;margin-bottom: 10px;margin-bottom: 11px;margin-bottom: 10px;margin-bottom: 9px;margin-bottom: 8px;margin-bottom: 7px;margin-bottom: 6px;margin-bottom: 5px;margin-bottom: 4px;margin-bottom: 3px;margin-bottom: 2px;color: #fff;font-size: 5em;font-weight: bold;font-family: Helvetica;text-shadow: 0 1px 0 #ccc, 0 2px 0 #c9c9c9, 0 3px 0 #bbb, 0 4px 0 #b9b9b9, 0 5px 0 #aaa, 0 6px 1px rgba(0,0,0,.1), 0 0 5px rgba(0,0,0,.1), 0 1px 3px rgba(0,0,0,.3), 0 3px 5px rgba(0,0,0,.2), 0 5px 10px rgba(0,0,0,.25), 0 10px 10px rgba(0,0,0,.2), 0 20px 20px rgba(0,0,0,.15);margin-top: 10px;margin-bottom: 10px;}
+.outText {
+color: #fff;
+font-size: 5em;
+font-weight: bold;
+font-family: Helvetica;
+text-shadow: 0 1px 0 #ccc, 0 2px 0 #c9c9c9, 0 3px 0 #bbb, 0 4px 0 #b9b9b9, 0 5px 0 #aaa, 0 6px 1px rgba(0,0,0,.1), 0 0 5px rgba(0,0,0,.1), 0 1px 3px rgba(0,0,0,.3), 0 3px 5px rgba(0,0,0,.2), 0 5px 10px rgba(0,0,0,.25), 0 10px 10px rgba(0,0,0,.2), 0 20px 20px rgba(0,0,0,.15);
+margin-top: 10px;
+margin-bottom: 0;
 }
 
 .box {
@@ -94,21 +165,7 @@ body {
   cursor: pointer;
 }
 
-button {
-  width: 120px;
-  height: 24px;
-  cursor: pointer;
-  border-radius: 20px;
-  margin-bottom: 10px;
-}
 
-button:hover {
-  background-color: #c733b0;
-}
-
-button:active {
-  background-color: blue;
-}
 
 .active {
   background-color: red;
