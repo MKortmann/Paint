@@ -1,6 +1,7 @@
 "use strict";
 
 /*TODO:
+*) del delete the selected draw
 *) Change mouse cursor
 *) Shadow effect
 *) copy the image to clickboard
@@ -69,7 +70,7 @@ jQuery(document).ready(function($) {
     let lineCapString = "round";
     // let width = $(window).width();
     let width = 1900;
-    let height = 580;
+    let height = 560;
 
     //the array below will store all the object created in canvas! In this way
     //it will be easy to move, copy and delete then!
