@@ -69,7 +69,7 @@ jQuery(document).ready(function($) {
     let lineCapString = "round";
     // let width = $(window).width();
     let width = 1900;
-    let height = 700;
+    let height = 580;
 
     //the array below will store all the object created in canvas! In this way
     //it will be easy to move, copy and delete then!

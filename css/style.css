@@ -13,6 +13,7 @@ button {
   border-radius: 20px;
   margin-bottom: 10px;
   margin-right: 10px;
+  margin-left: 10px;
 }
 
 button:hover {
@@ -21,6 +22,10 @@ button:hover {
 
 button:active {
   background-color: blue;
+}
+
+input {
+  border-radius: 10px;
 }
 .MainContainer {
   display: flex;
@@ -37,56 +42,12 @@ button:active {
   align-items: center;
 }
 
-.bUndo {
-  background: url("./icons/undo.svg") no-repeat ;
-  background-color: white;
-  background-position: center;
-  border: 2px solid black;
-}
-
-.bRedo {
-  background: url("./icons/redo.svg") no-repeat ;
-  background-color: white;
-  background-position: center;
-  border: 2px solid black;
-}
-
-.bPrint {
-  background: url("./icons/print.svg") no-repeat ;
-  background-color: white;
-  background-position: center;
-  border: 2px solid black;
-}
-
-.bSave {
-  background: url("./icons/save.svg") no-repeat ;
-  background-color: white;
-  background-position: center;
-  border: 2px solid black;
-}
-.bSelectMove  {
-  background: url("./icons/selectMove.svg") no-repeat ;
-  background-color: white;
-  background-position: center;
-  border: 2px solid black;
-}
-.bSelectPaste  {
-  background: url("./icons/selectPaste.svg") no-repeat ;
-  background-color: white;
-  background-position: center;
-  border: 2px solid black;
-}
-.bReload  {
-  background: url("./icons/refresh.svg") no-repeat ;
-  background-color: white;
-  background-position: center;
-  border: 2px solid black;
-}
 .containerTools {
   display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
+  margin-top: 10px;
 }
 
 .containerSettings {
@@ -94,6 +55,123 @@ button:active {
   flex-direction: row;
   justify-content: center;
   align-items: stretch;
+}
+
+.containerCanvas {
+ display: flex;
+ flex-direction: row;
+ justify-content: center;
+ align-items: center;
+}
+
+.bUndo {
+  background: url("../icons/undo.svg") no-repeat ;
+  background-color: white;
+  background-position: center;
+  border: 2px solid black;
+}
+
+.bRedo {
+  background: url("../icons/redo.svg") no-repeat ;
+  background-color: white;
+  background-position: center;
+  border: 2px solid black;
+}
+
+.bPrint {
+  background: url("../icons/print.svg") no-repeat ;
+  background-color: white;
+  background-position: center;
+  border: 2px solid black;
+}
+
+.bSave {
+  background: url("../icons/save.svg") no-repeat ;
+  background-color: white;
+  background-position: center;
+  border: 2px solid black;
+}
+.bSelectMove  {
+  background: url("../icons/selectMove.svg") no-repeat ;
+  background-color: white;
+  background-position: center;
+  border: 2px solid black;
+}
+.bSelectPaste  {
+  background: url("../icons/selectPaste.svg") no-repeat ;
+  background-color: white;
+  background-position: center;
+  border: 2px solid black;
+}
+.bReload  {
+  background: url("../icons/refresh.svg") no-repeat ;
+  background-color: white;
+  background-position: center;
+  border: 2px solid black;
+}
+
+.bStift {
+  background: url("../icons/pincel.svg") no-repeat ;
+  background-color: white;
+  background-position: center;
+  border: 2px solid black;
+}
+
+.bErase {
+  background: url("../icons/erase.svg") no-repeat ;
+  background-color: white;
+  background-position: center;
+  border: 2px solid black;
+}
+
+.bBackColor {
+  background: url("../icons/backgroundColor.svg") no-repeat ;
+  background-color: white;
+  background-position: center;
+  border: 2px solid black;
+}
+
+.bStraightLine {
+  background: url("../icons/Line.svg") no-repeat ;
+  background-color: white;
+  background-position: center;
+  border: 2px solid black;
+}
+
+.bRect {
+  background: url("../icons/rectangle.svg") no-repeat ;
+  background-color: white;
+  background-position: center;
+  border: 2px solid black;
+}
+
+.bCircle {
+  background: url("../icons/circle.svg") no-repeat ;
+  background-color: white;
+  background-position: center;
+  border: 2px solid black;
+}
+
+.bBezierQ {
+  background: url("../icons/bezier.svg") no-repeat ;
+  background-color: white;
+  background-position: center;
+  border: 2px solid black;
+}
+
+.bBezierC {
+  background: url("../icons/bezierCurve.svg") no-repeat ;
+  background-color: white;
+  background-position: center;
+  border: 2px solid black;
+}
+
+
+.bText {
+  background: url("../icons/Text.svg") no-repeat ;
+  background-color: white;
+  background-position: center;
+  border: 2px solid black;
 }
 
 .boxS {
@@ -127,16 +205,9 @@ button:active {
   max-width: 48px;
 }
 
-.containerCanvas {
- display: flex;
- flex-direction: row;
- justify-content: center;
- align-items: center;
-}
-
 #canvas {
   width: 1900px;
-  height: 700px;
+  height: 580px;
   border: 2px solid black;
   background-color: white;
   border-radius: 20px;

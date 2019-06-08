@@ -2,19 +2,13 @@
 <html lang="en">
 
 <head>
-
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
-    <!-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous"> -->
+    <link rel="stylesheet" href="./css/style.css">
     <title>Paint</title>
-    <!--Google icons used in the Main Card Grid and for some buttons styles-->
-    <!-- <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons"> -->
-
 </head>
 
 <body>
-
     <h1 class="outText">Paint</h1>
 
 <section class=MainContainer>
@@ -36,38 +30,14 @@
       </section>
 
       <section class="containerTools">
-          <button class="bStift fas fa-paint-brush">
-              pincel
-          </button>
-
-          <button class="bErase fas fa-eraser">
-              erase
-          </button>
-
-          <button class="bBackColor">
-              Set BackColor
-          </button>
-
-          <button class="bStraightLine fas fa-minus">
-              Line
-          </button>
-
-          <button class="bRect fas fa-square">
-              Rectangle
-          </button>
-
-          <button class="bCircle fas fa-circle">
-              Circle
-          </button>
-
-          <button class="bBezierQ fas fa-spinner">
-              Bezier quad.
-          </button>
-
-          <button class="bBezierC fas fa-bezier-curve">
-              Bezier Curve
-          </button>
-
+          <button class="bStift"></button>
+          <button class="bErase"></button>
+          <button class="bBackColor"></button>
+          <button class="bStraightLine"></button>
+          <button class="bRect"></button>
+          <button class="bCircle"></button>
+          <button class="bBezierQ"></button>
+          <button class="bBezierC"></button>
       </section>
 
       <section class="containerSettings">
@@ -99,9 +69,7 @@
           <div class="boxSubContainer">
           Text:
           <input type="text" id="textInput" placeholder="Type a text here, then click text and in the canvas to insert it" value="">
-          <button class="bText fas fa-pencil-alt">
-              Text
-          </button>
+          <button class="bText"></button>
 
           Font Size:
           <input type="number" id="fontSize" placeholder="30" value="30" step="1" min="1" max="80">
@@ -144,7 +112,7 @@
 </section> <!--End of main container-->
 
         <script src="./lib/jQuery/jquery-3.3.1.js"></script>
-        <script src="js.js"></script>
+        <script src="./js/js.js"></script>
 
 </body>
 
