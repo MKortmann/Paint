@@ -10,19 +10,28 @@ This app enclosed already many features:
     * rectangle
     * circle
     * bezier quadratic & curve
-    * zoom
+    * zoom: canvas scaling
     * refresh
+    * Cross Platform
+    * Fill Color Background
+    * 69 colors, including: transparency, thickness, linecap, linedash, gradient.
+    * Text - including: font size, and fill/contour.
+    * Selection Tool allowing copy and move or copy and paste
  
 ## In Development
 
+  - change mouse cursor
+  - keyboard interaction, for instance: del key.
+  - code refactor: improve OOP: object oriented classes hierarchy. (Maybe also Model Object View) 
   - Responsive Design 
-  - Cross Platform
   - Work with many input devices as mouse, pencil, fingers, keyboard...
-  - More draw tools as:fill, fill element, select 
 
 ## How to start the App?
 
- Please, install the App using the instructions below.
+ To use the app, please, click in the link:
+ https://mkortmann.github.io/Paint/
+ 
+ To install the App, please, follow the instructions at Installation section.
 
 ## What is the app so important?
 
