@@ -675,7 +675,7 @@ jQuery(document).ready(function($) {
                 ctx.moveTo(this.posArrayX[0], this.posArrayY[0]);
                 // bezierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y)
                 //ctx.quadraticCurveTo(posArrayX[1], posArrayY[1], posArrayX[2], posArrayY[2], posX, posY);
-                ctx.quadraticCurveTo(this.posArrayX[1], this.posArrayY[1], this.posX, this.posY, this.this.posArrayX[2], this.this.posArrayY[2]);
+                ctx.quadraticCurveTo(this.posArrayX[1], this.posArrayY[1], this.posX, this.posY, this.posArrayX[2], this.posArrayY[2]);
                 ctx.stroke();
             } else {
                 ctx.strokeStyle = this.activeColor;
