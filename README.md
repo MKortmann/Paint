@@ -17,13 +17,13 @@ This app enclosed already many features:
     * 69 colors, including: transparency, thickness, linecap, linedash, gradient.
     * Text - including: font size, and fill/contour.
     * Selection Tool allowing copy and move or copy and paste
+    * Keyboard interaction, for instance: del key.
  
 ## In Development
 
-  - change mouse cursor
-  - keyboard interaction, for instance: del key.
-  - code refactor: improve OOP: object oriented classes hierarchy. (Maybe also Model Object View) 
+  - improve the mouse cursor
   - Responsive Design 
+  - VERY IMPORTANT: code refactor: improve OOP: object oriented classes hierarchy. (Maybe also Model Object View).  
   - Work with many input devices as mouse, pencil, fingers, keyboard...
 
 ## How to start the App?
