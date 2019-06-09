@@ -397,7 +397,7 @@ jQuery(document).ready(function($) {
             // $("#canvas").css("cursor", "nwse-resize");
             // ctx.clearRect(0,0, innerWidth, innerHeight);
             ctx.beginPath();
-            ctx.lineWidth = this.lineWidth - 4;
+            ctx.lineWidth = 5;
             ctx.strokeStyle = "rgba(255, 160, 122, 0.3)";
             console.log(posX, posY);
             ctx.arc(posX, posY, this.radius, Math.PI * 2, false);
@@ -412,7 +412,7 @@ jQuery(document).ready(function($) {
         deleteDrawCircleGhost(posX, posY) {
             // ctx.clearRect(0,0, innerWidth, innerHeight);
             ctx.beginPath();
-            ctx.lineWidth = this.lineWidth + 3;
+            ctx.lineWidth = 8;
             ctx.strokeStyle = "white";
             console.log(posX, posY);
             ctx.arc(posX, posY, this.radius, Math.PI * 2, false);
@@ -531,9 +531,9 @@ jQuery(document).ready(function($) {
             // ctx.clearRect(0,0, innerWidth, innerHeight);
 
             ctx.beginPath();
-            ctx.lineWidth = this.lineWidth;
+            ctx.lineWidth = 5;
             ctx.lineCap = this.lineCap;
-            ctx.strokeStyle = this.activeColor;
+            ctx.strokeStyle = "rgba(255, 160, 122, 0.3)";
             ctx.globalAlpha = this.globalAlpha;
             // console.log(posArrayX, posArrayY);
             //quadraticCurveTo(cp1x, cp1y, x, y)
@@ -552,7 +552,7 @@ jQuery(document).ready(function($) {
         deleteDrawBezierGhost(posX, posY) {
             // ctx.clearRect(0,0, innerWidth, innerHeight);
             ctx.beginPath();
-            ctx.lineWidth = this.lineWidth + 20;
+            ctx.lineWidth = 10;
             ctx.lineCap = this.lineCap;
             ctx.strokeStyle = "white";
             // console.log(posArrayX, posArrayY);
@@ -710,10 +710,10 @@ jQuery(document).ready(function($) {
         drawBezierCurveGhost(posX, posY) {
             // ctx.clearRect(0,0, innerWidth, innerHeight);
             ctx.beginPath();
-            ctx.lineWidth = thickness;
+            ctx.lineWidth = 5;
             ctx.lineCap = lineCapString;
             ctx.setLineDash([thickness, dashIndex * thickness]); /*dashes are x and spaces are y*/
-            ctx.strokeStyle = activeColor;
+            ctx.strokeStyle = "rgba(255, 160, 122, 0.3)";
             ctx.globalAlpha = transparency;
             console.log(posArrayX, posArrayY);
             //quadraticCurveTo(cp1x, cp1y, x, y)
@@ -734,7 +734,7 @@ jQuery(document).ready(function($) {
         deleteDrawBezierCurveGhost(posX, posY) {
             // ctx.clearRect(0,0, innerWidth, innerHeight);
             ctx.beginPath();
-            ctx.lineWidth = thickness + 20;
+            ctx.lineWidth = 10;
             ctx.lineCap = lineCapString;
             ctx.strokeStyle = "white";
             console.log(posArrayX, posArrayY);
@@ -845,7 +845,6 @@ jQuery(document).ready(function($) {
     width and height attributes explicitly in the <canvas> attributes, and not using CSS.*/
 
     function resizeCanvas(width, height) {
-
         canvas[0].width = window.innerWidth;
         canvas[0].height = height;
         canvas.css("width", window.innerWidth);
