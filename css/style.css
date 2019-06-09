@@ -1,11 +1,14 @@
+/*The CSS styles are organized in the way that the contents appear in the browser
+from left to right. However, it starts from the global settings!*/
+/*
+***Global Settings***
+*/
 h1 {
   text-align: center;
 }
-
 body {
   background-color: #f1f1f1;
 }
-
 button {
   width: 96px;
   height: 56px;
@@ -15,18 +18,29 @@ button {
   margin-right: 10px;
   margin-left: 10px;
 }
-
 button:hover {
   background-color: #EC7063;
 }
-
-button:active {
-  background-color: blue;
-}
-
 input {
   border-radius: 10px;
 }
+/*used before:*/
+.active {
+  background-color: red;
+}
+/*h1 style*/
+.outText {
+color: #fff;
+font-size: 5em;
+font-weight: bold;
+font-family: Helvetica;
+text-shadow: 0 1px 0 #ccc, 0 2px 0 #c9c9c9, 0 3px 0 #bbb, 0 4px 0 #b9b9b9, 0 5px 0 #aaa, 0 6px 1px rgba(0,0,0,.1), 0 0 5px rgba(0,0,0,.1), 0 1px 3px rgba(0,0,0,.3), 0 3px 5px rgba(0,0,0,.2), 0 5px 10px rgba(0,0,0,.25), 0 10px 10px rgba(0,0,0,.2), 0 20px 20px rgba(0,0,0,.15);
+margin-top: 10px;
+margin-bottom: 0;
+}
+/*
+***Main Container: encloses all the containers as controls, settings...***
+*/
 .MainContainer {
   display: flex;
   flex-direction: column;
@@ -34,6 +48,9 @@ input {
   align-content: space-around;
   align-items: center;
 }
+/*
+***Container Controls: redo, undo, print, select ...***
+*/
 .containerControls {
   margin-top: 10px;
   display: flex;
@@ -41,54 +58,6 @@ input {
   justify-content: center;
   align-items: center;
 }
-
-.containerTools {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  margin-top: 10px;
-}
-
-.containerSettings {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: stretch;
-  flex: 1;
-}
-
-.containerSettings div {
-  margin-left: 10px;
-  color: #EC7063;
-  font-weight: bold;
-
-}
-
-.boxSubContainer {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-}
-
-#textInput {
-  min-width: 400px;
-}
-
-.containerCanvas {
- display: flex;
- flex-direction: row;
- justify-content: center;
- align-items: center;
-}
-
-.containerColors {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-}
-
 .bUndo {
   background: url("../icons/undo.svg") no-repeat ;
   background-color: white;
@@ -134,90 +103,128 @@ input {
   background-position: center;
   border: 2px solid black;
 }
-
+/*
+***Container Canvas: where the work is done***
+*/
+.containerCanvas {
+ display: flex;
+ flex-direction: row;
+ justify-content: center;
+ align-items: center;
+}
+/*
+***Container Tools: as pencil, erase, rectangle, circle....***
+*/
+.containerTools {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  margin-top: 10px;
+}
 .bStift {
   background: url("../icons/pincel.svg") no-repeat ;
   background-color: white;
   background-position: center;
   border: 2px solid black;
 }
-
 .mPincel {
   cursor: url("../icons/pincelMouse.png"), auto;
 }
 .mErase {
   cursor: url("../icons/pincelErase.png"), auto;
 }
-
 .mMove {
   cursor: url("../icons/moveMouse.png"), auto;
 }
-
 .mLine {
   cursor: url("../icons/moveLine.png"), auto;
 }
-
-.mText {
-  cursor: url("../icons/textMouse.png"), auto;
-}
-
 .bErase {
   background: url("../icons/erase.svg") no-repeat ;
   background-color: white;
   background-position: center;
   border: 2px solid black;
 }
-
 .bBackColor {
   background: url("../icons/backgroundColor.svg") no-repeat ;
   background-color: white;
   background-position: center;
   border: 2px solid black;
 }
-
 .bStraightLine {
   background: url("../icons/Line.svg") no-repeat ;
   background-color: white;
   background-position: center;
   border: 2px solid black;
 }
-
 .bRect {
   background: url("../icons/rectangle.svg") no-repeat ;
   background-color: white;
   background-position: center;
   border: 2px solid black;
 }
-
 .bCircle {
   background: url("../icons/circle.svg") no-repeat ;
   background-color: white;
   background-position: center;
   border: 2px solid black;
 }
-
 .bBezierQ {
   background: url("../icons/bezier.svg") no-repeat ;
   background-color: white;
   background-position: center;
   border: 2px solid black;
 }
-
 .bBezierC {
   background: url("../icons/bezierCurve.svg") no-repeat ;
   background-color: white;
   background-position: center;
   border: 2px solid black;
 }
+/*
+***Container Settings: as transparency, thickness, linecap, gradient....***
+*/
+.containerSettings {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: stretch;
+  flex: 1;
+}
+.containerSettings div {
+  margin-left: 10px;
+  color: #EC7063;
+  font-weight: bold;
 
-
+}
+.boxSubContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+.textInput {
+  min-width: 400px;
+}
+.mText {
+  cursor: url("../icons/textMouse.png"), auto;
+}
 .bText {
   background: url("../icons/Text.svg") no-repeat ;
   background-color: white;
   background-position: center;
   border: 2px solid black;
+  margin-top: 9px;
 }
-
+/*
+***Container Colors: palette of colors***
+*/
+.containerColors {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
 .boxS {
   border: 2px solid black;
   border-radius: 5px;
@@ -228,46 +235,27 @@ input {
   flex: 1;
   background-color: white;
 }
-
-.bText {
-  margin-top: 9px;
-}
-
-#lineCap,
-#lineDash,
-#gradient,
-#textFill,
-#canvasScaling {
+.lineCap,
+.lineDash,
+.gradient,
+.textFill,
+.thickness,
+.transparency,
+.canvasScaling {
   max-width: 48px;
 }
-
 #canvas {
   width: 1900px;
   height: 560px;
   border: 2px solid black;
   background-color: white;
   border-radius: 20px;
-   box-shadow: 1px 2px 2px 2px black;
-   /* box-shadow: 0 20px 20px -20px red; */
+  box-shadow: 1px 2px 2px 2px black;
 }
-
 footer {
   display: flex;
   justify-content: center;
   color: red;
   background-color: white;
   margin-top: 5px;
-}
-.outText {
-color: #fff;
-font-size: 5em;
-font-weight: bold;
-font-family: Helvetica;
-text-shadow: 0 1px 0 #ccc, 0 2px 0 #c9c9c9, 0 3px 0 #bbb, 0 4px 0 #b9b9b9, 0 5px 0 #aaa, 0 6px 1px rgba(0,0,0,.1), 0 0 5px rgba(0,0,0,.1), 0 1px 3px rgba(0,0,0,.3), 0 3px 5px rgba(0,0,0,.2), 0 5px 10px rgba(0,0,0,.25), 0 10px 10px rgba(0,0,0,.2), 0 20px 20px rgba(0,0,0,.15);
-margin-top: 10px;
-margin-bottom: 0;
-}
-
-.active {
-  background-color: red;
 }

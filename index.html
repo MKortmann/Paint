@@ -12,150 +12,151 @@
 <body>
     <h1 class="outText">Paint</h1>
 
-<section class=MainContainer>
-      <section class="containerControls">
-          <button class="bUndo"></button>
-          <button class="bRedo"></button>
-          <button class="bPrint"></button>
-          <button class="bSave"></button>
-          <button class="bSelectMove"></button>
-          <button class="bSelectPaste"></button>
-          <button class="bReload"></button>
-      </section>
-
-      <section class="containerCanvas">
-          <canvas id="canvas">
-              <!--It works as alt for imgs-->
-              This is canvas! Sorry, your browser do not support it!
-          </canvas>
-      </section>
-
-      <section class="containerTools">
-          <button class="bStift"></button>
-          <button class="bErase"></button>
-          <button class="bBackColor"></button>
-          <button class="bStraightLine"></button>
-          <button class="bRect"></button>
-          <button class="bCircle"></button>
-          <button class="bBezierQ"></button>
-          <button class="bBezierC"></button>
-      </section>
-
-      <section class="containerSettings">
-        <div class="boxS">
-          Transparency:
-          <input type="number" id="transparency" placeholder="1" step="0.1" min="0.1" max="1.0">
+    <div class=MainContainer>
+        <div class="containerControls">
+            <button class="bUndo"></button>
+            <button class="bRedo"></button>
+            <button class="bPrint"></button>
+            <button class="bSave"></button>
+            <button class="bSelectMove"></button>
+            <button class="bSelectPaste"></button>
+            <button class="bReload"></button>
         </div>
 
-        <div class="boxS">
-          Thickness:
-          <input type="number" id="thickness" placeholder="10" step="1" min="1" max="80">
-        </div>
-        <div class="boxS">
-          LineCap:
-          <input type="range" id="lineCap" placeholder="1" step="1" min="0" max="2">
+        <div class="containerCanvas">
+            <canvas id="canvas">
+                <!--It works as alt for imgs-->
+                This is canvas! Sorry, your browser do not support it!
+            </canvas>
         </div>
 
-        <div class="boxS">
-          LineDash:
-          <input type="range" id="lineDash" placeholder="0" value="0" step="1" min="0" max="6">
+        <div class="containerTools">
+            <button class="bStift"></button>
+            <button class="bErase"></button>
+            <button class="bBackColor"></button>
+            <button class="bStraightLine"></button>
+            <button class="bRect"></button>
+            <button class="bCircle"></button>
+            <button class="bBezierQ"></button>
+            <button class="bBezierC"></button>
         </div>
 
-        <div class="boxS">
-          Gradient:
-          <input type="range" id="gradient" placeholder="0" value="0" step="1" min="0" max="1">
+        <div class="containerSettings">
+            <div class="boxS">
+                Transparency:
+                <input type="range" class="transparency" step="0.1" min="0.1" max="1.0">
+            </div>
+
+            <div class="boxS">
+                Thickness:
+                <input type="range" class="thickness" step="1" min="1" max="80">
+            </div>
+            <div class="boxS">
+                LineCap:
+                <input type="range" class="lineCap" step="1" min="0" max="2">
+            </div>
+
+            <div class="boxS">
+                LineDash:
+                <input type="range" class="lineDash" value="0" step="1" min="0" max="6">
+            </div>
+
+            <div class="boxS">
+                Gradient:
+                <input type="range" class="gradient" value="0" step="1" min="0" max="1">
+            </div>
+
+            <div class="boxS">
+                <div class="boxSubContainer">
+                    Text:
+                    <input type="text" class="textInput" placeholder="Type a text here, then click text and in the canvas to insert it" value="">
+                    <button class="bText"></button>
+
+                    Font Size:
+                    <input type="number" class="fontSize" placeholder="30" value="30" step="1" min="1" max="80">
+
+                    Fill / Countour:
+                    <input type="range" class="textFill" value="0" step="1" min="0" max="1">
+                </div>
+            </div>
+
+            <div class="boxS">
+                Zoom:
+                <input type="range" class="canvasScaling" value="1" step="1" min="1" max="2">
+            </div>
         </div>
 
-        <div class="boxS">
-          <div class="boxSubContainer">
-          Text:
-          <input type="text" id="textInput" placeholder="Type a text here, then click text and in the canvas to insert it" value="">
-          <button class="bText"></button>
-
-          Font Size:
-          <input type="number" id="fontSize" placeholder="30" value="30" step="1" min="1" max="80">
-
-          Fill/Countour:
-          <input type="range" id="textFill" placeholder="0" value="0" step="1" min="0" max="1">
-          </div>
+        <div class="colorChart">
+            <div class="box b10" id="#17202A"></div>
+            <div class="box b11" id="#1B2631"></div>
+            <div class="box b12" id="#424949"></div>
+            <div class="box b13" id="#4D5656"></div>
+            <div class="box b14" id="#626567"></div>
+            <div class="box b15" id="#7B7D7D"></div>
+            <div class="box b16" id="#6E2C00"></div>
+            <div class="box b17" id="#784212"></div>
+            <div class="box b18" id="#7E5109"></div>
+            <div class="box b19" id="#7D6608"></div>
+            <div class="box b20" id="#186A3B"></div>
+            <div class="box b21" id="#145A32"></div>
+            <div class="box b22" id="#0B5345"></div>
+            <div class="box b23" id="#0E6251"></div>
+            <div class="box b24" id="#1B4F72"></div>
+            <div class="box b25" id="#154360"></div>
+            <div class="box b26" id="#4A235A"></div>
+            <div class="box b27" id="#512E5F"></div>
+            <div class="box b28" id="#78281F"></div>
+            <div class="box b29" id="#641E16"></div>
+            <div class="box b30" id="#566573"></div>
+            <div class="box b31" id="#5D6D7E"></div>
+            <div class="box b32" id="#99A3A4"></div>
+            <div class="box b33" id="#AAB7B8"></div>
+            <div class="box b34" id="#CACFD2"></div>
+            <div class="box b35" id="#E5E8E8"></div>
+            <div class="box b36" id="#DC7633"></div>
+            <div class="box b37" id="#EB984E"></div>
+            <div class="box b38" id="#F5B041"></div>
+            <div class="box b39" id="#F4D03F"></div>
+            <div class="box b40" id="#58D68D"></div>
+            <div class="box b41" id="#52BE80"></div>
+            <div class="box b42" id="#45B39D"></div>
+            <div class="box b43" id="#48C9B0"></div>
+            <div class="box b44" id="#5DADE2"></div>
+            <div class="box b45" id="#5499C7"></div>
+            <div class="box b46" id="#A569BD"></div>
+            <div class="box b47" id="#AF7AC5"></div>
+            <div class="box b48" id="#EC7063"></div>
+            <div class="box b49" id="#CD6155"></div>
+            <div class="box b50" id="#A2D9CE"></div>
+            <div class="box b51" id="#ABEBC6"></div>
+            <div class="box b52" id="#F9E79F"></div>
+            <div class="box b53" id="#F8C471"></div>
+            <div class="box b54" id="#F0B27A"></div>
+            <div class="box b55" id="#E59866"></div>
+            <div class="box b56" id="#FBEEE6"></div>
+            <div class="box b57" id="white"></div>
+            <div class="box b58" id="purple"></div>
+            <div class="box b59" id="blue"></div>
+            <div class="box b60" id="darkblue"></div>
+            <div class="box b61" id="green"></div>
+            <div class="box b62" id="darkgreen"></div>
+            <div class="box b63" id="yellow"></div>
+            <div class="box b64" id="orange"></div>
+            <div class="box b65" id="red"></div>
+            <div class="box b66" id="darkred"></div>
+            <div class="box b67" id="lightgray"></div>
+            <div class="box b68" id="gray"></div>
+            <div class="box b69" id="black"></div>
         </div>
+    </div>
+    <!--End of main container-->
 
-        <div class="boxS">
-          Canvas Scaling:
-          <input type="range" id="canvasScaling" value="1" step="1" min="1" max="2">
-        </div>
-      </section>
+    <script src="./lib/jQuery/jquery-3.3.1.js"></script>
+    <script src="./js/js.js"></script>
 
-      <section class="colorChart">
-        <div class="box b10" id="#17202A"></div>
-        <div class="box b11" id="#1B2631"></div>
-        <div class="box b12" id="#424949"></div>
-        <div class="box b13" id="#4D5656"></div>
-        <div class="box b14" id="#626567  "></div>
-        <div class="box b15" id="#7B7D7D"></div>
-        <div class="box b16" id="#6E2C00"></div>
-        <div class="box b17" id="#784212"></div>
-        <div class="box b18" id="#7E5109"></div>
-        <div class="box b19" id="#7D6608"></div>
-        <div class="box b20" id="#186A3B"></div>
-        <div class="box b21" id="#145A32"></div>
-        <div class="box b22" id="#0B5345"></div>
-        <div class="box b23" id="#0E6251"></div>
-        <div class="box b24" id="#1B4F72"></div>
-        <div class="box b25" id="#154360"></div>
-        <div class="box b26" id="#4A235A"></div>
-        <div class="box b27" id="#512E5F"></div>
-        <div class="box b28" id="#78281F"></div>
-        <div class="box b29" id="#641E16"></div>
-        <div class="box b30" id="#566573"></div>
-        <div class="box b31" id="#5D6D7E"></div>
-        <div class="box b32" id="#99A3A4"></div>
-        <div class="box b33" id="#AAB7B8"></div>
-        <div class="box b34" id="#CACFD2"></div>
-        <div class="box b35" id="#E5E8E8"></div>
-        <div class="box b36" id="#DC7633"></div>
-        <div class="box b37" id="#EB984E"></div>
-        <div class="box b38" id="#F5B041"></div>
-        <div class="box b39" id="#F4D03F"></div>
-        <div class="box b40" id="#58D68D"></div>
-        <div class="box b41" id="#52BE80"></div>
-        <div class="box b42" id="#45B39D"></div>
-        <div class="box b43" id="#48C9B0"></div>
-        <div class="box b44" id="#5DADE2"></div>
-        <div class="box b45" id="#5499C7"></div>
-        <div class="box b46" id="#A569BD"></div>
-        <div class="box b47" id="#AF7AC5"></div>
-        <div class="box b48" id="#EC7063"></div>
-        <div class="box b49" id="#CD6155"></div>
-        <div class="box b50" id="#A2D9CE"></div>
-        <div class="box b51" id="#ABEBC6"></div>
-        <div class="box b52" id="#F9E79F"></div>
-        <div class="box b53" id="#F8C471"></div>
-        <div class="box b54" id="#F0B27A"></div>
-        <div class="box b55" id="#E59866"></div>
-        <div class="box b56" id="#FBEEE6"></div>
-        <div class="box b57" id="white"></div>
-        <div class="box b58" id="purple"></div>
-        <div class="box b59" id="blue"></div>
-        <div class="box b60" id="darkblue"></div>
-        <div class="box b61" id="green"></div>
-        <div class="box b62" id="darkgreen"></div>
-        <div class="box b63" id="yellow"></div>
-        <div class="box b64" id="orange"></div>
-        <div class="box b65" id="red"></div>
-        <div class="box b66" id="darkred"></div>
-        <div class="box b67" id="lightgray"></div>
-        <div class="box b68" id="gray"></div>
-        <div class="box b69" id="black"></div>
-      </section>
-</section> <!--End of main container-->
-
-        <script src="./lib/jQuery/jquery-3.3.1.js"></script>
-        <script src="./js/js.js"></script>
-
-<footer>
-  Developed by Marcelo Kortmann - 2019
-</footer>
+    <footer>
+        Developed by Marcelo Kortmann - 2019
+    </footer>
 
 </body>
 

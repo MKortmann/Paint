@@ -1,40 +1,42 @@
 "use strict";
 
-/*TODO:
-*) del delete the selected draw
-*) Change mouse cursor
-*) Shadow effect
-*) copy the image to clickboard
-*) Important: look about tip menu explaining how to work with the program!,
-improve copy&paste and do a way to select elements.
+/**
+ * The code is composed and written in the order below:
+ * PART 1: INITIALIZATION: GLOBAL Variables & Arrays & Classes
+ * Create the GLOBAL Variables & Arrays & Classes:
+ * Class Line: used to draw lines and the respectives attributes/methods
+ * Class Rectangle: used to draw rectangle and the respectives attributes/methods
+ * Class Circle: used to draw rectangle and the respectives attributes/methods
+ * Class Bezier Quadratic: used to draw rectangle and the respectives attributes/methods
+ * PART 2: INITIALIZE THE CANVAS & MAIN GLOBAL FUNCTIONS AS SELECT, REDO; UNDO; PRINT!
+ * initialize canvas, function to resize it, function do free draw pencil, function to erase
+ * Then global functions to detect if an element was selected/clicked.
+ * Include also some extra functions as redo, undo, printCanvas,
+ * saveCanvas. reset & set some global parameters
+ * global function resetbuttons to reset the other buttons as soon you clicked
+ * in another one. It add and remove the class active. The class active works as
+ * a flag.
+ * PART 3: MOUSE EVENTS: MOUSE DOWN; MOVE & UP! It does the main engine!
+ * MOUSE DOWN: as soon you click at the mouse in the canvas it detect
+ * which tool you have selected and do the respective job. It uses the class active
+ * as a flag!
+ * MOUSE MOVE: keep checking if have to do the respective action in accord to the
+ * flag activated last movement!
+ * MOUSE UP: checked what was active last time to reset it or do another cycle, as
+ * in case of bezier.
+ * PARTE 4: PRINT EXTRA INTERACTION (SETTINGS; BUTTONS, ZOOM IN...)
+ * In the end you have a simple implementation for the HTML elements as
+ * buttons, input, palette colors.
+ * @summary Paint Program concise functionality description.
+ */
 
-2) Generate a palettes of color through js
-https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Applying_styles_and_colors
-
-*/
-/*Tutorial: lines MDN:
-
-lineWidth = value // sets the width of lines drawn in the future.
-lineCap  = type //(defaultvalue = butt) sets the appearance of the ends of lines.
-lineJoin = type // sets the appearance of the "corners" where lines meet
-miterLimit = value // Establishes a limit on the miter when two lines join
-//at a sharp angle, to let you control how the thick the junction becomes.
-
-getLineDash() //returns the current line dash pattern array.
-setLineDash(segments) //sets the current line dash pattern.
-lineDashOffset = value //specifies where to start a dash array on a line.
-
-
-
-*/
-/*
-Using quadratic and cubic Bézier curves can be quite challenging, because unlike
- vector drawing software like Adobe Illustrator, we don't have direct visual
- feedback as to what we're doing. */
-/*Udemy jQuery Lektion 82*/
 jQuery(document).ready(function($) {
 
-    /*Declarations*/
+    /*
+     ***PART 1: INITIALIZATION: GLOBAL Variables & Arrays & Classes
+     */
+
+    /*Global Declarations*/
     let stiftActive = false;
     let eraseActive = false;
     let rectActive = false;
@@ -58,22 +60,27 @@ jQuery(document).ready(function($) {
     let activeColor = "black";
     let transparency = 1;
     let thickness = 20;
-    let lineCap = ["square", "round", "butt"]; //"butt" lineCap DO NOT WORK, With
+    //"butt" lineCap DO NOT WORK, With
+    let lineCap = ["square", "round", "butt"];
     let dashIndex = 0;
     let gradient = false;
     let linearGradient = 0;
     let radialGradient = 0;
     let textDraw = false;
-    //starting with the value of 0
-    // $("#lineDash")[0].value = 0
-    //free style stift.
     let lineCapString = "round";
     // let width = $(window).width();
     let width = 1900;
     let height = 560;
+    /*Undo Function*/
+    //TODO: I want to simplify here. I want to remove flag and 1 array.
+
+    let globalArray = new Array();
+    let globalRedo = new Array();
+    let canvasImg = new Image();
 
     //the array below will store all the object created in canvas! In this way
     //it will be easy to move, copy and delete then!
+    //Global Arrays!
     let oGlobalLineArray = [];
     let oGlobalRectArray = [];
     let oGlobalCircleArray = [];
@@ -328,9 +335,7 @@ jQuery(document).ready(function($) {
      * @param {posX} posX - the x center position of the circle get at mouseUp
      * @param {posY} posY - the y center position of the circle get at mouseUp
      */
-
     class Circle {
-
         constructor(posX, posY) {
             this.firstPosClickX = firstPosClickX;
             this.firstPosClickY = firstPosClickY;
@@ -441,6 +446,12 @@ jQuery(document).ready(function($) {
 
     }
 
+    /**
+     * @description Represents a Bezier
+     * @constructor
+     * @param {posX} posX - the x end/last position of the curve get at mouseUp
+     * @param {posY} posY - the y end/last position of the curve get at mouseUp
+     */
     class Bezier extends Line {
         constructor(posX, posY) {
             super(posX, posY);
@@ -611,7 +622,12 @@ jQuery(document).ready(function($) {
         }
 
     };
-
+    /**
+     * @description Represents a Bezier Curve
+     * @constructor
+     * @param {posX} posX - the x end/last position of the curve get at mouseUp
+     * @param {posY} posY - the y end/last position of the curve get at mouseUp
+     */
 
     /////FOR Bezier Quadratic//////////////////////////////
     class BezierC extends Line {
@@ -786,14 +802,14 @@ jQuery(document).ready(function($) {
             this.posX = this.posX - DeltaXGap;
             this.posY = this.posY - DeltaYGap;
 
-
             this.middlePointCurve();
 
         }
-
-
-
     }
+
+    /*
+     ***PART 2: INITIALIZE THE CANVAS & MAIN GLOBAL FUNCTIONS AS SELECT, REDO; UNDO; PRINT!
+     */
 
     /*The Canvas API provides a means for drawing graphics
     via JavaScript and the HTML <canvas> element.*/
@@ -896,18 +912,6 @@ jQuery(document).ready(function($) {
         activeColor = e.target.id;
     });
 
-
-    function selection() {
-
-        if (copy === true && paste === true) {
-            console.log("We are at selection!!!!!");
-            let cursorPositions = getCursorPosition(canvas, event);
-            ctx.putImageData(imageData, cursorPositions[0], cursorPositions[1]);
-            copy = false;
-            paste = false;
-        }
-
-    }
 
     function elementLineClicked(posClickX, posClickY) {
         console.log(`You clicked at X: ${posClickX} and y: ${posClickY}`);
@@ -1144,6 +1148,140 @@ jQuery(document).ready(function($) {
     }
 
 
+    //the flag is true as soon as we click to redo. It is necessary because
+    //we need to remove one array from the globalArray. If not, after clicking in redo
+    //and we click again in undo it will be necessary to click two times because it
+    //stores two times the same array. So we make the flag to check it and if it
+    //is true we pop it out.
+    // let globalSavedNumbers = 0;
+
+    // //Saving the last status of the canvas!
+    globalPush();
+
+    function globalPush() {
+        // globalSavedNumbers++;
+        //Saving Images. The HTMLCanvasElement provcides a toDataURL() method, which
+        //is useful when saving images.
+        //Create a PNG image with the default settings.
+        globalArray.push(canvas[0].toDataURL());
+        console.log(`we are at the global push, globalArray length: ${globalArray.length}`);
+    }
+
+    /*See, that we pop two times from the globalArray because we store the image when
+    we click the mouse and when we release the mouse.*/
+    function undo() {
+        console.log(`we are at the undo, globalArray length: ${globalArray.length}`);
+        if (globalArray.length > 0) {
+
+            globalRedo.push(globalArray.pop());
+            canvasImg.src = globalArray.length === 0 ? "" : globalArray[globalArray.length - 1]
+
+            canvasImg.onload = function() {
+                //drawImage(image, x, y); (x,y) are the canvas coordinates
+                ctx.clearRect(0, 0, canvas[0].width, canvas[0].height);
+                ctx.drawImage(canvasImg, 0, 0);
+            }
+        } else {
+            console.log(`The Global Array has size: ${globalArray.length}`)
+        }
+    }
+
+    function redo() {
+        console.log(`we are at the redo, globalRedo length: ${globalArray.length}`);
+        if (globalRedo.length > 0) {
+
+            canvasImg.src = globalRedo.pop();
+            /*These two lines below are important to undo&redo the process infinite!*/
+            globalArray.push(canvasImg.src);
+            // globalArray.push(canvasImg.src);
+            canvasImg.onload = function() {
+                //drawImage(image, x, y); (x,y) are the canvas coordinates
+                ctx.clearRect(0, 0, canvas[0].width, canvas[0].height);
+                ctx.drawImage(canvasImg, 0, 0);
+            }
+        } else {
+            console.log(`The Redo Array is empty: ${globalRedo}`)
+        }
+    }
+
+
+    function canvasScaling() {
+        canvasImg.src = globalArray.length === 0 ? "" : globalArray[globalArray.length - 1]
+        canvasImg.onload = function() {
+            //drawImage(image, x, y); (x,y) are the canvas coordinates
+            ctx.clearRect(0, 0, canvas[0].width, canvas[0].height);
+            if ($(".canvasScaling")[0].value === "2") {
+                ctx.drawImage(canvasImg, canvas[0].width / 4, canvas[0].height / 4,
+                    canvas[0].width / $(".canvasScaling")[0].value, canvas[0].height / $(".canvasScaling")[0].value);
+            } else {
+                ctx.drawImage(canvasImg, 0, 0,
+                    canvas[0].width, canvas[0].height);
+            }
+        }
+    };
+
+    function printCanvas() {
+        const dataUrl = canvas[0].toDataURL();
+        let windowContent = '<!DOCTYPE html>';
+        windowContent += '<html>'
+        windowContent += `<head><title>${$("h1").text()}</title></head>`;
+        windowContent += '<body>'
+        windowContent += '<img src="' + dataUrl + '">';
+        windowContent += '</body>';
+        windowContent += '</html>';
+        let printWin = window.open('', '', `width=${canvas[0].width},height=${canvas[0].height}`);
+        printWin.document.open();
+        printWin.document.write(windowContent);
+
+        //I am using ES6 here instead of jQuery. Do not work with on!
+        printWin.document.addEventListener('load', function() {
+            printWin.focus();
+            printWin.print();
+            printWin.document.close();
+            printWin.close();
+        }, true);
+    }
+
+    //Save Canvas: here we create a link to be able to download it
+    //as image
+    function saveCanvas() {
+        /*setting*/
+        let TYPE = "img/png";
+
+        const imgURL = canvas[0].toDataURL(TYPE);
+
+        let dlLink = document.createElement('a');
+        dlLink.download = "Paint";
+        dlLink.href = imgURL;
+        dlLink.dataset.downloadurl = [TYPE, dlLink.download, dlLink.href].join(':');
+        /*add, click and removing*/
+        document.body.appendChild(dlLink);
+        dlLink.click();
+        document.body.removeChild(dlLink);
+    }
+
+
+    //Fill Background color
+    function fillBackgroundColor() {
+        ctx.fillStyle = activeColor;
+        ctx.rect(0, 0, canvas[0].width, canvas[0].height);
+        ctx.fill();
+    }
+
+    /*reset nav buttons function*/
+    function resetButtons() {
+        /*reseting other buttons*/
+        if (activeButtons.length > 1) {
+            $(activeButtons[0]).toggleClass("active");
+            activeButtons.shift();
+        }
+        console.log(activeButtons);
+    };
+
+
+    /*
+     ***PART 3: MOUSE EVENTS: MOUSE DOWN; MOVE & UP! It does the main engine!
+     */
     ////////////////////////////////////////////////////
     //MOUSEEEEEEEEEEEEEEEEEEEEEEEE UP
     $("#canvas").mousedown(function(event) {
@@ -1173,7 +1311,8 @@ jQuery(document).ready(function($) {
             elementBezierClicked(cursorPositions[0], cursorPositions[1]);
             elementBezierCClicked(cursorPositions[0], cursorPositions[1]);
         };
-
+        /*This is not beeing used more. I let here because is a nice source of
+        example to be refine/used in the future*/
         if ($(".bCopyPaste").hasClass("active") || $(".bCutPaste").hasClass("active")) {
 
             if (paste === false) {
@@ -1212,10 +1351,10 @@ jQuery(document).ready(function($) {
             draw(cursorPositions[0], cursorPositions[1]);
 
             //lineCap "butt do not work with Stift"
-            $("#lineCap")[0].max = 1;
+            $(".lineCap")[0].max = 1;
 
         } else {
-            $("#lineCap")[0].max = 2;
+            $(".lineCap")[0].max = 2;
 
         };
         if ($(".bErase").hasClass("active")) {
@@ -1314,19 +1453,19 @@ jQuery(document).ready(function($) {
             firstPosClickX = cursorPositions[0];
             firstPosClickY = cursorPositions[1];
 
-            if ($("#textInput")[0].value === "") {
+            if ($(".textInput")[0].value === "") {
                 alert("Write something in the inputBox first!");
             }
 
             // ctx.font = "64px serif";
-            ctx.font = ($("#fontSize")[0].value) + "px" + " serif";
+            ctx.font = ($(".fontSize")[0].value) + "px" + " serif";
             ctx.fillStyle = activeColor;
             ctx.strokeStyle = activeColor;
 
-            if ($("#textFill")[0].value === "0") {
-                ctx.fillText($("#textInput")[0].value, firstPosClickX, firstPosClickY);
+            if ($(".textFill")[0].value === "0") {
+                ctx.fillText($(".textInput")[0].value, firstPosClickX, firstPosClickY);
             } else {
-                ctx.strokeText($("#textInput")[0].value, firstPosClickX, firstPosClickY);
+                ctx.strokeText($(".textInput")[0].value, firstPosClickX, firstPosClickY);
             }
         };
     })
@@ -1373,8 +1512,6 @@ jQuery(document).ready(function($) {
 
     });
 
-
-
     $("#canvas").mouseup(function(event) {
         /*reseting*/
         stiftActive = false;
@@ -1406,12 +1543,6 @@ jQuery(document).ready(function($) {
             oGlobalCircleArray[oGlobalCircleArray.length - 1].drawCircle(cursorPositions[0], cursorPositions[1]);
             circleActive = false;
         }
-
-        selection();
-        if (copy === true) {
-            paste = true;
-        }
-
 
         if (posArrayY.length >= 3 && bezierQActive) {
             bezierQActive = false;
@@ -1463,152 +1594,7 @@ jQuery(document).ready(function($) {
         globalPush();
     })
 
-    /**nav functions:*/
 
-    /*reset nav buttons function*/
-    function resetButtons() {
-        /*reseting other buttons*/
-        if (activeButtons.length > 1) {
-            $(activeButtons[0]).toggleClass("active");
-            activeButtons.shift();
-        }
-        console.log(activeButtons);
-    };
-
-
-    /*Undo Function*/
-    //TODO: I want to simplify here. I want to remove flag and 1 array.
-
-    let globalArray = new Array();
-    let globalRedo = new Array();
-    let canvasImg = new Image();
-    //the flag is true as soon as we click to redo. It is necessary because
-    //we need to remove one array from the globalArray. If not, after clicking in redo
-    //and we click again in undo it will be necessary to click two times because it
-    //stores two times the same array. So we make the flag to check it and if it
-    //is true we pop it out.
-    // let globalSavedNumbers = 0;
-
-    // //Saving the last status of the canvas!
-    globalPush();
-
-    function globalPush() {
-        // globalSavedNumbers++;
-        //Saving Images. The HTMLCanvasElement provcides a toDataURL() method, which
-        //is useful when saving images.
-        //Create a PNG image with the default settings.
-        globalArray.push(canvas[0].toDataURL());
-        console.log(`we are at the global push, globalArray length: ${globalArray.length}`);
-    }
-
-    /*See, that we pop two times from the globalArray because we store the image when
-    we click the mouse and when we release the mouse.*/
-    function undo() {
-        console.log(`we are at the undo, globalArray length: ${globalArray.length}`);
-        if (globalArray.length > 0) {
-
-            globalRedo.push(globalArray.pop());
-            canvasImg.src = globalArray.length === 0 ? "" : globalArray[globalArray.length - 1]
-
-            canvasImg.onload = function() {
-                //drawImage(image, x, y); (x,y) are the canvas coordinates
-                ctx.clearRect(0, 0, canvas[0].width, canvas[0].height);
-                ctx.drawImage(canvasImg, 0, 0);
-            }
-        } else {
-            console.log(`The Global Array has size: ${globalArray.length}`)
-        }
-    }
-
-    function redo() {
-        console.log(`we are at the redo, globalRedo length: ${globalArray.length}`);
-        if (globalRedo.length > 0) {
-
-            canvasImg.src = globalRedo.pop();
-            /*These two lines below are important to undo&redo the process infinite!*/
-            globalArray.push(canvasImg.src);
-            // globalArray.push(canvasImg.src);
-            canvasImg.onload = function() {
-                //drawImage(image, x, y); (x,y) are the canvas coordinates
-                ctx.clearRect(0, 0, canvas[0].width, canvas[0].height);
-                ctx.drawImage(canvasImg, 0, 0);
-            }
-        } else {
-            console.log(`The Redo Array is empty: ${globalRedo}`)
-        }
-    }
-
-
-    function canvasScaling() {
-        canvasImg.src = globalArray.length === 0 ? "" : globalArray[globalArray.length - 1]
-        canvasImg.onload = function() {
-            //drawImage(image, x, y); (x,y) are the canvas coordinates
-            ctx.clearRect(0, 0, canvas[0].width, canvas[0].height);
-            if ($("#canvasScaling")[0].value === "2") {
-                ctx.drawImage(canvasImg, canvas[0].width / 4, canvas[0].height / 4,
-                    canvas[0].width / $("#canvasScaling")[0].value, canvas[0].height / $("#canvasScaling")[0].value);
-            } else {
-                ctx.drawImage(canvasImg, 0, 0,
-                    canvas[0].width, canvas[0].height);
-            }
-        }
-    };
-    // AT THE MOMENT WE WILL NOT USE THIS
-    // $("#canvasTranslatingX").change( ()=> {
-    //   ctx.save();
-    //   ctx.translate($("#canvasTranslatingX")[0].value, 0);
-    //   ctx.restore();
-    //   console.log("canvasScaling: " + $("#canvasTranslatingX")[0].value);
-    // })
-    /*adding buttons*/
-
-    function printCanvas() {
-        const dataUrl = canvas[0].toDataURL();
-        let windowContent = '<!DOCTYPE html>';
-        windowContent += '<html>'
-        windowContent += `<head><title>${$("h1").text()}</title></head>`;
-        windowContent += '<body>'
-        windowContent += '<img src="' + dataUrl + '">';
-        windowContent += '</body>';
-        windowContent += '</html>';
-        let printWin = window.open('', '', `width=${canvas[0].width},height=${canvas[0].height}`);
-        printWin.document.open();
-        printWin.document.write(windowContent);
-
-        //I am using ES6 here instead of jQuery. Do not work with on!
-        printWin.document.addEventListener('load', function() {
-            printWin.focus();
-            printWin.print();
-            printWin.document.close();
-            printWin.close();
-        }, true);
-    }
-
-    //Save Canvas: here we create a link to be able to download it
-    //as image
-    function saveCanvas() {
-        /*setting*/
-        let TYPE = "img/png";
-
-        const imgURL = canvas[0].toDataURL(TYPE);
-
-        let dlLink = document.createElement('a');
-        dlLink.download = "Paint";
-        dlLink.href = imgURL;
-        dlLink.dataset.downloadurl = [TYPE, dlLink.download, dlLink.href].join(':');
-        /*add, click and removing*/
-        document.body.appendChild(dlLink);
-        dlLink.click();
-        document.body.removeChild(dlLink);
-    }
-
-
-    //Fill Background color
-    function fillBackgroundColor() {
-        ctx.fillStyle = activeColor;
-        ctx.rect(0, 0, canvas[0].width, canvas[0].height);
-        ctx.fill();
-    }
 
 
     ///////////////////////CONTROLS
@@ -1650,31 +1636,32 @@ jQuery(document).ready(function($) {
     })
     ///////////////////////////TOOLS
     let cursorMouse = [];
+
     function removeAddMouseCursor(Removealles = false) {
-      if(cursorMouse.length > 1) {
-        $("#canvas").removeClass(cursorMouse[1]);
-        cursorMouse.pop();
-      }
-      if(Removealles === "true")  {
-        $("#canvas").removeClass(cursorMouse[0]);
-        cursorMouse.pop();
-      }
+        if (cursorMouse.length > 1) {
+            $("#canvas").removeClass(cursorMouse[1]);
+            cursorMouse.pop();
+        }
+        if (Removealles === "true") {
+            $("#canvas").removeClass(cursorMouse[0]);
+            cursorMouse.pop();
+        }
 
     }
     //Stift
     $(".bStift").click(function() {
-      cursorMouse.unshift("mPincel");
-      removeAddMouseCursor();
-      $("#canvas").addClass("mPincel");
-      $(".bStift").toggleClass("active");
-      activeButtons.push(".bStift");
-      resetButtons();
+        cursorMouse.unshift("mPincel");
+        removeAddMouseCursor();
+        $("#canvas").addClass("mPincel");
+        $(".bStift").toggleClass("active");
+        activeButtons.push(".bStift");
+        resetButtons();
     });
     //bErase
     $(".bErase").click(function() {
-      cursorMouse.unshift("mErase");
-      removeAddMouseCursor();
-      $("#canvas").addClass("mErase");
+        cursorMouse.unshift("mErase");
+        removeAddMouseCursor();
+        $("#canvas").addClass("mErase");
         $(".bErase").toggleClass("active");
         /*reseting other buttons*/
         activeButtons.push(".bErase");
@@ -1692,9 +1679,9 @@ jQuery(document).ready(function($) {
     });
     //bStraightLine
     $(".bStraightLine").click(() => {
-      cursorMouse.unshift("mLine");
-      removeAddMouseCursor();
-      $("#canvas").addClass("mLine");
+        cursorMouse.unshift("mLine");
+        removeAddMouseCursor();
+        $("#canvas").addClass("mLine");
         $(".bStraightLine").toggleClass("active");
         activeButtons.push(".bStraightLine");
         resetButtons();
@@ -1702,9 +1689,9 @@ jQuery(document).ready(function($) {
 
     //bRectangle
     $(".bRect").click(() => {
-      cursorMouse.unshift("mMove");
-      removeAddMouseCursor();
-      $("#canvas").addClass("mMove");
+        cursorMouse.unshift("mMove");
+        removeAddMouseCursor();
+        $("#canvas").addClass("mMove");
         $(".bRect").toggleClass("active");
         activeButtons.push(".bRect");
         resetButtons();
@@ -1712,61 +1699,42 @@ jQuery(document).ready(function($) {
 
     //bCircle
     $(".bCircle").click(() => {
-      cursorMouse.unshift("mMove");
-      removeAddMouseCursor();
-      $("#canvas").addClass("mMove");
-      $(".bCircle").toggleClass("active");
-      activeButtons.push(".bCircle");
-      resetButtons();
+        cursorMouse.unshift("mMove");
+        removeAddMouseCursor();
+        $("#canvas").addClass("mMove");
+        $(".bCircle").toggleClass("active");
+        activeButtons.push(".bCircle");
+        resetButtons();
     });
 
     //bBezierQ
     $(".bBezierQ").click(() => {
-      cursorMouse.unshift("mLine");
-      removeAddMouseCursor();
-      $("#canvas").addClass("mLine");
+        cursorMouse.unshift("mLine");
+        removeAddMouseCursor();
+        $("#canvas").addClass("mLine");
         $(".bBezierQ").toggleClass("active");
         activeButtons.push(".bBezierQ");
         resetButtons();
     });
     //bBezierC
     $(".bBezierC").click(() => {
-      cursorMouse.unshift("mLine");
-      removeAddMouseCursor();
-      $("#canvas").addClass("mLine");
+        cursorMouse.unshift("mLine");
+        removeAddMouseCursor();
+        $("#canvas").addClass("mLine");
         $(".bBezierC").toggleClass("active");
         activeButtons.push(".bBezierC");
         resetButtons();
     });
 
     $(".bText").click(() => {
-      cursorMouse.unshift("mText");
-      removeAddMouseCursor();
-      $("#canvas").addClass("mText");
+        cursorMouse.unshift("mText");
+        removeAddMouseCursor();
+        $("#canvas").addClass("mText");
         $(".bText").toggleClass("active");
         activeButtons.push(".bText");
         resetButtons();
     })
 
-    // $(".bCopyPaste").click(() => {
-    //     $(".bCopyPaste").toggleClass("active");
-    //     activeButtons.push(".bCopyPaste");
-    //     resetButtons();
-    // });
-    //
-    // $(".bCutPaste").click(() => {
-    //     $(".bCutPaste").toggleClass("active");
-    //     activeButtons.push(".bCutPaste");
-    //     resetButtons();
-    // });
-
-    //Zoom
-    // $(".bZoom").click(function() {
-    //     $(".bZoom").toggleClass("active");
-    //     resizeCanvas(window.innerWidth, 300);
-    //     activeButtons.push(".bZoom");
-    //     resetButtons();
-    // });
     //Reload
     $(".bReload").click(function() {
         resizeCanvas(width, height);
@@ -1783,34 +1751,34 @@ jQuery(document).ready(function($) {
 
     });
 
-    $("#transparency").change(() => {
-        transparency = $("#transparency")[0].value;
-        console.log($("#transparency")[0].value);
+    $(".transparency").change(() => {
+        transparency = $(".transparency")[0].value;
+        console.log($(".transparency")[0].value);
     });
 
-    $("#thickness").change(() => {
-        thickness = $("#thickness")[0].value;
-        console.log($("#thickness")[0].value);
+    $(".thickness").change(() => {
+        thickness = $(".thickness")[0].value;
+        console.log($(".thickness")[0].value);
     })
 
-    $("#lineCap").change(() => {
-        lineCapString = lineCap[($("#lineCap")[0].value)];
+    $(".lineCap").change(() => {
+        lineCapString = lineCap[($(".lineCap")[0].value)];
 
-        console.log(($("#lineCap")[0].value));
+        console.log(($(".lineCap")[0].value));
         console.log(lineCapString);
     })
 
-    $("#lineDash").change(() => {
-        dashIndex = $("#lineDash")[0].value;
+    $(".lineDash").change(() => {
+        dashIndex = $(".lineDash")[0].value;
         console.log(dashIndex);
     })
 
-    $("#gradient").change(() => {
-        gradient = $("#gradient")[0].value == 1 ? "true" : "false";
+    $(".gradient").change(() => {
+        gradient = $(".gradient")[0].value == 1 ? "true" : "false";
         console.log(gradient);
     })
 
-    $("#canvasScaling").change(() => {
+    $(".canvasScaling").change(() => {
         canvasScaling();
         console.log("canvasScaling");
     })
@@ -1830,7 +1798,7 @@ jQuery(document).ready(function($) {
     /*
     ANIMATION THAT CAN BE USE WHEN YOU START THE PROGRAM!
     */
-    smileFace();
+    // smileFace();
 
     function smileFace() {
         ctx.beginPath();
@@ -1893,48 +1861,43 @@ jQuery(document).ready(function($) {
         }
     }
 
-    $("html").keydown( function(event) {
-      if(event.keyCode == 46) {
+    $("html").keydown(function(event) {
+        if (event.keyCode == 46) {
 
-        for(let index=0; index < oGlobalLineArray.length; index++) {
-          if(oGlobalLineArray[index].clicked === true) {
-            oGlobalLineArray[index].eraseLine();
-            oGlobalLineArray.splice(index,1);
-          }
-        };
+            for (let index = 0; index < oGlobalLineArray.length; index++) {
+                if (oGlobalLineArray[index].clicked === true) {
+                    oGlobalLineArray[index].eraseLine();
+                    oGlobalLineArray.splice(index, 1);
+                }
+            };
 
-        for(let index=0; index < oGlobalRectArray.length; index++) {
-          if(oGlobalRectArray[index].clicked === true) {
-            oGlobalRectArray[index].eraseRect();
-            oGlobalRectArray.splice(index,1);
-          }
-        };
+            for (let index = 0; index < oGlobalRectArray.length; index++) {
+                if (oGlobalRectArray[index].clicked === true) {
+                    oGlobalRectArray[index].eraseRect();
+                    oGlobalRectArray.splice(index, 1);
+                }
+            };
 
-        for(let index=0; index < oGlobalCircleArray.length; index++) {
-          if(oGlobalCircleArray[index].clicked === true) {
-            oGlobalCircleArray[index].eraseCircle();
-            oGlobalCircleArray.splice(index,1);
-          }
-        };
+            for (let index = 0; index < oGlobalCircleArray.length; index++) {
+                if (oGlobalCircleArray[index].clicked === true) {
+                    oGlobalCircleArray[index].eraseCircle();
+                    oGlobalCircleArray.splice(index, 1);
+                }
+            };
 
-        for(let index=0; index < oGlobalBezierArray.length; index++) {
-          if(oGlobalBezierArray[index].clicked === true) {
-            oGlobalBezierArray[index].eraseBezier();
-            oGlobalBezierArray.splice(index,1);
-          }
-        };
+            for (let index = 0; index < oGlobalBezierArray.length; index++) {
+                if (oGlobalBezierArray[index].clicked === true) {
+                    oGlobalBezierArray[index].eraseBezier();
+                    oGlobalBezierArray.splice(index, 1);
+                }
+            };
 
-        for(let index=0; index < oGlobalBezierCArray.length; index++) {
-          if(oGlobalBezierCArray[index].clicked === true) {
-            oGlobalBezierCArray[index].eraseBezierCurve();
-            oGlobalBezierCArray.splice(index,1);
-          }
-        };
-
-
-      }
+            for (let index = 0; index < oGlobalBezierCArray.length; index++) {
+                if (oGlobalBezierCArray[index].clicked === true) {
+                    oGlobalBezierCArray[index].eraseBezierCurve();
+                    oGlobalBezierCArray.splice(index, 1);
+                }
+            };
+        }
     });
-
-
-
 });
