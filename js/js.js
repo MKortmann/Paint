@@ -845,16 +845,16 @@ jQuery(document).ready(function($) {
     width and height attributes explicitly in the <canvas> attributes, and not using CSS.*/
 
     function resizeCanvas(width, height) {
-        canvas[0].width = width;
+
+        canvas[0].width = window.innerWidth;
         canvas[0].height = height;
-        canvas.css("width", width);
+        canvas.css("width", window.innerWidth);
         canvas.css("height", height);
     }
     /*You make sure that the attributes of canvas and css are the same!*/
     resizeCanvas(width, height);
 
-
-    function getCursorPosition(canvas, event) {
+      function getCursorPosition(canvas, event) {
         //you can get the bounding box of any element by calling getBoundingClientRecht
         //javaScript native function
         const rect = canvas[0].getBoundingClientRect();

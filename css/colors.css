@@ -4,6 +4,7 @@ Use plain CSS for large background images
 
 .colorChart {
 	display: flex;
+	flex-wrap: wrap;
 	grid-template-columns: auto auto auto auto auto auto auto auto auto auto auto auto auto auto auto auto auto auto auto auto;
 	background: white;
 	grid-gap: 1px;
@@ -11,7 +12,7 @@ Use plain CSS for large background images
 	padding: 2px 2px 2px 2px;
 	border-radius: 4px;
 	/* max-width: 300px; */
-	justify-content: space-evenly;
+	justify-content: stretch;
 	margin: auto;
 	/** big grid stay at the center*/
 	border: 1.5px solid;
