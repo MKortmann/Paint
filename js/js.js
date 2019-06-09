@@ -57,7 +57,7 @@ jQuery(document).ready(function($) {
     let activeButtons = [];
     let activeColor = "black";
     let transparency = 1;
-    let thickness = 10;
+    let thickness = 20;
     let lineCap = ["square", "round", "butt"]; //"butt" lineCap DO NOT WORK, With
     let dashIndex = 0;
     let gradient = false;
@@ -190,7 +190,7 @@ jQuery(document).ready(function($) {
             ctx.moveTo(this.firstPosClickX, this.firstPosClickY);
             ctx.lineTo(this.posX, this.posY);
             ctx.stroke();
-            $("#canvas").css("cursor", "pointer");
+            // $("#canvas").css("cursor", "pointer");
         }
 
         eraseLine() {
@@ -202,7 +202,7 @@ jQuery(document).ready(function($) {
             ctx.moveTo(this.firstPosClickX, this.firstPosClickY);
             ctx.lineTo(this.posX, this.posY);
             ctx.stroke();
-            $("#canvas").css("cursor", "pointer");
+            // $("#canvas").css("cursor", "pointer");
         }
 
         updateLine(posX, posY) {
@@ -261,7 +261,7 @@ jQuery(document).ready(function($) {
             ctx.fillRect(this.firstPosClickX, this.firstPosClickY, this.width, this.height);
             ctx.rect(this.firstPosClickX - 2, this.firstPosClickY - 2, this.width + 4, this.height + 4);
             ctx.stroke();
-            $("#canvas").css("cursor", "pointer");
+            // $("#canvas").css("cursor", "pointer");
         }
 
         drawRect(newPosClickX = this.firstPosClickX, newPosClickY = this.firstPosClickY) {
@@ -290,7 +290,7 @@ jQuery(document).ready(function($) {
                 ctx.rect(newPosClickX, newPosClickY, this.width, this.height);
                 ctx.stroke();
             }
-            $("#canvas").css("cursor", "default");
+            // $("#canvas").css("cursor", "default");
         }
         updateRect(newPosClickX, newPosClickY) {
             this.firstPosClickX = newPosClickX;
@@ -299,7 +299,7 @@ jQuery(document).ready(function($) {
         }
         //to make a nice effect and let the program user friendly!
         drawRectGhost(posX, posY) {
-            $("#canvas").css("cursor", "nwse-resize");
+            // $("#canvas").css("cursor", "nwse-resize");
             ctx.beginPath();
             ctx.lineWidth = 5;
             ctx.lineCap = "round";
@@ -350,7 +350,7 @@ jQuery(document).ready(function($) {
         }
 
         drawCircle(posX = this.posX, posY = this.posY) {
-            $("#canvas").css("cursor", "default");
+            // $("#canvas").css("cursor", "default");
             // ctx.clearRect(0,0, innerWidth, innerHeight);
             ctx.beginPath();
             ctx.lineWidth = this.lineWidth;
@@ -385,11 +385,11 @@ jQuery(document).ready(function($) {
 
             }
             console.log(`The radius is: ${this.radius}`);
-            $("#canvas").css("cursor", "default");
+            // $("#canvas").css("cursor", "default");
         }
 
         drawCircleGhost(posX, posY) {
-            $("#canvas").css("cursor", "nwse-resize");
+            // $("#canvas").css("cursor", "nwse-resize");
             // ctx.clearRect(0,0, innerWidth, innerHeight);
             ctx.beginPath();
             ctx.lineWidth = this.lineWidth - 4;
@@ -422,7 +422,7 @@ jQuery(document).ready(function($) {
             console.log(this.posX, this.posY);
             ctx.arc(this.posX, this.posY, this.radius, Math.PI * 2, false);
             ctx.stroke();
-            $("#canvas").css("cursor", "pointer");
+            // $("#canvas").css("cursor", "pointer");
         }
 
         eraseCircle() {
@@ -564,7 +564,7 @@ jQuery(document).ready(function($) {
             // ctx.quadraticCurveTo(canvas.width/2, canvas.height/2, posX, posY);
             ctx.quadraticCurveTo(this.posX, this.posY, this.posArrayX[1], this.posArrayY[1]);
             ctx.stroke();
-            $("#canvas").css("cursor", "pointer");
+            // $("#canvas").css("cursor", "pointer");
         }
 
         eraseBezier() {
@@ -742,7 +742,7 @@ jQuery(document).ready(function($) {
             ctx.moveTo(this.posArrayX[0], this.posArrayY[0])
             ctx.quadraticCurveTo(this.posArrayX[1], this.posArrayY[1], this.posX, this.posY, this.posArrayX[2], this.posArrayY[2]);
             ctx.stroke();
-            $("#canvas").css("cursor", "pointer");
+            // $("#canvas").css("cursor", "pointer");
         }
 
         eraseBezierCurve() {
@@ -1649,14 +1649,32 @@ jQuery(document).ready(function($) {
         resetButtons();
     })
     ///////////////////////////TOOLS
+    let cursorMouse = [];
+    function removeAddMouseCursor(Removealles = false) {
+      if(cursorMouse.length > 1) {
+        $("#canvas").removeClass(cursorMouse[1]);
+        cursorMouse.pop();
+      }
+      if(Removealles === "true")  {
+        $("#canvas").removeClass(cursorMouse[0]);
+        cursorMouse.pop();
+      }
+
+    }
     //Stift
     $(".bStift").click(function() {
-        $(".bStift").toggleClass("active");
-        activeButtons.push(".bStift");
-        resetButtons();
+      cursorMouse.unshift("mPincel");
+      removeAddMouseCursor();
+      $("#canvas").addClass("mPincel");
+      $(".bStift").toggleClass("active");
+      activeButtons.push(".bStift");
+      resetButtons();
     });
     //bErase
     $(".bErase").click(function() {
+      cursorMouse.unshift("mErase");
+      removeAddMouseCursor();
+      $("#canvas").addClass("mErase");
         $(".bErase").toggleClass("active");
         /*reseting other buttons*/
         activeButtons.push(".bErase");
@@ -1665,29 +1683,18 @@ jQuery(document).ready(function($) {
 
     //bSet Background color
     $(".bBackColor").click(() => {
+        removeAddMouseCursor("true");
         $(".bBackColor").toggleClass("active");
         fillBackgroundColor();
         /*reseting other buttons*/
         activeButtons.push(".bBackColor");
         resetButtons();
     });
-    //bFill
-    $(".bFill").click(() => {
-        ctx.fillStyle = "green";
-        ctx.fillRect(0, 0, canvas[0].width, canvas[0].height);
-        $(".bFill").toggleClass("active");
-        activeButtons.push(".bFill");
-        resetButtons();
-    });
-    //bFillElement
-    //bFill
-    $(".bFillElement").click(() => {
-        $(".bFillElement").toggleClass("active");
-        activeButtons.push(".bFillElement");
-        resetButtons();
-    });
     //bStraightLine
     $(".bStraightLine").click(() => {
+      cursorMouse.unshift("mLine");
+      removeAddMouseCursor();
+      $("#canvas").addClass("mLine");
         $(".bStraightLine").toggleClass("active");
         activeButtons.push(".bStraightLine");
         resetButtons();
@@ -1695,6 +1702,9 @@ jQuery(document).ready(function($) {
 
     //bRectangle
     $(".bRect").click(() => {
+      cursorMouse.unshift("mMove");
+      removeAddMouseCursor();
+      $("#canvas").addClass("mMove");
         $(".bRect").toggleClass("active");
         activeButtons.push(".bRect");
         resetButtons();
@@ -1702,41 +1712,53 @@ jQuery(document).ready(function($) {
 
     //bCircle
     $(".bCircle").click(() => {
-        $(".bCircle").toggleClass("active");
-        activeButtons.push(".bCircle");
-        resetButtons();
+      cursorMouse.unshift("mMove");
+      removeAddMouseCursor();
+      $("#canvas").addClass("mMove");
+      $(".bCircle").toggleClass("active");
+      activeButtons.push(".bCircle");
+      resetButtons();
     });
 
     //bBezierQ
     $(".bBezierQ").click(() => {
+      cursorMouse.unshift("mLine");
+      removeAddMouseCursor();
+      $("#canvas").addClass("mLine");
         $(".bBezierQ").toggleClass("active");
         activeButtons.push(".bBezierQ");
         resetButtons();
     });
     //bBezierC
     $(".bBezierC").click(() => {
+      cursorMouse.unshift("mLine");
+      removeAddMouseCursor();
+      $("#canvas").addClass("mLine");
         $(".bBezierC").toggleClass("active");
         activeButtons.push(".bBezierC");
         resetButtons();
     });
 
     $(".bText").click(() => {
+      cursorMouse.unshift("mText");
+      removeAddMouseCursor();
+      $("#canvas").addClass("mText");
         $(".bText").toggleClass("active");
         activeButtons.push(".bText");
         resetButtons();
     })
 
-    $(".bCopyPaste").click(() => {
-        $(".bCopyPaste").toggleClass("active");
-        activeButtons.push(".bCopyPaste");
-        resetButtons();
-    });
-
-    $(".bCutPaste").click(() => {
-        $(".bCutPaste").toggleClass("active");
-        activeButtons.push(".bCutPaste");
-        resetButtons();
-    });
+    // $(".bCopyPaste").click(() => {
+    //     $(".bCopyPaste").toggleClass("active");
+    //     activeButtons.push(".bCopyPaste");
+    //     resetButtons();
+    // });
+    //
+    // $(".bCutPaste").click(() => {
+    //     $(".bCutPaste").toggleClass("active");
+    //     activeButtons.push(".bCutPaste");
+    //     resetButtons();
+    // });
 
     //Zoom
     // $(".bZoom").click(function() {
@@ -1808,7 +1830,7 @@ jQuery(document).ready(function($) {
     /*
     ANIMATION THAT CAN BE USE WHEN YOU START THE PROGRAM!
     */
-    // smileFace();
+    smileFace();
 
     function smileFace() {
         ctx.beginPath();
@@ -1862,7 +1884,7 @@ jQuery(document).ready(function($) {
         ctx.fillText("!Welcome!", 900, 30);
 
         //Nice way to clear
-        for (let index = 0; index <= 1150; index = index + 0.5) {
+        for (let index = 0; index <= 1150; index = index + 1) {
             setTimeout(function() {
                 ctx.strokeStyle = "white";
                 ctx.arc(920, 300, index, 0, Math.PI * 2, true); // Outer circle

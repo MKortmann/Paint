@@ -142,6 +142,25 @@ input {
   border: 2px solid black;
 }
 
+.mPincel {
+  cursor: url("../icons/pincelMouse.png"), auto;
+}
+.mErase {
+  cursor: url("../icons/pincelErase.png"), auto;
+}
+
+.mMove {
+  cursor: url("../icons/moveMouse.png"), auto;
+}
+
+.mLine {
+  cursor: url("../icons/moveLine.png"), auto;
+}
+
+.mText {
+  cursor: url("../icons/textMouse.png"), auto;
+}
+
 .bErase {
   background: url("../icons/erase.svg") no-repeat ;
   background-color: white;
