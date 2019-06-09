@@ -899,6 +899,7 @@ jQuery(document).ready(function($) {
     function erase(posX, posY) {
         ctx.beginPath();
         ctx.lineWidth = thickness;
+        ctx.globalAlpha = transparency;
         ctx.lineCap = lineCapString;
         ctx.strokeStyle = "white";
         ctx.lineTo(posX, posY);
@@ -1624,15 +1625,17 @@ jQuery(document).ready(function($) {
     })
     //Select&Move
     $(".bSelectMove").click(() => {
-        $(".bSelectMove").toggleClass("active");
-        activeButtons.push(".bSelectMove");
-        resetButtons();
+      removeAddMouseCursor("true");
+      $(".bSelectMove").toggleClass("active");
+      activeButtons.push(".bSelectMove");
+      resetButtons();
     })
     //Select&Paste
     $(".bSelectPaste").click(() => {
-        $(".bSelectPaste").toggleClass("active");
-        activeButtons.push(".bSelectPaste");
-        resetButtons();
+      removeAddMouseCursor("true");
+      $(".bSelectPaste").toggleClass("active");
+      activeButtons.push(".bSelectPaste");
+      resetButtons();
     })
     ///////////////////////////TOOLS
     let cursorMouse = [];
