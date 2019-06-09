@@ -400,7 +400,7 @@ jQuery(document).ready(function($) {
 
             setTimeout(() => {
                 this.deleteDrawCircleGhost(posX, posY);
-            }, 100);
+            }, 50);
 
         }
 
@@ -1817,7 +1817,7 @@ jQuery(document).ready(function($) {
         //arc(x,y,radius,startAngle, endAngle, anticlockwise);
         //Draw an arc which is centerd at (x,y),
         //Angles in the arc function are measured in radians, not degress.
-        ctx.arc(300, 300, 300, 0, Math.PI * 2, true); // Outer circle
+        ctx.arc(950, 285, 250, 0, Math.PI * 2, true); // Outer circle
         /*Another way to draw an arc is to type:
         arcTo(x1, y1, x2, y2, radius)
         It draws an arc with the given control poionts and radius, connected to the
@@ -1825,46 +1825,93 @@ jQuery(document).ready(function($) {
 
         //Mouth
         //MoveTo: moves the pen to the coordinates specified by x,y
-        ctx.moveTo(500, 300);
+        ctx.moveTo(1150, 285);
         // Mouth (clockwise) - outside part
-        ctx.arc(300, 300, 200, 0, Math.PI, false);
+        ctx.arc(950, 285, 200, 0, Math.PI, false);
         // Mouth (clockwise) - inside part
-        ctx.moveTo(500, 300);
-        ctx.arc(300, 300, 220, 0, Math.PI, false); // Mouth (clockwise)
-        ctx.moveTo(80, 300);
-        //draws a line from the current drawing position to the position specified x,y
-        ctx.lineTo(100, 300)
+        ctx.moveTo(1150, 285);
+        ctx.arc(950, 285, 220, 0, Math.PI, false); // Mouth (clockwise)
+        ctx.moveTo(730, 285);
+        // //draws a line from the current drawing position to the position specified x,y
+        ctx.lineTo(750, 285)
         // ctx.closePath();
         ctx.stroke();
         ctx.beginPath();
         //eyes
-        ctx.moveTo(260, 200);
-        //eye left
-        ctx.arc(200, 200, 60, 0, Math.PI * 2, true); // Left eye
-        ctx.moveTo(460, 200);
-        //eye right
-        ctx.arc(400, 200, 60, 0, Math.PI * 2, true); // Right eye
-        //Sets the style for shapes outlines
+        ctx.moveTo(910, 200);
+        // //eye left
+        ctx.arc(850, 200, 60, 0, Math.PI * 2, true); // Left eye
+        ctx.moveTo(1110, 200);
+        // //eye right
+        ctx.arc(1050, 200, 60, 0, Math.PI * 2, true); // Right eye
+        // //Sets the style for shapes outlines
         ctx.strokeStyle = "blue";
         ctx.stroke();
         //nose
         ctx.beginPath();
-        ctx.moveTo(342, 350);
+        ctx.moveTo(892, 350);
         //Sets the style used when filling shapes
         ctx.fillStyle = "red";
-        ctx.arc(302, 350, 40, 0, Math.PI * 2, true); // Right eye
+        ctx.arc(952, 350, 40, 0, Math.PI * 2, true); // Right eye
         ctx.fill();
+        //Welcome text
+        ctx.beginPath();
+        ctx.font = "20px Arial";
+        //fillText(text,x,y); - draws "filled" text on the canvas
+        ctx.fillStyle = "red";
+        ctx.fillText("!Welcome!", 900, 30);
 
         //Nice way to clear
-        for (let index = 0; index <= 310; index = index + 0.3) {
+        for (let index = 0; index <= 1150; index = index + 0.5) {
             setTimeout(function() {
                 ctx.strokeStyle = "white";
-                ctx.arc(300, 300, index, 0, Math.PI * 2, true); // Outer circle
+                ctx.arc(920, 300, index, 0, Math.PI * 2, true); // Outer circle
                 ctx.stroke();
             }.bind(index), 3000);
         }
     }
 
+    $("html").keydown( function(event) {
+      if(event.keyCode == 46) {
+
+        for(let index=0; index < oGlobalLineArray.length; index++) {
+          if(oGlobalLineArray[index].clicked === true) {
+            oGlobalLineArray[index].eraseLine();
+            oGlobalLineArray.splice(index,1);
+          }
+        };
+
+        for(let index=0; index < oGlobalRectArray.length; index++) {
+          if(oGlobalRectArray[index].clicked === true) {
+            oGlobalRectArray[index].eraseRect();
+            oGlobalRectArray.splice(index,1);
+          }
+        };
+
+        for(let index=0; index < oGlobalCircleArray.length; index++) {
+          if(oGlobalCircleArray[index].clicked === true) {
+            oGlobalCircleArray[index].eraseCircle();
+            oGlobalCircleArray.splice(index,1);
+          }
+        };
+
+        for(let index=0; index < oGlobalBezierArray.length; index++) {
+          if(oGlobalBezierArray[index].clicked === true) {
+            oGlobalBezierArray[index].eraseBezier();
+            oGlobalBezierArray.splice(index,1);
+          }
+        };
+
+        for(let index=0; index < oGlobalBezierCArray.length; index++) {
+          if(oGlobalBezierCArray[index].clicked === true) {
+            oGlobalBezierCArray[index].eraseBezierCurve();
+            oGlobalBezierCArray.splice(index,1);
+          }
+        };
+
+
+      }
+    });
 
 
 
