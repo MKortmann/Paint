@@ -435,7 +435,7 @@ jQuery(document).ready(function($) {
             ctx.fillStyle = "white";
             ctx.setLineDash([]);
             console.log(this.posX, this.posY);
-            ctx.arc(this.posX, this.posY, this.radius + 8, Math.PI * 2, false);
+            ctx.arc(this.posX, this.posY, this.radius + this.lineWidth, Math.PI * 2, false);
             ctx.fill();
         }
 
@@ -920,33 +920,33 @@ jQuery(document).ready(function($) {
         //first time clicked:
         //Check The Rectangle
 
-        for (let index = 0; index < oGlobalLineArray.length; index++) {
-            if (oGlobalLineArray[index].clicked === true) {
+        oGlobalLineArray.forEach(function(line) {
+            if (line.clicked === true) {
                 console.log("it is true");
-                oGlobalLineArray[index].clicked = false;
-                console.log("flag setted to: " + oGlobalLineArray[index].clicked);
+                line.clicked = false;
+                console.log("flag setted to: " + line.clicked);
                 if (!$(".bSelectPaste").hasClass("active")) {
-                    oGlobalLineArray[index].eraseLine();
+                    line.eraseLine();
                 } else {
-                    oGlobalLineArray[index].drawStraightLine();
+                    line.drawStraightLine();
                 }
-                oGlobalLineArray[index].drawStraightLine(posClickX, posClickY, true);
-                oGlobalLineArray[index].updateLine(posClickX, posClickY);
+                line.drawStraightLine(posClickX, posClickY, true);
+                line.updateLine(posClickX, posClickY);
 
             } else {
-                let result = oGlobalLineArray[index].calcLineEqMatchClicked(posClickX, posClickY);
+                let result = line.calcLineEqMatchClicked(posClickX, posClickY);
                 console.log(`The result is: ${result}`);
 
-                if (Math.abs(result) < 8 && (posClickX + enlargeTarged) > oGlobalLineArray[index].firstPosClickX &&
-                    (posClickX - enlargeTarged) < oGlobalLineArray[index].posX) {
+                if (Math.abs(result) < 8 && (posClickX + enlargeTarged) > line.firstPosClickX &&
+                    (posClickX - enlargeTarged) < line.posX) {
                     console.log("MATCH");
-                    oGlobalLineArray[index].clicked = true;
-                    console.log("flag setted to: " + oGlobalLineArray[index].clicked);
-                    oGlobalLineArray[index].focusLine();
+                    line.clicked = true;
+                    console.log("flag setted to: " + line.clicked);
+                    line.focusLine();
                 }
             }
 
-        }
+        });
 
     }
 
@@ -956,32 +956,32 @@ jQuery(document).ready(function($) {
         //moving, second time clicked:
         //first time clicked:
         //Check The Rectangle
-        for (let index = 0; index < oGlobalRectArray.length; index++) {
-            if (oGlobalRectArray[index].clicked === true) {
+        oGlobalRectArray.forEach(function(rect) {
+            if (rect.clicked === true) {
                 console.log("true");
                 if (!$(".bSelectPaste").hasClass("active")) {
-                    oGlobalRectArray[index].eraseRect();
+                    rect.eraseRect();
                 } else {
-                    oGlobalRectArray[index].drawRect();
+                    rect.drawRect();
                 }
-                oGlobalRectArray[index].drawRect(posClickX, posClickY);
-                oGlobalRectArray[index].updateRect(posClickX, posClickY);
+                rect.drawRect(posClickX, posClickY);
+                rect.updateRect(posClickX, posClickY);
             } else {
-                if (oGlobalRectArray[index].firstPosClickX - enlargeTarged <= posClickX && posClickX <= (oGlobalRectArray[index].firstPosClickX + oGlobalRectArray[index].width + enlargeTarged)) {
-                    if (oGlobalRectArray[index].firstPosClickY <= posClickY && posClickY <= (oGlobalRectArray[index].firstPosClickY + oGlobalRectArray[index].height)) {
-                        console.log(`The object number ${index} is clicked!`);
-                        oGlobalRectArray[index].focusRect();
-                        oGlobalRectArray[index].clicked = true;
+                if (rect.firstPosClickX - enlargeTarged <= posClickX && posClickX <= (rect.firstPosClickX + rect.width + enlargeTarged)) {
+                    if (rect.firstPosClickY <= posClickY && posClickY <= (rect.firstPosClickY + rect.height)) {
+                        rect.focusRect();
+                        rect.clicked = true;
                     }
                 }
             }
-        }
-    }
+        });
+}
 
     function elementCircleClicked(posClickX, posClickY) {
 
 
-        for (let index = 0; index < oGlobalCircleArray.length; index++) { //circle equation!!
+          oGlobalCircleArray.forEach(function(circle) {
+
 
             //In all cases a point on the circle follows the rule x^2+y^2=radius^2
             //Most General Case:
@@ -1004,11 +1004,11 @@ jQuery(document).ready(function($) {
             so, if (x,y) clicked is lower than 36 means that we have clicked at the
             circle!!
             */
-            if (oGlobalCircleArray[index].clicked === false) {
+            if (circle.clicked === false) {
 
-                let radius = oGlobalCircleArray[index].radius;
-                let centerXa = oGlobalCircleArray[index].posX;
-                let centerYb = oGlobalCircleArray[index].posY;
+                let radius = circle.radius;
+                let centerXa = circle.posX;
+                let centerYb = circle.posY;
                 //circleEqResult should be less than 0, means that you have clicked at any pos.
                 //inside the circle
 
@@ -1016,30 +1016,31 @@ jQuery(document).ready(function($) {
 
                 if (circleEqResult <= 0) {
                     console.log("matched");
-                    oGlobalCircleArray[index].clicked = true;
-                    oGlobalCircleArray[index].focusCircle();
+                    circle.clicked = true;
+                    circle.focusCircle();
                 }
             } else {
-                oGlobalCircleArray[index].clicked = false;
+                circle.clicked = false;
                 if (!$(".bSelectPaste").hasClass("active")) {
-                    oGlobalCircleArray[index].eraseCircle();
+                    circle.eraseCircle();
                 } else {
 
-                    oGlobalCircleArray[index].drawCircle();
+                    circle.drawCircle();
                 }
-                oGlobalCircleArray[index].updateCircle(posClickX, posClickY);
-                oGlobalCircleArray[index].drawCircle(posClickX, posClickY);
+                circle.updateCircle(posClickX, posClickY);
+                circle.drawCircle(posClickX, posClickY);
 
             }
 
+        });
 
-        }
-    }
+      }
+
+
 
     function elementBezierClicked(posClickX, posClickY) {
-
-        for (let index = 0; index < oGlobalBezierArray.length; index++) { //circle equation!!
-            if (oGlobalBezierArray[index].clicked === false) {
+        oGlobalBezierArray.forEach(function(bezier) {
+            if (bezier.clicked === false) {
 
                 //let's calculate as it was a small rectangle. It will be computational
                 //faster to calculate all the t parameters that would be at least 8 towards
@@ -1047,19 +1048,19 @@ jQuery(document).ready(function($) {
                 //not so precise but as it is ok as proof of concept!
                 //Now, instead of posX and posY we will use the middlePoint.
                 //it will be preciser!!
-                let xMax = Math.max(oGlobalBezierArray[index].x,
-                    oGlobalBezierArray[index].posArrayX[0],
-                    oGlobalBezierArray[index].posArrayX[1]);
-                let xMin = Math.min(oGlobalBezierArray[index].x,
-                    oGlobalBezierArray[index].posArrayX[0],
-                    oGlobalBezierArray[index].posArrayX[1]);
+                let xMax = Math.max(bezier.x,
+                    bezier.posArrayX[0],
+                    bezier.posArrayX[1]);
+                let xMin = Math.min(bezier.x,
+                    bezier.posArrayX[0],
+                    bezier.posArrayX[1]);
 
-                let yMax = Math.max(oGlobalBezierArray[index].y,
-                    oGlobalBezierArray[index].posArrayY[0],
-                    oGlobalBezierArray[index].posArrayY[1]);
-                let yMin = Math.min(oGlobalBezierArray[index].y,
-                    oGlobalBezierArray[index].posArrayY[0],
-                    oGlobalBezierArray[index].posArrayY[1]);
+                let yMax = Math.max(bezier.y,
+                    bezier.posArrayY[0],
+                    bezier.posArrayY[1]);
+                let yMin = Math.min(bezier.y,
+                    bezier.posArrayY[0],
+                    bezier.posArrayY[1]);
 
 
                 console.log(`X values: xMax: ${xMax}, xMin: ${xMin}`);
@@ -1069,33 +1070,29 @@ jQuery(document).ready(function($) {
                 if (xMin < posClickX && posClickX < xMax && yMin < posClickY && posClickY < yMax) {
 
                     console.log("MATCHED");
-                    oGlobalBezierArray[index].focusBezier();
-                    oGlobalBezierArray[index].clicked = true;
+                    bezier.focusBezier();
+                    bezier.clicked = true;
 
                 }
 
             } else {
                 if (!$(".bSelectPaste").hasClass("active")) {
-                    oGlobalBezierArray[index].eraseBezier();
+                    bezier.eraseBezier();
                 } else {
-                    oGlobalBezierArray[index].drawBezier();
+                    bezier.drawBezier();
                 }
-                oGlobalBezierArray[index].updateBezier(posClickX, posClickY);
-                oGlobalBezierArray[index].clicked = false;
-                oGlobalBezierArray[index].drawBezier(posClickX, posClickY);
-
+                bezier.updateBezier(posClickX, posClickY);
+                bezier.clicked = false;
+                bezier.drawBezier(posClickX, posClickY);
             }
-
-
-
-        }
+        });
     }
 
     function elementBezierCClicked(posClickX, posClickY) {
 
+        oGlobalBezierCArray.forEach( function (bezierC) {
 
-        for (let index = 0; index < oGlobalBezierCArray.length; index++) { //circle equation!!
-            if (oGlobalBezierCArray[index].clicked === false) {
+            if (bezierC.clicked === false) {
 
                 //let's calculate as it was a small rectangle. It will be computational
                 //faster to calculate all the t parameters that would be at least 8 towards
@@ -1103,19 +1100,19 @@ jQuery(document).ready(function($) {
                 //not so precise but as it is ok as proof of concept!
                 //Now, instead of posX and posY we will use the middlePoint.
                 //it will be preciser!!
-                let xMax = Math.max(oGlobalBezierCArray[index].posX,
-                    oGlobalBezierCArray[index].posArrayX[0],
-                    oGlobalBezierCArray[index].x);
-                let xMin = Math.min(oGlobalBezierCArray[index].posX,
-                    oGlobalBezierCArray[index].posArrayX[0],
-                    oGlobalBezierCArray[index].x);
+                let xMax = Math.max(bezierC.posX,
+                    bezierC.posArrayX[0],
+                    bezierC.x);
+                let xMin = Math.min(bezierC.posX,
+                    bezierC.posArrayX[0],
+                    bezierC.x);
 
-                let yMax = Math.max(oGlobalBezierCArray[index].posY,
-                    oGlobalBezierCArray[index].posArrayY[0],
-                    oGlobalBezierCArray[index].y);
-                let yMin = Math.min(oGlobalBezierCArray[index].posY,
-                    oGlobalBezierCArray[index].posArrayY[0],
-                    oGlobalBezierCArray[index].y);
+                let yMax = Math.max(bezierC.posY,
+                    bezierC.posArrayY[0],
+                    bezierC.y);
+                let yMin = Math.min(bezierC.posY,
+                    bezierC.posArrayY[0],
+                    bezierC.y);
 
 
                 console.log(`X values: xMax: ${xMax}, xMin: ${xMin}`);
@@ -1125,26 +1122,26 @@ jQuery(document).ready(function($) {
                 if (xMin < posClickX && posClickX < xMax && yMin < posClickY && posClickY < yMax) {
 
                     console.log("MATCHED");
-                    oGlobalBezierCArray[index].focusBezierCurve();
-                    oGlobalBezierCArray[index].clicked = true;
+                    bezierC.focusBezierCurve();
+                    bezierC.clicked = true;
 
                 }
 
             } else {
                 console.log("SETTING CLICKED TO FALSE! Not matched!");
                 if (!$(".bSelectPaste").hasClass("active")) {
-                    oGlobalBezierCArray[index].eraseBezierCurve();
+                    bezierC.eraseBezierCurve();
                 } else {
-                    oGlobalBezierCArray[index].drawBezierCurve();
+                    bezierC.drawBezierCurve();
                 }
-                oGlobalBezierCArray[index].updateBezierCurve(posClickX, posClickY);
-                oGlobalBezierCArray[index].clicked = false;
-                oGlobalBezierCArray[index].drawBezierCurve(posClickX, posClickY);
+                bezierC.updateBezierCurve(posClickX, posClickY);
+                bezierC.clicked = false;
+                bezierC.drawBezierCurve(posClickX, posClickY);
             }
 
 
 
-        }
+        });
     }
 
 
@@ -1854,7 +1851,7 @@ jQuery(document).ready(function($) {
         ctx.fillText("!Welcome!", 900, 30);
 
         //Nice way to clear
-        for (let index = 0; index <= 1150; index = index + 1) {
+        let index = 0; index <= 1150; index = index + 1) {
             setTimeout(function() {
                 ctx.strokeStyle = "white";
                 ctx.arc(920, 300, index, 0, Math.PI * 2, true); // Outer circle
@@ -1866,40 +1863,40 @@ jQuery(document).ready(function($) {
     $("html").keydown(function(event) {
         if (event.keyCode == 46) {
 
-            for (let index = 0; index < oGlobalLineArray.length; index++) {
-                if (oGlobalLineArray[index].clicked === true) {
-                    oGlobalLineArray[index].eraseLine();
+            oGlobalLineArray.forEach(function(line, index) {
+                if (line.clicked === true) {
+                    line.eraseLine();
                     oGlobalLineArray.splice(index, 1);
                 }
-            };
+            });
 
-            for (let index = 0; index < oGlobalRectArray.length; index++) {
-                if (oGlobalRectArray[index].clicked === true) {
-                    oGlobalRectArray[index].eraseRect();
+            oGlobalRectArray.forEach(function(rect, index) {
+                if (rect.clicked === true) {
+                    rect.eraseRect();
                     oGlobalRectArray.splice(index, 1);
                 }
-            };
+            });
 
-            for (let index = 0; index < oGlobalCircleArray.length; index++) {
-                if (oGlobalCircleArray[index].clicked === true) {
-                    oGlobalCircleArray[index].eraseCircle();
+            oGlobalCircleArray.forEach(function(circle, index) {
+                if (circle.clicked === true) {
+                    circle.eraseCircle();
                     oGlobalCircleArray.splice(index, 1);
                 }
-            };
+            });
 
-            for (let index = 0; index < oGlobalBezierArray.length; index++) {
-                if (oGlobalBezierArray[index].clicked === true) {
-                    oGlobalBezierArray[index].eraseBezier();
+            oGlobalBezierArray.forEach(function(bezier, index) {
+                if (bezier.clicked === true) {
+                    bezier.eraseBezier();
                     oGlobalBezierArray.splice(index, 1);
                 }
-            };
+            });
 
-            for (let index = 0; index < oGlobalBezierCArray.length; index++) {
-                if (oGlobalBezierCArray[index].clicked === true) {
-                    oGlobalBezierCArray[index].eraseBezierCurve();
+            oGlobalBezierCArray.forEach(function(bezierC, index) {
+                if (bezierC.clicked === true) {
+                    bezierC.eraseBezierCurve();
                     oGlobalBezierCArray.splice(index, 1);
                 }
-            };
+            });
         }
     });
 });
