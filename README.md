@@ -24,6 +24,8 @@ This app enclosed already many features:
  
 ## In Development
 
+  - Save and Load Images from Storage
+  - To make the program faster we are thinking to remove jQuery! Because it does not helped us so much. I think ES6 is already so powerful to do everything that jQuery does. Date: 21.06.2019
   - VERY IMPORTANT: code refactor: improve OOP: object oriented classes hierarchy. (Maybe also Model Object View).  
   - Work with many input devices as mouse, pencil, fingers, keyboard. 
 
