@@ -1291,6 +1291,9 @@ jQuery(document).ready(function($) {
           ctx.clearRect(0, 0, canvas[0].width, canvas[0].height);
           ctx.drawImage(canvasImg, 0, 0);
       }
+
+      /**button to display the results*/
+      document.querySelector(".sidenav").classList.toggle("open");
     }
 
 

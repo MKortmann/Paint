@@ -66,6 +66,38 @@ margin-bottom: 0;
 	overflow-y: auto;
 	overflow-x: auto;
 }
+
+.big-font-sidenav {
+	color: red;
+}
+
+.button-sidenav {
+	background-color: white;
+	color: black;
+	cursor: pointer;
+	border-radius: 20px;
+}
+
+.button-sidenav:hover {
+	background-color: red;
+	color: white;
+}
+
+.sidenav a {
+	/**top, right, bottom, left*/
+	padding: 32px 8px 8px 32px;
+	text-decoration: none;
+	color: white;
+	/**gray*/
+	display: block;
+	transition: 0.3s;
+}
+
+.sidenav a:hover {
+	color: black;
+	font-size: 2em;
+}
+
 /*
 ***Main Container: encloses all the containers as controls, settings...***
 */
