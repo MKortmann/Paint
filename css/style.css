@@ -39,6 +39,33 @@ text-shadow: 0 1px 0 #ccc, 0 2px 0 #c9c9c9, 0 3px 0 #bbb, 0 4px 0 #b9b9b9, 0 5px
 margin-top: 10px;
 margin-bottom: 0;
 }
+/*SIDENAV-1: loadContent*/
+
+.sidenav {
+	top: 0;
+	margin: 0;
+	padding-top: 10%;
+	width: 50%;
+	height: 100%;
+	position: fixed;
+	/**NOT ABSOLUTE: very important because of the main:Y-Scroll*/
+	transform: translate(0, -10000px);
+	transition: transform 0.2s ease;
+	z-index: +1;
+}
+
+.sidenav.open {
+	top: 0;
+	padding-top: 0;
+	right: 25%;
+	background: linear-gradient(to bottom right, #39f 0%, #0f9 100%);
+	color: white;
+	transform: translate(0, 0);
+	transition: transform 0.3s ease;
+	font-size: 2em;
+	overflow-y: auto;
+	overflow-x: auto;
+}
 /*
 ***Main Container: encloses all the containers as controls, settings...***
 */

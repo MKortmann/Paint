@@ -12,6 +12,58 @@
 <body>
     <h1 class="outText">Paint</h1>
 
+<!--SIDENAV 1: CREATED TO BE ABLE TO LOAD THE SAVED IMAGE -->
+<div id="id-sidenav-3" class="sidenav">
+  <p>
+    <span>
+      <button class="button-sidenav" id="b-cancel-sidenav-3">close</button>
+      <button class="button-sidenav" id="b-clear-results">clear results</button>
+    </span>
+  </p>
+  <table id="id-table-inside">
+    <caption>Memory Game<br> Results</caption>
+    <thead>
+      <tr>
+        <th>
+          <span class="longName">Date</span>
+          <span class="shortName">Date</span>
+        </th>
+        <th>
+          <span class="longName">Time</span>
+          <span class="shortName">Time</span>
+        </th>
+        <th>
+          <span class="longName">Cards</span>
+          <span class="shortName">C.</span>
+        </th>
+        <th>
+          <span class="longName">Flipped</span>
+          <span class="shortName">F.</span>
+        </th>
+        <th>
+          <span class="longName">Misses</span>
+          <span class="shortName">M.</span>
+        </th>
+        <th>
+          <span class="longName">Elapsed Time</span>
+          <span class="shortName">Elapsed Time</span>
+        </th>
+      </tr>
+    </thead>
+    <tbody id="table-row">
+      <!--The data will be dinamically insert in this table in <thead>
+            way showen below:
+          </thead>
+          <tr id="table-row">
+              <td>
+                <span>28/01/2019</span>
+              </td>
+          </tr>-->
+    <tbody>
+  </table>
+</div>
+<!--END OF SIDENAV 1-->
+
     <div class=MainContainer>
         <div class="containerControls">
             <button class="bUndo"></button>
