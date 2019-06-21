@@ -1257,6 +1257,42 @@ jQuery(document).ready(function($) {
         document.body.removeChild(dlLink);
     }
 
+    //Save Canvas in local storage!
+    function saveLocalCanvas() {
+        /*setting*/
+        let TYPE = "img/png";
+        const imgURL = canvas[0].toDataURL(TYPE);
+        let images;
+        if(localStorage.getItem("images") === null) {
+          images = [];
+
+        } else {
+          //convert the localStorage JSON file to an array
+          //the images array will be loaded with all the files
+          //stored at localStorage
+          images = JSON.parse(localStorage.getItem("images"));
+        }
+        //Now, let's add the actual element
+        images.push(imgURL);
+
+        //Now, let's save all the array in the memory
+
+        localStorage.setItem("images", JSON.stringify(images));
+
+        console.log(images);
+    }
+    //load Canvas from localStorage
+    function loadLocalCanvas() {
+      const item = localStorage.getItem("image");
+      console.log(item);
+      canvasImg.src = item;
+      canvasImg.onload = function() {
+          //drawImage(image, x, y); (x,y) are the canvas coordinates
+          ctx.clearRect(0, 0, canvas[0].width, canvas[0].height);
+          ctx.drawImage(canvasImg, 0, 0);
+      }
+    }
+
 
     //Fill Background color
     function fillBackgroundColor() {
@@ -1741,6 +1777,22 @@ jQuery(document).ready(function($) {
         activeButtons.push(".bReload");
         resetButtons();
     });
+    //Saving the image local
+    $(".bSaveLocal").click(function() {
+        // $(".bSaveLocal").toggleClass("active");
+        activeButtons.push(".bSaveLocal");
+        resetButtons();
+        saveLocalCanvas();
+        console.log("Saving local");
+    });
+    //Load local image
+    $(".bLoad").click(function() {
+        // $(".bSaveLocal").toggleClass("active");
+        activeButtons.push(".bLoad");
+        resetButtons();
+        loadLocalCanvas();
+        console.log("Load local Saving");
+    });
     //Animation
     $(".bAnimation").click(function() {
         animation();
@@ -1851,7 +1903,7 @@ jQuery(document).ready(function($) {
         ctx.fillText("!Welcome!", 900, 30);
 
         //Nice way to clear
-        let index = 0; index <= 1150; index = index + 1) {
+        for(let index = 0; index <= 1150; index = index + 1) {
             setTimeout(function() {
                 ctx.strokeStyle = "white";
                 ctx.arc(920, 300, index, 0, Math.PI * 2, true); // Outer circle
