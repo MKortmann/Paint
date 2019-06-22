@@ -1283,19 +1283,57 @@ jQuery(document).ready(function($) {
     }
     //load Canvas from localStorage
     function loadLocalCanvas() {
-      const item = localStorage.getItem("image");
-      console.log(item);
-      canvasImg.src = item;
+      const items = localStorage.getItem("image");
+      console.log(items);
+      canvasImg.src = items;
       canvasImg.onload = function() {
           //drawImage(image, x, y); (x,y) are the canvas coordinates
           ctx.clearRect(0, 0, canvas[0].width, canvas[0].height);
           ctx.drawImage(canvasImg, 0, 0);
       }
 
+      const fragment = document.createDocumentFragment();
+
+      const itemsArray = JSON.parse(localStorage.getItem("images"));
+
+      itemsArray.forEach(function(item, index) {
+        const newLine = document.createElement("tr");
+        const newColumnDate = document.createElement("td");
+        const newColumnTime = document.createElement("td");
+        const newColumnImages = document.createElement("td");
+
+        const newSpanDate = document.createElement("span");
+        const newSpanTime = document.createElement("span");
+        const newSpanImages = document.createElement("span");
+
+        newSpanDate.textContent = `Data: ${index}`;
+        newSpanTime.textContent = `Data: ${index}`;
+        newSpanImages.textContent = `Image: ${index}`;
+
+        fragment.appendChild(newLine);
+        /*For the first column: Date*/
+        newLine.appendChild(newColumnDate);
+        newColumnDate.appendChild(newSpanDate);
+        /*For the second column: Time*/
+        newLine.appendChild(newColumnTime);
+        newColumnTime.appendChild(newSpanTime);
+        /*For the third column: Images*/
+        newLine.appendChild(newColumnImages);
+        newColumnImages.appendChild(newSpanImages);
+
+      });
+
+      /*reflow and repaint here!*/
+      document.getElementById("table-row").appendChild(fragment);
+
       /**button to display the results*/
       document.querySelector(".sidenav").classList.toggle("open");
     }
 
+    /**button to close the sidenav*/
+    document.querySelector(".bClose").addEventListener("click", ()=> {
+      document.querySelector(".sidenav").classList.toggle("open");
+    });
 
     //Fill Background color
     function fillBackgroundColor() {
