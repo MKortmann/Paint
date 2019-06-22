@@ -46,7 +46,8 @@ margin-bottom: 0;
 	margin: 0;
 	padding-top: 10%;
 	width: 50%;
-	height: 100%;
+	height: 80%;
+  border-radius: 20px;
 	position: fixed;
 	/**NOT ABSOLUTE: very important because of the main:Y-Scroll*/
 	transform: translate(0, -10000px);
@@ -55,16 +56,19 @@ margin-bottom: 0;
 }
 
 .sidenav.open {
-	top: 0;
+	top: 80px;
+  bottom: 80px;
 	padding-top: 0;
 	right: 25%;
-	background: linear-gradient(to bottom right, #39f 0%, #0f9 100%);
+	background: linear-gradient(to bottom right, #333 0%, #BAF3F3 100%);
 	color: white;
 	transform: translate(0, 0);
 	transition: transform 0.3s ease;
 	font-size: 2em;
 	overflow-y: auto;
 	overflow-x: auto;
+
+  text-align: center;
 }
 
 .big-font-sidenav {
@@ -97,6 +101,62 @@ margin-bottom: 0;
 	color: black;
 	font-size: 2em;
 }
+
+.tableResults {
+	font-size: 1em;
+	border: 3px solid black;
+	width: 90%;
+	border-collapse: collapse;
+	margin: auto;
+	color: black;
+
+}
+
+caption {
+	background-color: white;
+	font-style: italic;
+	border: 3px solid black;
+  border-radius: 20px 20px 0 0;
+	border-bottom: 0;
+}
+
+thead {
+	background-color: #9da3b0;
+	border: 3px solid black;
+	text-align: center;
+}
+
+tbody {
+	text-align: center;
+	border: 3px solid black;
+}
+
+td {
+	letter-spacing: 1px;
+	padding-left: 16px;
+	padding-right: 16px;
+}
+
+tbody tr:nth-child(even) {
+	background-color: #9da3b0;
+}
+
+tbody tr:nth-child(odd) {
+	background-color: white;
+}
+
+
+.sidenav button {
+	text-align: center;
+	background-color: white;
+	color: black;
+	font-size: 0.5em;
+	cursor: pointer;
+	/**top, right, bottom, left*/
+	padding: 10px 20px 10px 20px;
+	border: 0;
+}
+
 
 /*
 ***Main Container: encloses all the containers as controls, settings...***

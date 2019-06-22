@@ -1262,6 +1262,9 @@ jQuery(document).ready(function($) {
         /*setting*/
         let TYPE = "img/png";
         const imgURL = canvas[0].toDataURL(TYPE);
+        //easiest way to get the date
+        const today = new Date();
+
         let images;
         if(localStorage.getItem("images") === null) {
           images = [];
@@ -1274,6 +1277,7 @@ jQuery(document).ready(function($) {
         }
         //Now, let's add the actual element
         images.push(imgURL);
+        images.push(today);
 
         //Now, let's save all the array in the memory
 
@@ -1296,7 +1300,11 @@ jQuery(document).ready(function($) {
 
       const itemsArray = JSON.parse(localStorage.getItem("images"));
 
-      itemsArray.forEach(function(item, index) {
+      //easiest way to get the date
+      const today = new Date();
+
+      for(let i=0; i<itemsArray.length; i=i+2) {
+
         const newLine = document.createElement("tr");
         const newColumnDate = document.createElement("td");
         const newColumnTime = document.createElement("td");
@@ -1306,9 +1314,14 @@ jQuery(document).ready(function($) {
         const newSpanTime = document.createElement("span");
         const newSpanImages = document.createElement("span");
 
-        newSpanDate.textContent = `Data: ${index}`;
-        newSpanTime.textContent = `Data: ${index}`;
-        newSpanImages.textContent = `Image: ${index}`;
+        //convert the string date into a function Date
+        const today = new Date(itemsArray[i+1]);
+
+        newSpanDate.textContent = `${today.getDay()}/
+          ${today.getMonth()}/${today.getFullYear()}`;
+        newSpanTime.textContent = `${today.getHours()}:
+          ${today.getMinutes()}:${today.getSeconds()}`;
+        newSpanImages.textContent = `${i+1}`;
 
         fragment.appendChild(newLine);
         /*For the first column: Date*/
@@ -1321,14 +1334,14 @@ jQuery(document).ready(function($) {
         newLine.appendChild(newColumnImages);
         newColumnImages.appendChild(newSpanImages);
 
-      });
+      };
 
       /*reflow and repaint here!*/
-      document.getElementById("table-row").appendChild(fragment);
+      document.querySelector(".tableRow").appendChild(fragment);
 
       /**button to display the results*/
       document.querySelector(".sidenav").classList.toggle("open");
-    }
+    };
 
     /**button to close the sidenav*/
     document.querySelector(".bClose").addEventListener("click", ()=> {
