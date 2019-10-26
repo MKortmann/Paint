@@ -1830,6 +1830,8 @@ jQuery(document).ready(function($) {
         $(".bReload").toggleClass("active");
         activeButtons.push(".bReload");
         resetButtons();
+        // add temporary reload here!
+        location.reload(true);
     });
     //Saving the image local
     $(".bSaveLocal").click(function() {
